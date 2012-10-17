@@ -1,14 +1,42 @@
+var counter=1;
+
 function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60});
 }
 
 function showPhoto(data){
-	var pic = $('#taskPic');
-	pic.attr('src', data);
+	$('#taskPic').attr('src', data);
+	
 }
-
+function captureAdditionalPhoto(e){
+	var im=$(e.target);
+	navigator.camera.getPicture(generateSuccess(im),null,{sourceType:1,quality:60});
+}
+function generateSuccess(image){
+	return function(data){
+		image.attr('src',data);
+	}
+	
+}
+function addPhoto(data){
+	$('#exPhoto1').attr('src',data)
+	$('#extraPhotos').listview('refresh');
+}
+function init(){
+	counter=1;
+}
 function addPhotoSpace(){
-	console.log("photo added");
-	var html = '<li style="height:128px;"><div class="ui-grid-b"><div class="ui-block-a" style="width:33%"><img src="camera.jpg" style="height:auto;width:30%"></div><div class="ui-block-b" style="width:33%"><label>Photo Name</label></br><label>Photo Desc.</label></div><div class="ui-block-c" style="width:33%"><input type="text" name="namePhoto1" id="nameField1" value="" /><input type="text" name="descPhoto1" id="descField1" value="" /></div></div></li>';
+	var fieldName = "nameField"+counter,
+		fieldDesc = "descField"+counter,
+		photoDesc = "descPhoto"+counter,
+		photoName = "namePhoto"+counter,
+		photoId = "exPhoto"+counter,
+		html = '<li><img id="' + photoId + '" src="camera.jpg" >';
+	html += '<label for="'+fieldName+'">Photo Name</label>';
+	html += '<input type="text" name="'+photoName+'" id="'+fieldName+'" value="" /></br>';
+	html += '<label for="'+fieldDesc+'">Photo Desc.</label>';
+	html += '<input type="text" name="'+photoDesc+'" id="'+fieldDesc+'" value="" /></li>';
 	$('#extraPhotos').append(html).listview('refresh');
+	$(photoId).bind('tap', captureAdditionalPhoto);
+	counter++;
 }

@@ -30,7 +30,7 @@
 		<h1 id="titleHeading">View Task</h1>
 	</div>
 	<div data-role = "content" >
-		
+		<img id="taskPicView" src="camera.jpg" style="height:128px;width:auto;">
 	</div>
 	<div data-role = "footer" data-position="fixed" style="height:64px">
 		
@@ -47,7 +47,7 @@
 	<div data-role = "content" >
 		<fieldset class="ui-grid-a">
 			<div class="ui-block-a">
-				<p>Task Photo</p>
+				<h2>Task Photo</h2>
 				<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;"></a>
 				<button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button>
 				</br>
@@ -67,15 +67,14 @@
 				<label for="notificationCheck">Enable Notifications</label>
 				
 			</div>
-	
-			<div class="ui-grid-solo">
-				<div class="ui-block-a" style="width:100%">
+		</fieldset>
+		<div class="ui-grid-solo">
+				<div class="ui-block-a" >
 					<ul data-role="listview" id="extraPhotos">
 					
 					</ul>
 				</div>
 			</div>
-		</fieldset>
 	</div>
 	<div data-role = "footer" data-position="fixed" style="height:64px">
 		<fieldset class="ui-grid-a">

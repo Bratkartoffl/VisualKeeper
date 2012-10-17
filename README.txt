@@ -1,3 +1,3 @@
 Visual Keeper
 Jared Cahalan, Abel Sanchez
-The add task page is almost complete, I am having some formatting issues with the list view in the bottom. There is also an issue with the date time input field not working correctly on the device. The phonegap photo api is used to take the photos.
+The add task page is almost complete, I am having some formatting issues with the list view in the bottom. I can't get the columns in there to work right and the style doesn't look right. There is also an issue with the date time input field not working correctly on the device. It should show a date and time picker, but instead just opens the keyboard. On the jQuery Mobile docs page the datetime input field works as it should but I'm not sure why ours isn't. The phonegap photo api is used to take the photos. The input fields are not storing anything yet but once we get the storage worked out they will be.
