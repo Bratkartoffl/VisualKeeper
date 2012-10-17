@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>VisualKeeper</title>
+<script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="myscript.js"></script>
+<link rel="stylesheet" href="jquery.mobile-1.2.0.min.css" />
+<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="jquery.mobile-1.2.0.min.js"></script>
+</head>
+<body>
+
+<div data-role ="page" id="home">
+	<div data-role = "header">
+		<a href="#home" data-role="button" data-transition="flip">Home</a>
+		<h1 id="titleHeading">Home</h1>
+	</div>
+	<div data-role = "content" >
+		<a href="#newTask" data-role="button" data-transition="flip">New Task</a>
+		<a href="#viewTask" data-role="button" data-transition="flip">View Task</a>
+	</div>
+	<div data-role = "footer" data-position="fixed">
+		
+	</div>
+</div>
+
+<div data-role ="page" id="viewTask">
+	<div data-role = "header" style="height:64px">
+		<a href="#home" data-role="button" data-transition="flip">Home</a>
+		<h1 id="titleHeading">View Task</h1>
+	</div>
+	<div data-role = "content" >
+		
+	</div>
+	<div data-role = "footer" data-position="fixed" style="height:64px">
+		
+	</div>
+</div>
+
+
+
+<div data-role ="page" id="newTask">
+	<div data-role = "header" style="height:64px">
+		<a href="#home" data-role="button" data-transition="flip">Home</a>
+		<h1 id="titleHeading">New Task</h1>
+	</div>
+	<div data-role = "content" >
+		<fieldset class="ui-grid-a">
+			<div class="ui-block-a">
+				<p>Task Photo</p>
+				<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;"></a>
+				<button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button>
+				</br>
+			</div>
+			<div class="ui-block-b">
+				</br>
+				<label for="nameField">Name:</label>
+   				<input type="text" name="taskName" id="nameField" value=""  />
+   				
+   				<label for="descArea">Description:</label>
+				<textarea name="desc" id="descArea"></textarea>
+				
+				<label for="dateField">When:</label>
+				<input type="datetime" name="when" id="dateField" />
+				
+				<input type="checkbox" name="notify" id="notificationCheck" />
+				<label for="notificationCheck">Enable Notifications</label>
+				
+			</div>
+	
+			<div class="ui-grid-solo">
+				<div class="ui-block-a" style="width:100%">
+					<ul data-role="listview" id="extraPhotos">
+					
+					</ul>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<div data-role = "footer" data-position="fixed" style="height:64px">
+		<fieldset class="ui-grid-a">
+			<div class="ui-block-a"><p data-role="button" data-transition="flip">Accept</p></div>
+			<div class="ui-block-b"><p data-role="button" data-transition="flip">Cancel</p></div>	   
+		</fieldset>
+	</div>
+</div>
+
+
+</body>
+</html>
