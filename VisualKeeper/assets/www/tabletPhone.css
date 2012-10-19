@@ -1,0 +1,17 @@
+@media all and (min-width: 801px) {
+  #taskPhoto {
+    float: left;
+  }
+  #taskInfo {
+    float: left;
+  }
+}
+
+@media all and (max-width: 800px) {
+  #taskPhoto {
+    width: 100%;
+  }
+  #taskInfo {
+    width: 100%;
+  }
+}
