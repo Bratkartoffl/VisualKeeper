@@ -1,6 +1,7 @@
 package com.jared.hellophonegap;
 
 import android.os.Bundle;
+import com.jaredabel.visualkeeper.R;
 import org.apache.cordova.*;
 public class HelloPhonegapActivity extends DroidGap {
     /** Called when the activity is first created. */
