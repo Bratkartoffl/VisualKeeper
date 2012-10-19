@@ -12,9 +12,22 @@
 <body onload="init();">
 
 <div data-role ="page" id="home" data-theme="a">
-	<div data-role = "header">
-		<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:25%;">Menu</a>
-		<h1 id="titleHeading">Home</h1>
+	<div data-role = "header" id="homeheader">
+		<div class="ui-grid-b">
+			<div class="ui-block-a">
+				<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:25%;">Menu</a>
+			</div>
+			<div class="ui-block-b">
+				<select name="selectedList" id="listselect" data-icon="arrow-d">
+					
+					<optgroup label="">
+						<option value="new">Add new list</option>
+					</optgroup>
+					
+				</select>
+			</div>
+		
+		</div>
 	</div>
 	
 	<div data-role="popup" id="menuPopup">
@@ -31,7 +44,7 @@
 		<ul data-role="listview" id="taskList" data-split-icon="gear">
 		<li>
 			<a href="#viewTask">
-				<img id="taskPic1" src="camera.jpg" style="height:auto;width:auto;">
+				<img id="taskPic1" src="camera.jpg" style="height:auto;width:auto;border-radius:5px;">
 				<p> Text</p>
 			</a>
 			<a href="#newTask">

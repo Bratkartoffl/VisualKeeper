@@ -5,10 +5,20 @@ function capturePhoto(){
 }
 function init(){
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
-	$('#newTask').bind('pageinit',initNewTask)
+	$('#newTask').bind('pageinit',initNewTask);
+	$('#home').bind('pageinit',initHome);
+	addNewListToDropdown('val1','name1');
+	addNewListToDropdown('val2','name2');
+	addNewListToDropdown('val3','name3');
+}
+function initHome(){
+	
+	
+	
 }
 function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
+	
 }
 function cancelNewTask(){
 	resetNewTask();
@@ -55,5 +65,11 @@ function addPhotoSpace(){
 	$('#newTaskContent').trigger("create");
 	$('#'+photoId).bind('tap', captureAdditionalPhoto);
 	counter++;
+}
+function addNewListToDropdown(value, name){
 	
+	var html = '<option value="';
+	html += value+'"> '+name+'</option>';
+	$('#listselect').prepend(html).selectmenu('refresh',true);
+	$('#homeheader').trigger("create");
 }
