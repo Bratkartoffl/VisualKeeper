@@ -8,11 +8,10 @@
 <script type="text/javascript" src="jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="jquery.mobile-1.2.0.min.js"></script>
 </head>
-<body>
+<body onload="init();">
 
 <div data-role ="page" id="home">
 	<div data-role = "header">
-		<a href="#home" data-role="button" data-transition="flip">Home</a>
 		<h1 id="titleHeading">Home</h1>
 	</div>
 	<div data-role = "content" >
@@ -39,47 +38,55 @@
 
 
 
-<div data-role ="page" id="newTask">
-	<div data-role = "header" style="height:64px">
-		<a href="#home" data-role="button" data-transition="flip">Home</a>
+<div data-role ="page" id="newTask" data-theme="a">
+	<div data-role = "header">
 		<h1 id="titleHeading">New Task</h1>
 	</div>
-	<div data-role = "content" >
+	<div data-role = "content" data-theme="a" id="newTaskContent">
 		<fieldset class="ui-grid-a">
 			<div class="ui-block-a">
-				<h2>Task Photo</h2>
-				<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;"></a>
-				<button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button>
+				<h2 style="padding-left:80px;">Task Photo</h2>
+				<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
+				<div style="width:75%;"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
 				</br>
 			</div>
 			<div class="ui-block-b">
-				</br>
-				<label for="nameField">Name:</label>
-   				<input type="text" name="taskName" id="nameField" value=""  />
+				<h2 style="margin-bottom:15px;">Task Information</h2>
+				<div data-role="fieldcontain">
+					<label for="nameField">Name:</label>
+   					<input type="text" name="taskName" id="nameField" value=""  />
+   				</div>
    				
-   				<label for="descArea">Description:</label>
-				<textarea name="desc" id="descArea"></textarea>
+   				<div data-role="fieldcontain">
+   					<label for="descArea">Description:</label>
+					<textarea name="desc" id="descArea"></textarea>
+				</div>
 				
-				<label for="dateField">When:</label>
-				<input type="datetime" name="when" id="dateField" />
+				<div data-role="fieldcontain">
+					<label for="dateField">When:</label>
+					<input type="datetime" name="when" id="dateField" />
+				</div>
 				
-				<input type="checkbox" name="notify" id="notificationCheck" />
-				<label for="notificationCheck">Enable Notifications</label>
-				
+				<div data-role="fieldcontain" style="width:60%;">
+					<input type="checkbox" name="notify" id="notificationCheck" />
+					<label for="notificationCheck">Enable Notifications</label>
+				</div>				
 			</div>
 		</fieldset>
 		<div class="ui-grid-solo">
 				<div class="ui-block-a" >
-					<ul data-role="listview" id="extraPhotos">
-					
+					<form>
+					<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="a">
+						
 					</ul>
+					</form>
 				</div>
 			</div>
 	</div>
-	<div data-role = "footer" data-position="fixed" style="height:64px">
+	<div data-role = "footer" data-position="fixed">
 		<fieldset class="ui-grid-a">
-			<div class="ui-block-a"><p data-role="button" data-transition="flip">Accept</p></div>
-			<div class="ui-block-b"><p data-role="button" data-transition="flip">Cancel</p></div>	   
+			<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
+			<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
 		</fieldset>
 	</div>
 </div>
