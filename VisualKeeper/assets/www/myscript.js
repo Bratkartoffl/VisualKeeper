@@ -7,18 +7,44 @@ function init(){
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#newTask').bind('pageinit',initNewTask);
 	$('#home').bind('pageinit',initHome);
-	addNewListToDropdown('val1','name1');
-	addNewListToDropdown('val2','name2');
-	addNewListToDropdown('val3','name3');
+	addNewListToDropdown('example','Example List');
+	$('#listselect option[value="example"]').attr('selected', 'selected');
+	$('#listselect').selectmenu('refresh', true);
+	
 }
+function newListViewTask(img, id, name, desc, datetime){
+	var html = '<li><a href="#viewTask"><img id="';
+	html += id;
+	html += '" src="';
+	html += img;
+	html += '" style="height:auto;width:auto;border-radius:5px;">';
+	html += '<h1>';
+	html += name;
+	html += '</h1>';
+	html += '<p>';
+	html += desc;
+	html += '</br>';
+	html += datetime;
+	html += '</p>';
+	html += '</a><a href="#newTask"><span>Edit Task</span></a></li>';
+	tasklist = $('#taskList');
+	tasklist.append(html).listview('refresh');
+	tasklist.trigger("create");
+}
+
 function initHome(){
-	
-	
 	
 }
 function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
+	$('#acceptButton').bind('tap',acceptNewTask);
 	
+}
+function acceptNewTask(){
+	$.mobile.changePage($('#home'));
+	var imgsrc = $('#taskPic').attr('src');
+	console.log(imgsrc);
+	newListViewTask(imgsrc, 'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
 }
 function cancelNewTask(){
 	resetNewTask();
@@ -39,14 +65,14 @@ function generateSuccess(image){
 	
 }
 function addPhoto(data){
-	$('#exPhoto1').attr('src',data)
+	$('#exPhoto1').attr('src',data);
 	$('#extraPhotos').listview('refresh');
 }
 function resetNewTask(){
 	counter=1;
 	var s='';
 	$('#extraPhotos').html(s).listview('refresh');
-	console.log("inited");
+	
 }
 function addPhotoSpace(){
 	var list = $('#extraPhotos'),
@@ -67,7 +93,6 @@ function addPhotoSpace(){
 	counter++;
 }
 function addNewListToDropdown(value, name){
-	
 	var html = '<option value="';
 	html += value+'"> '+name+'</option>';
 	$('#listselect').prepend(html).selectmenu('refresh',true);
