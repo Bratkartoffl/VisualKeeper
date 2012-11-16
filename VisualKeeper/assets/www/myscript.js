@@ -1,7 +1,7 @@
 var photoCounter=1;
 
 function capturePhoto(){
-	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60});
+	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,destinationType: Camera.DestinationType.FILE_URI,correctOrientation: true});
 }
 function init(){
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
@@ -64,7 +64,8 @@ function cancelNewTask(){
 	$.mobile.changePage($('#home'));
 }
 function showPhoto(data){
-	$('#taskPic').attr('src', data);
+	var pic = %('#taskPic');
+	pic.attr('src', data);
 	
 }
 function captureAdditionalPhoto(e){
