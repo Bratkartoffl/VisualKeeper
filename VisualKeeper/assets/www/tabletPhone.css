@@ -1,13 +1,19 @@
-@media all and (min-width: 801px) {
+@media screen and (min-width: 801px) {
   #taskPhoto {
     float: left;
   }
   #taskInfo {
     float: left;
   }
+  #photoButton{
+    width: 25%; 
+  }
+  #menuButton{
+    width: 25%;
+  }
 }
 
-@media all and (max-width: 800px) {
+@media screen and (max-width: 800px) {
   #taskPhoto {
     width: 100%;
   }

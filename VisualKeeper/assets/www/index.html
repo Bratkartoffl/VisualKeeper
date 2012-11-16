@@ -5,17 +5,18 @@
 <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
 <script type="text/javascript" charset="utf-8" src="myscript.js"></script>
 <link rel="stylesheet" href="jquery.mobile-1.2.0.min.css" />
+<link rel="stylesheet" href="themes/VisualKeeper.css" />
 <script type="text/javascript" src="jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="jquery.mobile-1.2.0.min.js"></script>
-<link rel="stylesheet" type="text/css" media="screen and (max-device-width: 799px)" href="tabletPhone.css" />
+<link rel="stylesheet" type="text/css" href="tabletPhone.css" />
 </head>
 <body onload="init();">
 
 <div data-role ="page" id="home" data-theme="a">
 	<div data-role = "header" id="homeheader">
-		<div class="ui-grid-b">
+		<div class="ui-grid-a">
 			<div class="ui-block-a">
-				<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:25%;">Menu</a>
+				<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:50%;">Menu</a>
 			</div>
 			<div class="ui-block-b">
 				<select name="selectedList" id="listselect" data-icon="arrow-d">
@@ -34,8 +35,8 @@
 		<ul data-role="listview">
 			<li>Search</li>
 			<li>Sort</li>
-			<li>Settings</li>
-			<li>Schedule Summary</li>
+			<li><a href="#settings">Settings</a></li>
+			<li><a href="#summarySchedule">Schedule Summary</a></li>
 			<li>Share</li>
 		</ul>
 	</div>
@@ -54,7 +55,7 @@
 <div data-role ="page" id="viewTask">
 	<div data-role = "header" style="height:64px">
 		<a href="#home" data-role="button" data-transition="flip">Home</a>
-		<h1 id="titleHeading">View Task</h1>
+		<h1 id="viewTaskHeading">View Task</h1>
 	</div>
 	<div data-role = "content" >
 		<img id="taskPicView" src="camera.jpg" style="height:128px;width:auto;">
@@ -68,43 +69,45 @@
 
 <div data-role ="page" id="newTask" data-theme="a">
 	<div data-role = "header">
-		<h1 id="titleHeading">New Task</h1>
+		<h1 id="editTaskHeading">New Task</h1>
 	</div>
 	<div data-role = "content" data-theme="a" id="newTaskContent">
-		<fieldset class="ui-grid-a">
-			<div class="ui-block-a" id="taskPhoto">
-				<h2 style="padding-left:80px;">Task Photo</h2>
-				<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
-				</br>
-			</div>
-			<div class="ui-block-b" id="taskInfo">
-				<h2 style="margin-bottom:15px;">Task Information</h2>
-				<div data-role="fieldcontain">
-					<label for="nameField">Name:</label>
-   					<input type="text" name="taskName" id="nameField" value=""  />
-   				</div>
-   				
-   				<div data-role="fieldcontain">
-   					<label for="descArea">Description:</label>
-					<textarea name="desc" id="descArea"></textarea>
+		<form>
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a" id="taskPhoto">
+					<h2 style="padding-left:80px;">Task Photo</h2>
+					<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
+					</br>
 				</div>
-				
-				<div data-role="fieldcontain">
-					<label for="dateField">When:</label>
-					<input type="datetime" name="when" id="dateField" />
+				<div class="ui-block-b" id="taskInfo">
+					<h2 style="margin-bottom:15px;">Task Information</h2>
+					<div data-role="fieldcontain">
+						<label for="nameField">Name:</label>
+	   					<input type="text" name="taskName" id="nameField" value=""  />
+	   				</div>
+	   				
+	   				<div data-role="fieldcontain">
+	   					<label for="descArea">Description:</label>
+						<textarea name="desc" id="descArea"></textarea>
+					</div>
+					
+					<div data-role="fieldcontain">
+						<label for="dateField">When:</label>
+						<input type="datetime" name="when" id="dateField" />
+					</div>
+					
+					<div data-role="fieldcontain" style="width:60%;">
+						<input type="checkbox" name="notify" id="notificationCheck" />
+						<label for="notificationCheck">Enable Notifications</label>
+					</div>				
 				</div>
-				
-				<div data-role="fieldcontain" style="width:60%;">
-					<input type="checkbox" name="notify" id="notificationCheck" />
-					<label for="notificationCheck">Enable Notifications</label>
-				</div>				
-			</div>
-		</fieldset>
+			</fieldset>
+		</form>
 		<div class="ui-grid-solo">
-			<div style="width:25%;"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
+			<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
 				<div class="ui-block-a" >
 					<form>
-					<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="a">
+					<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b">
 						
 					</ul>
 					</form>
@@ -119,6 +122,34 @@
 	</div>
 </div>
 
+<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
+	<div data-role="header">
+		<h3>Tasks This Week</h3>
+	</div>
+	<div data-role="content">
+		<ul data-role="listview" >
+			<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li>
+			<li>Task 1</li>
+			<li id="monDivide" data-role="list-divider">Monday</li>
+			<li>Task 2</li>
+			<li>Task 3</li>
+			<li id="tueDivide" data-role="list-divider">Tuesday</li>
+			<li id="wedDivide" data-role="list-divider">Wednesday</li>
+			<li id="thurDivide" data-role="list-divider">Thursday</li>
+			<li id="friDivide" data-role="list-divider">Friday</li>
+			<li id="satDivide" data-role="list-divider">Saturday</li>
+		</ul>
+	</div>
+</div>
+
+<div data-role="page" id="settings" data-theme="a">
+	<div data-role="header">
+	</div>
+	<div data-role="content">
+	</div>
+	<div data-role="footer">
+	</div>
+</div>
 
 </body>
 </html>

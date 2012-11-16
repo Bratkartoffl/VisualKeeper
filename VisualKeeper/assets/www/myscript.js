@@ -1,4 +1,4 @@
-var counter=1;
+var photoCounter=1;
 
 function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60});
@@ -6,10 +6,11 @@ function capturePhoto(){
 function init(){
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#newTask').bind('pageinit',initNewTask);
+	$('#editTaskButton').bind('tap',setToEditTask);
 	$('#home').bind('pageinit',initHome);
 	addNewListToDropdown('example','Example List');
 	$('#listselect option[value="example"]').attr('selected', 'selected');
-	$('#listselect').selectmenu('refresh', true);
+	$('#listselect').selectmenu();
 	
 }
 function newListViewTask(img, id, name, desc, datetime){
@@ -26,7 +27,7 @@ function newListViewTask(img, id, name, desc, datetime){
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a href="#newTask"><span>Edit Task</span></a></li>';
+	html += '</a><a id="editTaskButton" href="#newTask"><span>Edit Task</span></a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
@@ -35,9 +36,21 @@ function newListViewTask(img, id, name, desc, datetime){
 function initHome(){
 	
 }
+function populateScheduleSummary(weekTasks){
+	var html="", i;
+	for(i=0;i<weekTasks.length;i++){
+		html += "<li><a href='#viewTask'><h1>";
+		html += weekTasks[i].tName + ' id: '+weekTasks[i].tId;
+		html += "</h1></a></li>";
+	}
+	
+
+	
+}
 function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
+	setToNewTask();
 	
 }
 function acceptNewTask(){
@@ -69,18 +82,27 @@ function addPhoto(data){
 	$('#extraPhotos').listview('refresh');
 }
 function resetNewTask(){
-	counter=1;
+	photoCounter=1;
 	var s='';
 	$('#extraPhotos').html(s).listview('refresh');
 	
 }
+function setToNewTask(){
+	$('#editTaskHeading').html('New Task');
+	console.log('making new task...');
+}
+function setToEditTask(taskid){
+	$('#editTaskHeading').html('Edit Task');
+	console.log('editing...');
+
+}
 function addPhotoSpace(){
 	var list = $('#extraPhotos'),
-		fieldName = "nameField"+counter,
-		fieldDesc = "descField"+counter,
-		photoDesc = "descPhoto"+counter,
-		photoName = "namePhoto"+counter,
-		photoId = "exPhoto"+counter,
+		fieldName = "nameField"+photoCounter,
+		fieldDesc = "descField"+photoCounter,
+		photoDesc = "descPhoto"+photoCounter,
+		photoName = "namePhoto"+photoCounter,
+		photoId = "exPhoto"+photoCounter,
 		html = '<li data-role="fieldcontain" data-theme="a">';
 	html += '<label for="'+fieldName+'">Photo Name</label>';
 	html += '<input type="text" name="'+photoName+'" id="'+fieldName+'" />';
@@ -90,7 +112,7 @@ function addPhotoSpace(){
 	list.append(html).listview("refresh");
 	$('#newTaskContent').trigger("create");
 	$('#'+photoId).bind('tap', captureAdditionalPhoto);
-	counter++;
+	photoCounter++;
 }
 function addNewListToDropdown(value, name){
 	var html = '<option value="';
