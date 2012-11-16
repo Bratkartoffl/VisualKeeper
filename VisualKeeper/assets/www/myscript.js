@@ -1,7 +1,7 @@
 var photoCounter=1;
 
 function capturePhoto(){
-	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,destinationType: Camera.DestinationType.FILE_URI,correctOrientation: true});
+	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,correctOrientation: true});
 }
 function init(){
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
