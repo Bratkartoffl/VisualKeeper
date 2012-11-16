@@ -20,4 +20,13 @@
   #taskInfo {
     width: 100%;
   }
+  #viewTaskContent{
+    text-align: center;
+  }
+  #viewTaskContent > label{
+    text-align: left;
+  }
+  #notifycheckbox{
+    width:50%;
+  }
 }

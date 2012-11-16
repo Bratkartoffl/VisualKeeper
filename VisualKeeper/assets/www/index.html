@@ -52,16 +52,31 @@
 	</div>
 </div>
 
-<div data-role ="page" id="viewTask">
-	<div data-role = "header" style="height:64px">
-		<a href="#home" data-role="button" data-transition="flip">Home</a>
-		<h1 id="viewTaskHeading">View Task</h1>
+<div data-role ="page" id="viewTask" data-add-back-btn="true">
+	<div data-role = "header">
+		<h2 id="viewTaskHeading">View Task</h2>
 	</div>
-	<div data-role = "content" >
-		<img id="taskPicView" src="camera.jpg" style="height:128px;width:auto;">
+	<div data-role = "content" id="viewTaskContent">
+		<h2>Task Name</h2>
+		<img id="taskViewPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
+		<p>Time</p>
+		<p>Date</p>
+		<p>Frequency</p>
+
+		<label for="descViewBox">Description</label>
+		<textarea name="DescriptionBox" id="descViewBox" disabled="disabled"></textarea>
+		<div id="notifycheckbox">
+			<input type="checkbox" name="Notify" id="notifyCheck"/>
+			<label for="notifyCheck">Notify Me</label>
+		</div>
+		<p id="addlPhotoLabel">Additional Photos</p>
+		<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
+			
+		</ul>
+
 	</div>
-	<div data-role = "footer" data-position="fixed" style="height:64px">
-		
+	<div data-role = "footer" data-position="fixed">
+		<a href="#newTask" data-role="button" style="width:100%;">Edit Task</a>
 	</div>
 </div>
 

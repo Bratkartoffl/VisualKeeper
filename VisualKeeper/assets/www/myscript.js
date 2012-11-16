@@ -11,6 +11,7 @@ function init(){
 	addNewListToDropdown('example','Example List');
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
+	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
 	
 }
 function newListViewTask(img, id, name, desc, datetime){
@@ -32,7 +33,6 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
 }
-
 function initHome(){
 	
 }
@@ -113,6 +113,26 @@ function addPhotoSpace(){
 	$('#newTaskContent').trigger("create");
 	$('#'+photoId).bind('tap', captureAdditionalPhoto);
 	photoCounter++;
+}
+function addPhotoView(){
+	var photonum =1;
+	var html = '<li data-theme="a">',
+		list = $('#addlPhotos')
+		fieldName = "nameField"+photonum,
+		fieldDesc = "descField"+photonum,
+		photoDesc = "descPhoto"+photonum,
+		photoName = "namePhoto"+photonum,
+		photoId = "exPhoto"+photonum;
+	html += '<h4>Photo Name</h4>';
+	html += '<div data-role="fieldcontain">';
+	html += '<label for="'+fieldDesc+'">Photo Description</label>';
+	html += '<textarea id="'+fieldDesc+'" disabled="disabled">Some text...</textarea>';
+	html += '</div>';
+	html += '<img id="'+photoId+'" src="camera.jpg" style="border-radius:5px; margin-left:8px; margin-top:7px;"></li>';
+
+	list.append(html).listview('refresh');
+	$('#viewTaskContent').trigger("create");
+	console.log('photo view added');
 }
 function addNewListToDropdown(value, name){
 	var html = '<option value="';
