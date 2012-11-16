@@ -64,7 +64,7 @@ function cancelNewTask(){
 	$.mobile.changePage($('#home'));
 }
 function showPhoto(data){
-	var pic = %('#taskPic');
+	var pic = $('#taskPic');
 	pic.attr('src', data);
 	
 }
