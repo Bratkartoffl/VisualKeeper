@@ -3,14 +3,10 @@ var photoCounter=1;
 function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,correctOrientation: true});
 }
-function init(){
-	document.addEventListener('deviceready',deviceready, false);
-}
-function deviceready() {
+function deviceReady() {
 	console.log("device is ready");
 	Parse.initialize("c8HCVamYNDo1e6uzgwp81vybRFimX2vfEHgBNLrv", "ieQmtmB8jIhmgWRBPAp3Wzw4HEpnzHUIcRUM8yxK");
     TestObject = Parse.Object.extend("TestObject");
-
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#newTask').bind('pageinit',initNewTask);
 	$('#editTaskButton').bind('tap',setToEditTask);
@@ -19,6 +15,35 @@ function deviceready() {
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
 	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
+	
+}
+function init(){
+	$('#dateTimeDialog').bind('pagebeforeshow',function(){
+		$('#dailyOptions').hide();
+		$('#weekOptions').hide();
+	});
+	$('input[name="taskfrequency"]').bind('change',function(){
+		var selection = $("input[name='taskfrequency']:checked").val(),
+			once = $('#onceOptions'),
+			daily = $('#dailyOptions'),
+			weekly = $('#weekOptions');
+		if(selection == 'once'){
+			once.show();
+			daily.hide();
+			weekly.hide();
+		}
+		else if(selection == 'daily'){
+			once.hide();
+			daily.show();
+			weekly.hide();
+		}
+		else if(selection == 'weekly'){
+			once.hide();
+			daily.hide();
+			weekly.show();
+		}
+	});
+	document.addEventListener('deviceready',deviceReady, false);
 }
 function newListViewTask(img, id, name, desc, datetime){
 	var html = '<li><a href="#viewTask"><img id="';
@@ -90,7 +115,7 @@ function showPhoto(data){
     options.params=params;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "localhost/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
+    ft.upload(imageURI, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
 	
 }
 function captureAdditionalPhoto(e){

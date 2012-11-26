@@ -80,32 +80,68 @@
 	</div>
 
 
-	<div data-role="page" id="dateTimeDialog">
-		<div data-role="header" style="text-align:center;">
+	<div data-role="page" id="dateTimeDialog" style="text-align:center;">
+		<div data-role="header" >
+			<form>
 			<fieldset data-role="controlgroup" data-type="horizontal" >
-				<input type="radio" name="taskOnce" id="taskOnce" value="once" checked="checked" />
+				<input type="radio" name="taskfrequency" id="taskOnce" value="once" checked="checked" />
 	     		<label for="taskOnce">Once</label>
 
-	     		<input type="radio" name="taskDaily" id="taskDaily" value="daily"/>
+	     		<input type="radio" name="taskfrequency" id="taskDaily" value="daily"/>
 	     		<label for="taskDaily">Daily</label>
 
-	     		<input type="radio" name="taskWeekly" id="taskWeekly" value="weekly" />
+	     		<input type="radio" name="taskfrequency" id="taskWeekly" value="weekly" />
 	     		<label for="taskWeekly">Weekly</label>
 			</fieldset>
+			</form>
+			<!-- <ul data-role="controlgroup" data-type="horizontal">
+				<a data-role="button">Once</a>
+				<a data-role="button">Daily</a>
+				<a data-role="button">Weekly</a>
+			</ul> -->
 		</div>
 		<div data-role="content">
 			
-			<div id="timeOptions">
+			<div id="onceOptions">
 				<ul data-role="listview">
-					<li>One</li>
-					<li>Two</li>
-					<li>Three</li>
+					<li><label for="oDate">Day</label><input type="date" name="date" id="oDate" /></li>
+					<li><label for="oTime">Time</label><input type="time" name="time" id="oTime" /></li>
 				</ul>
+			</div>
+			<div id="weekOptions">
+				<label for='daysfieldset'>Days</label>
+				<fieldset id="daysfieldset" data-role="controlgroup">
+					<input type="checkbox" name="dayofweek" id="suncheck" />
+	   				<label for="suncheck">Sunday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="moncheck" />
+	   				<label for="moncheck">Monday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="tuecheck" />
+	   				<label for="tuecheck">Tuesday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="wedcheck" />
+	   				<label for="wedcheck">Wednesday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="thurcheck" />
+	   				<label for="thurcheck">Thursday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="fricheck" />
+	   				<label for="fricheck">Friday</label>
+
+	   				<input type="checkbox" name="dayofweek" id="satcheck" />
+	   				<label for="satcheck">Saturday</label>
+
+    			</fieldset>
+				<label for="wTime">Time</label><input type="time" name="time" id="wTime" />
+			</div>
+			<div id="dailyOptions">
+				<label for="dTime">Time</label><input type="time" name="time" id="dTime" />
 			</div>
 
 		</div>
 		<div data-role="footer">
-
+			<a data-role="button" style="width:100%;">Accept</a>
 		</div>
 
 	</div>
