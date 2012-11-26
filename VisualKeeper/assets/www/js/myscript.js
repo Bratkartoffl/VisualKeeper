@@ -4,6 +4,10 @@ function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,correctOrientation: true});
 }
 function init(){
+	document.addEventListener('deviceready',deviceready, false);
+}
+function deviceready() {
+	console.log("device is ready");
 	Parse.initialize("c8HCVamYNDo1e6uzgwp81vybRFimX2vfEHgBNLrv", "ieQmtmB8jIhmgWRBPAp3Wzw4HEpnzHUIcRUM8yxK");
     TestObject = Parse.Object.extend("TestObject");
 
