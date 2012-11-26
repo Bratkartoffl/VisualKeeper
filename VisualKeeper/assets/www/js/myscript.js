@@ -94,7 +94,7 @@ function acceptNewTask(){
 	var testObject = new TestObject();
     testObject.save({taskName:taskName,
     				 taskDesc:taskDesc,
-    				 taskDue:taskDue});
+    				 taskDue:taskDate});
 }
 function cancelNewTask(){
 	resetNewTask();
@@ -112,10 +112,12 @@ function showPhoto(data){
     options.mimeType="image/jpeg";
     params.uid = id;
     params.uname=uname;
+    params.taskid=110;
+    params.photoid=1;
     options.params=params;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
+    ft.upload(data, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
 	
 }
 function captureAdditionalPhoto(e){
