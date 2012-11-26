@@ -58,14 +58,28 @@ function acceptNewTask(){
 	var imgsrc = $('#taskPic').attr('src');
 	console.log(imgsrc);
 	newListViewTask(imgsrc, 'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
+
 }
 function cancelNewTask(){
 	resetNewTask();
 	$.mobile.changePage($('#home'));
 }
 function showPhoto(data){
-	var pic = $('#taskPic');
+	var pic = $('#taskPic'),
+		options = new FileUploadOptions(),
+		params = new Object(),
+		id = 662,
+		uname='blanco';
 	pic.attr('src', data);
+    options.fileKey="file";
+    options.fileName=data.substr(data.lastIndexOf('/')+1);
+    options.mimeType="image/jpeg";
+    params.uid = id;
+    params.uname=uname;
+    options.params=params;
+
+    var ft = new FileTransfer();
+    ft.upload(imageURI, "localhost/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
 	
 }
 function captureAdditionalPhoto(e){

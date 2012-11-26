@@ -13,6 +13,7 @@
 </head>
 <body onload="init();">
 
+
 <div data-role ="page" id="home" data-theme="a">
 	<div data-role = "header" id="homeheader">
 		<div class="ui-grid-a">
@@ -34,8 +35,8 @@
 	
 	<div data-role="popup" id="menuPopup">
 		<ul data-role="listview">
-			<li>Search</li>
-			<li>Sort</li>
+			<li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
+			<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
 			<li><a href="#settings">Settings</a></li>
 			<li><a href="#summarySchedule">Schedule Summary</a></li>
 			<li>Share</li>
@@ -80,8 +81,35 @@
 		<a href="#newTask" data-role="button" style="width:100%;">Edit Task</a>
 	</div>
 </div>
+<div data-role="page" id="dateTimeDialog">
+	<div data-role="header" style="text-align:center;">
+		<fieldset data-role="controlgroup" data-type="horizontal" >
+			<input type="radio" name="taskOnce" id="taskOnce" value="once" checked="checked" />
+     		<label for="taskOnce">Once</label>
 
+     		<input type="radio" name="taskDaily" id="taskDaily" value="daily"/>
+     		<label for="taskDaily">Daily</label>
 
+     		<input type="radio" name="taskWeekly" id="taskWeekly" value="weekly" />
+     		<label for="taskWeekly">Weekly</label>
+		</fieldset>
+	</div>
+	<div data-role="content">
+		
+		<div id="timeOptions">
+			<ul data-role="listview">
+				<li>One</li>
+				<li>Two</li>
+				<li>Three</li>
+			</ul>
+		</div>
+
+	</div>
+	<div data-role="footer">
+
+	</div>
+
+</div>
 
 <div data-role ="page" id="newTask" data-theme="a">
 	<div data-role = "header">
@@ -107,10 +135,11 @@
 						<textarea name="desc" id="descArea"></textarea>
 					</div>
 					
-					<div data-role="fieldcontain">
+					<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+					<!-- <div data-role="fieldcontain">
 						<label for="dateField">When:</label>
 						<input type="datetime" name="when" id="dateField" />
-					</div>
+					</div> -->
 					
 					<div data-role="fieldcontain" style="width:60%;">
 						<input type="checkbox" name="notify" id="notificationCheck" />
@@ -166,6 +195,24 @@
 	<div data-role="footer">
 	</div>
 </div>
+
+<div data-role="page" id="sortDialog" data-theme="a">
+	<div data-role="header">
+		<h3>Sort By</h3>
+	</div>
+	<div data-role="content">
+		<ul data-role="listview">
+			<li>Date</li>
+			<li>Location</li>
+			<li>Name</li>
+		</ul>
+	</div>
+	<div data-role="footer">
+		<a href="#home" data-role="button">Cancel</a>
+	</div>
+
+</div>
+
 
 </body>
 </html>
