@@ -4,6 +4,13 @@ function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,correctOrientation: true});
 }
 function init(){
+	document.addEventListener('deviceready',deviceready, false);
+}
+function deviceready() {
+	console.log("device is ready");
+	Parse.initialize("c8HCVamYNDo1e6uzgwp81vybRFimX2vfEHgBNLrv", "ieQmtmB8jIhmgWRBPAp3Wzw4HEpnzHUIcRUM8yxK");
+    TestObject = Parse.Object.extend("TestObject");
+
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#newTask').bind('pageinit',initNewTask);
 	$('#editTaskButton').bind('tap',setToEditTask);
@@ -12,7 +19,6 @@ function init(){
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
 	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
-	
 }
 function newListViewTask(img, id, name, desc, datetime){
 	var html = '<li><a href="#viewTask"><img id="';
@@ -34,7 +40,6 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist.trigger("create");
 }
 function initHome(){
-	
 }
 function populateScheduleSummary(weekTasks){
 	var html="", i;
@@ -43,22 +48,33 @@ function populateScheduleSummary(weekTasks){
 		html += weekTasks[i].tName + ' id: '+weekTasks[i].tId;
 		html += "</h1></a></li>";
 	}
-	
-
-	
 }
 function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
-	
 }
 function acceptNewTask(){
+	var taskName = $("#nameField").val();
+	var taskDesc = $("#descArea").val();
+	var taskDate = $("#dateField").val();
+	var taskTime = $("#")
 	$.mobile.changePage($('#home'));
 	var imgsrc = $('#taskPic').attr('src');
 	console.log(imgsrc);
+<<<<<<< HEAD:VisualKeeper/assets/www/myscript.js
 	newListViewTask(imgsrc, 'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
 
+=======
+	if (taskName === "")
+		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
+	else
+		newListViewTask(imgsrc,,taskName,taskDesc, tas);
+	var testObject = new TestObject();
+    testObject.save({taskName:taskName,
+    				 taskDesc:taskDesc,
+    				 taskDue:taskDue});
+>>>>>>> e2ccb35370c4942a21113526bfbe7b711d21d287:VisualKeeper/assets/www/js/myscript.js
 }
 function cancelNewTask(){
 	resetNewTask();
@@ -71,6 +87,7 @@ function showPhoto(data){
 		id = 662,
 		uname='blanco';
 	pic.attr('src', data);
+<<<<<<< HEAD:VisualKeeper/assets/www/myscript.js
     options.fileKey="file";
     options.fileName=data.substr(data.lastIndexOf('/')+1);
     options.mimeType="image/jpeg";
@@ -81,6 +98,8 @@ function showPhoto(data){
     var ft = new FileTransfer();
     ft.upload(imageURI, "localhost/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
 	
+=======
+>>>>>>> e2ccb35370c4942a21113526bfbe7b711d21d287:VisualKeeper/assets/www/js/myscript.js
 }
 function captureAdditionalPhoto(e){
 	var im=$(e.target);
@@ -90,7 +109,6 @@ function generateSuccess(image){
 	return function(data){
 		image.attr('src',data);
 	}
-	
 }
 function addPhoto(data){
 	$('#exPhoto1').attr('src',data);
@@ -100,7 +118,6 @@ function resetNewTask(){
 	photoCounter=1;
 	var s='';
 	$('#extraPhotos').html(s).listview('refresh');
-	
 }
 function setToNewTask(){
 	$('#editTaskHeading').html('New Task');
@@ -109,7 +126,6 @@ function setToNewTask(){
 function setToEditTask(taskid){
 	$('#editTaskHeading').html('Edit Task');
 	console.log('editing...');
-
 }
 function addPhotoSpace(){
 	var list = $('#extraPhotos'),
