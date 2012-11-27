@@ -116,11 +116,11 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
     params.uname=uname;
     params.taskid=tid;
     params.photoid=pid;
-    options.params=params;
+    //options.params=params;
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "http://184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+    ft.upload(imageURI, "http://184.166.26.100/services/upload.php?uid="+id+"&uname="+uname+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
 		
 }
 function showPhoto(data){
