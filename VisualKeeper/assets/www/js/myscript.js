@@ -228,7 +228,8 @@ function acceptNewTask(){
 	var testObject = new TestObject();
     testObject.save({taskName:taskName,
     				 taskDesc:taskDesc,
-    				 taskDue:taskDate});
+    				 taskDue:taskDate,
+    				 creator:CurrentUser});
 }
 function cancelNewTask(){
 	resetNewTask();

@@ -7,3 +7,6 @@ https://docs.google.com/document/d/1X8pEdmvjmj8kmfVTz8Gr3h2krJIZSFvj_dRgZgnUCz8/
 
 Link to Phase 2 Documentation:
 https://docs.google.com/document/d/1BODVVbkju7dUfQJdNiLlrw0QnQmn3eacjVPnVQzBm8s/edit
+
+PhoneGap Build Page:
+https://build.phonegap.com/apps/250240/share
