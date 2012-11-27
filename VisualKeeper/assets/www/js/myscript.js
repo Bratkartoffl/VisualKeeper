@@ -177,7 +177,8 @@ function login(){
             console.log("ERROR!");
             console.dir(error);
             
-            location.reload();
+            //location.reload();
+             $.mobile.changePage("#login");
             //$("#loginstatus").html(error.message).addClass("errorDiv");
         }
     });
