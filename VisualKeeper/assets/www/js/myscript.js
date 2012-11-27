@@ -120,7 +120,7 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+    ft.upload(imageURI, "http://184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
 		
 }
 function showPhoto(data){
