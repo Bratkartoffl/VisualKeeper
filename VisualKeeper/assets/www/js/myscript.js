@@ -100,25 +100,29 @@ function cancelNewTask(){
 	resetNewTask();
 	$.mobile.changePage($('#home'));
 }
-function showPhoto(data){
-	var pic = $('#taskPic'),
-		options = new FileUploadOptions(),
-		params = new Object(),
-		id = 662,
-		uname='blanco';
-	pic.attr('src', data);
-    options.fileKey="file";
-    options.fileName=data.substr(data.lastIndexOf('/')+1);
-    options.mimeType="image/jpeg";
-    params.uid = id;
+function uploadPhoto(imageURI, id, uname, tid, pid){
+	var options = new FileUploadOptions(),
+		params = new Object();
+	options.fileKey="file";
+	options.fileName=data.substr(data.lastIndexOf('/')+1);
+	options.mimeType="image/jpeg";
+	console.log(options.fileName);
+	params.uid = id;
     params.uname=uname;
-    params.taskid=110;
-    params.photoid=1;
+    params.taskid=tid;
+    params.photoid=pid;
     options.params=params;
+    options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(data, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
-	
+    ft.upload(imageURI, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+		
+}
+function showPhoto(data){
+	var pic = $('#taskPic');
+	pic.attr('src', data);
+	uploadPhoto(data,662,'blanco',110,1);
+    
 }
 function captureAdditionalPhoto(e){
 	var im=$(e.target);
