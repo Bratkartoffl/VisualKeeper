@@ -1,7 +1,13 @@
 var photoCounter=1;
 
 function capturePhoto(){
-	navigator.camera.getPicture(showPhoto,null,{sourceType:1,quality:60,correctOrientation: true});
+	navigator.camera.getPicture(showPhoto,null,{
+												destinationType : Camera.DestinationType.FILE_URI, 
+ 												sourceType : Camera.PictureSourceType.CAMERA, 
+  												allowEdit : true,
+  												encodingType: Camera.EncodingType.JPEG,
+  												quality:60,
+  												correctOrientation: true});
 }
 function deviceReady() {
 	console.log("device is ready");
@@ -104,7 +110,7 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 	var options = new FileUploadOptions(),
 		params = new Object();
 	options.fileKey="file";
-	options.fileName=data.substr(data.lastIndexOf('/')+1);
+	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 	options.mimeType="image/jpeg";
 	console.log(options.fileName);
 	params.uid = id;
