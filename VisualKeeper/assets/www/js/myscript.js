@@ -92,7 +92,6 @@ function acceptNewTask(){
 	var taskTime = $("#")
 	$.mobile.changePage($('#home'));
 	var imgsrc = $('#taskPic').attr('src');
-	console.log(imgsrc);
 	if (taskName === "")
 		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
 	else
@@ -111,7 +110,7 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 		params = new Object();
 	options.fileKey="file";
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-	options.mimeType="image/jpeg";
+	options.mimeType="text/plain";
 	console.log(options.fileName);
 	params.uid = id;
     params.uname=uname;
