@@ -10,9 +10,73 @@
 	<script src="phonegap.js"></script>
 	<script type="text/javascript" src="js/parse-1.1.13.min.js"></script>
 	<script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="js/zepto.min.js"></script>
+    <script type="text/javascript" src="js/cylon.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/myscript.js"></script>
 </head>
 <body onload="init();">
+	<div data-role ="page" id="intro" data-theme="a">
+		<div data-role = "header" id="homeheader"></div>
+		<div data-role = "content" >
+			<div class="menu">
+				<a href="#login" data-role="button">Login</a>
+				<a href="#register" data-role="button">Register</a>
+			</div>
+		</div>
+		<div data-role = "footer" data-position="fixed"></div>
+	</div>
+
+	<div data-role ="page" id="register" data-theme="a">
+		<div data-role = "header" id="homeheader">
+			<a href="javascript:history.go(-1)">Back</a>
+			<h1>Register</h1>
+		</div>
+		<div data-role = "content" >
+			<div id="regstatus"></div>
+			<br />
+			<form>
+				<label for="username">Username:</label>
+				<input type="text" id="username">
+				<span id="usernameerror" style="visibility:hidden;">Username Required</span><hr />
+
+				<label for="password">Password:</label>
+				<input type="password" id="password">
+				<span id="passworderror" style="visibility:hidden;">Password Required</span><hr />
+
+				<label for="email">Email: </label>
+				<input type="text" id="email">
+				<span id="emailerror" style="visibility:hidden;">Email Required</span><hr />
+
+				<a data-role="button" id="registerForm" onclick="register()">Register</a>
+			</form>
+		</div>
+		<div data-role = "footer" data-position="fixed">
+		</div>
+	</div>
+
+	<div data-role ="page" id="login" data-theme="a">
+		<div data-role = "header" id="homeheader">
+			<a href="javascript:history.go(-1)">Back</a>
+			<H1>Welcome to Visual Keeper</h1>
+		</div>
+		<div data-role = "content" >
+			<div id="logstatus"></div>
+			<form>
+				<label for="username">Username:</label>
+				<input type="text" id="usernamelogin">
+				<span id="loginuser" style="visibility:hidden">Username Required</span><br />
+				<label for="password">Password: </label>
+				<input type="password" id="passwordlogin">
+				<span id="loginpass" style="visibility:hidden">Password Required</span>
+				<br />
+				<a data-role="button" id="loginForm" onclick="login();">Login</a>
+			</form>
+			<hr />
+		</div>
+		<div data-role = "footer" data-position="fixed">
+		</div>
+	</div>
+
 	<div data-role ="page" id="home" data-theme="a">
 
 		<div data-role = "header" id="homeheader">
@@ -79,7 +143,6 @@
 		</div>
 	</div>
 
-
 	<div data-role="page" id="dateTimeDialog" style="text-align:center;">
 		<div data-role="header" >
 			<form>
@@ -143,109 +206,108 @@
 		<div data-role="footer">
 			<a data-role="button" style="width:100%;">Accept</a>
 		</div>
-
 	</div>
 
-<div data-role ="page" id="newTask" data-theme="a">
-	<div data-role = "header">
-		<h1 id="editTaskHeading">New Task</h1>
-	</div>
-	<div data-role = "content" data-theme="a" id="newTaskContent">
-		<form>
-			<fieldset class="ui-grid-a">
-				<div class="ui-block-a" id="taskPhoto">
-					<h2 style="padding-left:80px;">Task Photo</h2>
-					<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
-					</br>
-				</div>
-				<div class="ui-block-b" id="taskInfo">
-					<h2 style="margin-bottom:15px;">Task Information</h2>
-					<div data-role="fieldcontain">
-						<label for="nameField">Name:</label>
-	   					<input type="text" name="taskName" id="nameField" value=""  />
-	   				</div>
-	   				
-	   				<div data-role="fieldcontain">
-	   					<label for="descArea">Description:</label>
-						<textarea name="desc" id="descArea"></textarea>
+	<div data-role ="page" id="newTask" data-theme="a">
+		<div data-role = "header">
+			<h1 id="editTaskHeading">New Task</h1>
+		</div>
+		<div data-role = "content" data-theme="a" id="newTaskContent">
+			<form>
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a" id="taskPhoto">
+						<h2 id="loggedIn">Tasks for </h2>
+						<h2 style="padding-left:80px;">Task Photo</h2>
+						<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
+						</br>
 					</div>
+					<div class="ui-block-b" id="taskInfo">
+						<h2 style="margin-bottom:15px;">Task Information</h2>
+						<div data-role="fieldcontain">
+							<label for="nameField">Name:</label>
+		   					<input type="text" name="taskName" id="nameField" value=""  />
+		   				</div>
+		   				
+		   				<div data-role="fieldcontain">
+		   					<label for="descArea">Description:</label>
+							<textarea name="desc" id="descArea"></textarea>
+						</div>
+						
+						<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+						<!-- <div data-role="fieldcontain">
+							<label for="dateField">When:</label>
+							<input type="datetime" name="when" id="dateField" />
+						</div> -->
+						
+						<div data-role="fieldcontain" style="width:60%;">
+							<input type="checkbox" name="notify" id="notificationCheck" />
+							<label for="notificationCheck">Enable Notifications</label>
+						</div>				
 					
-					<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
-					<!-- <div data-role="fieldcontain">
-						<label for="dateField">When:</label>
-						<input type="datetime" name="when" id="dateField" />
-					</div> -->
-					
-					<div data-role="fieldcontain" style="width:60%;">
-						<input type="checkbox" name="notify" id="notificationCheck" />
-						<label for="notificationCheck">Enable Notifications</label>
-					</div>				
-				
+					</div>
+				</fieldset>
+			</form>
+			<div class="ui-grid-solo">
+				<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
+				<div class="ui-block-a" >
+					<form>
+						<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
+					</form>
 				</div>
-			</fieldset>
-		</form>
-		<div class="ui-grid-solo">
-			<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
-			<div class="ui-block-a" >
-				<form>
-					<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
-				</form>
 			</div>
 		</div>
-	</div>
-	<div data-role = "footer" data-position="fixed">
-		<fieldset class="ui-grid-a">
-			<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
-			<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
-		</fieldset>
-	</div>
-</div>
-
-<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
-	<div data-role="header">
-		<h3>Tasks This Week</h3>
-	</div>
-	<div data-role="content">
-		<ul data-role="listview" >
-			<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li>
-			<li>Task 1</li>
-			<li id="monDivide" data-role="list-divider">Monday</li>
-			<li>Task 2</li>
-			<li>Task 3</li>
-			<li id="tueDivide" data-role="list-divider">Tuesday</li>
-			<li id="wedDivide" data-role="list-divider">Wednesday</li>
-			<li id="thurDivide" data-role="list-divider">Thursday</li>
-			<li id="friDivide" data-role="list-divider">Friday</li>
-			<li id="satDivide" data-role="list-divider">Saturday</li>
-		</ul>
-	</div>
-</div>
-
-<div data-role="page" id="settings" data-theme="a">
-	<div data-role="header">
-	</div>
-	<div data-role="content">
-	</div>
-	<div data-role="footer">
-	</div>
-</div>
-
-<div data-role="page" id="sortDialog" data-theme="a">
-	<div data-role="header">
-		<h3>Sort By</h3>
-	</div>
-	<div data-role="content">
-		<ul data-role="listview">
-			<li>Date</li>
-			<li>Location</li>
-			<li>Name</li>
-		</ul>
-	</div>
-	<div data-role="footer">
-		<a href="#home" data-role="button">Cancel</a>
+		<div data-role = "footer" data-position="fixed">
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
+				<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
+			</fieldset>
+		</div>
 	</div>
 
-</div>
+	<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
+		<div data-role="header">
+			<h3>Tasks This Week</h3>
+		</div>
+		<div data-role="content">
+			<ul data-role="listview" >
+				<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li>
+				<li>Task 1</li>
+				<li id="monDivide" data-role="list-divider">Monday</li>
+				<li>Task 2</li>
+				<li>Task 3</li>
+				<li id="tueDivide" data-role="list-divider">Tuesday</li>
+				<li id="wedDivide" data-role="list-divider">Wednesday</li>
+				<li id="thurDivide" data-role="list-divider">Thursday</li>
+				<li id="friDivide" data-role="list-divider">Friday</li>
+				<li id="satDivide" data-role="list-divider">Saturday</li>
+			</ul>
+		</div>
+	</div>
+
+	<div data-role="page" id="settings" data-theme="a">
+		<div data-role="header">
+		</div>
+		<div data-role="content">
+		</div>
+		<div data-role="footer">
+		</div>
+	</div>
+
+	<div data-role="page" id="sortDialog" data-theme="a">
+		<div data-role="header">
+			<h3>Sort By</h3>
+		</div>
+		<div data-role="content">
+			<ul data-role="listview">
+				<li>Date</li>
+				<li>Location</li>
+				<li>Name</li>
+			</ul>
+		</div>
+		<div data-role="footer">
+			<a href="#home" data-role="button">Cancel</a>
+		</div>
+	</div>
 
 
 </body>

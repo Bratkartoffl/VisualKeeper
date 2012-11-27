@@ -1,4 +1,8 @@
 var photoCounter=1;
+var CurrentUser;
+var UserObject;
+Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
+taskObject = Parse.Object.extend("TaskObject");
 
 function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{
@@ -11,8 +15,8 @@ function capturePhoto(){
 }
 function deviceReady() {
 	console.log("device is ready");
-	Parse.initialize("c8HCVamYNDo1e6uzgwp81vybRFimX2vfEHgBNLrv", "ieQmtmB8jIhmgWRBPAp3Wzw4HEpnzHUIcRUM8yxK");
-    TestObject = Parse.Object.extend("TestObject");
+    //loadfromParse();
+
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#newTask').bind('pageinit',initNewTask);
 	$('#editTaskButton').bind('tap',setToEditTask);
@@ -72,6 +76,129 @@ function newListViewTask(img, id, name, desc, datetime){
 }
 function initHome(){
 }
+function register(){
+	$("#regstatus").html("").removeClass("errorDiv");
+
+	//get values
+    var username = $("#username").val();
+    var password = $("#password").val();
+    var email = $("#email").val();
+
+    //do some basic validation here
+    var error = "";
+
+    if(username === "") {
+    	$("#usernameerror").css("color","red");
+    	$("#usernameerror").css("visibility","visible");
+    	error+="username error ";
+    }else
+    	$("#usernameerror").css("visibility","hidden");
+
+    if(password === "") {
+    	$("#passworderror").css("color","red");
+    	$("#passworderror").css("visibility","visible");
+    	error+="password error ";
+    }else
+    	$("#passworderror").css("visibility","hidden");
+
+    if(email === "") {
+    	$("#emailerror").css("color","red");
+    	$("#emailerror").css("visibility","visible");
+    	error+="email error ";
+
+	} else
+		$("#emailerror").css("visibility","hidden");
+
+    if(error !== "") {
+        $("#regstatus").html(error).addClass("errorDiv");
+        $.mobile.changePage("#register");
+        return;
+    }else
+    	$("#regstatus").html("<b>Registering user...</b>");
+    //try to register with Parse and see if it works.
+    var user = new Parse.User();
+    user.set("username", username);
+    user.set("password", password);
+    user.set("email", email);
+
+
+    user.signUp(null, {
+        success:function(user) {
+            CurrentUser = user;
+            alert("Successful Registration!!")
+          
+            $.mobile.changePage("./index.html#login");
+
+        },
+        error:function(user, error) {
+            console.log("ERROR!");
+            console.dir(error);
+        }
+    });
+}
+function login(){
+
+    $("#loginstatus").html("").removeClass("errorDiv");
+
+    //get values
+    var username = $("#usernamelogin").val();
+    var password = $("#passwordlogin").val();
+
+    var errors="";
+
+    //do some basic validation here
+    if(username === ""){
+    	$("#loginuser").css("color","red");
+    	$("#loginuser").css("visibility","visible");
+    	errors +="userlogin "
+    } else
+		$("#loginuser").css("visibility","hidden");
+
+    if(password === ""){
+    	$("#loginpass").css("color","red");
+    	$("#loginpass").css("visibility","visible");
+    	errors += "passlogin "
+    } else
+    	$("#loginpass").css("visibility","hidden");
+
+    //alert(username+" "+password);
+    Parse.User.logIn(username, password, {
+        success:function(user) {
+            CurrentUser = user;
+             $("#loginstatus").html("<b>Logging in...</b>");
+             $("#loggedIn").append(CurrentUser.get("username"));
+            //alert("successful Login");
+            $.mobile.changePage("#home");
+
+        },
+        error:function(user, error) {
+            alert("Login Fail!!\nPlease Register");
+            console.log("ERROR!");
+            console.dir(error);
+            
+            location.reload();
+            //$("#loginstatus").html(error.message).addClass("errorDiv");
+        }
+    });
+}
+function loadfromParse() {
+	userObject = Parse.User.id;
+	var imgsrc = $('#taskPic').attr('src');
+	var query = new Parse.Query(taskObject);
+	query.equalTo("creator",userObject);
+	query.find({
+	 	success:function(results){
+	 		for(var i=0,len=results.length; i<len; i++){
+	 		  	var result=results[i];
+	 		  	newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,result.attributes.timeDue+" on "+result.attributes.dateDue);
+	 		}
+	 	},
+	 	error: function(error){
+	 		alert("Error: "+error.code+" "+error.message)
+	 	}
+	 });
+}
+
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
