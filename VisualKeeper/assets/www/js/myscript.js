@@ -12,6 +12,7 @@ function capturePhoto(){
   												encodingType: Camera.EncodingType.JPEG,
   												quality:60,
   												correctOrientation: true});
+	alert()
 }
 function deviceReady() {
 	console.log("device is ready");
@@ -198,7 +199,6 @@ function loadfromParse() {
 	 	}
 	 });
 }
-
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
@@ -216,7 +216,8 @@ function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
 	var taskDate = $("#dateField").val();
-	var taskTime = $("#")
+	var taskTime = $("#dateTime").val();
+	
 	$.mobile.changePage($('#home'));
 	var imgsrc = $('#taskPic').attr('src');
 	if (taskName === "")
@@ -248,13 +249,11 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 
     var ft = new FileTransfer();
     ft.upload(imageURI, "http://184.166.26.100/services/upload.php?uid="+id+"&uname="+uname+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
-		
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
 	pic.attr('src', data);
 	uploadPhoto(data,662,'blanco',110,1);
-    
 }
 function captureAdditionalPhoto(e){
 	var im=$(e.target);
