@@ -117,7 +117,7 @@ function showPhoto(data){
     options.params=params;
 
     var ft = new FileTransfer();
-    ft.upload(data, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(){console.log('failure');}, options);
+    ft.upload(data, "184.166.26.100/services/upload.php", function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
 	
 }
 function captureAdditionalPhoto(e){
