@@ -298,7 +298,7 @@ function acceptNewTask(){
 			creator:CurrentUser
 		},{
 			success: function(tO){
-				console.log('success! id: '+ tO.get('objectId'));
+				console.log('success! id: '+ tO.get('taskName'));
 		 	},
 		 	error: function(tO, error){
 		 		console.log('error saving');
