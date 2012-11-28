@@ -246,7 +246,7 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
     params.uname=uname;
     params.taskid=tid;
     params.photoid=pid;
-    //options.params=params;
+    options.params=params;
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
