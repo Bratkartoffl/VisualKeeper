@@ -52,7 +52,9 @@ function init(){
 			$('#newListLink').click();
 		}
 	})
-	addNewListToDropdown('example','Example List');
+	$('#home').bind('pageinit',function(){
+		addNewListToDropdown('example','Example List');
+	});
 	$('option:selected').each(function(idx, elem){
 			$(elem).removeAttr('selected');
 		});
