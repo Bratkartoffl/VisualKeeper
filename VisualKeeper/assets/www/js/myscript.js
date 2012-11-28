@@ -12,14 +12,13 @@ function capturePhoto(){
   												encodingType: Camera.EncodingType.JPEG,
   												quality:60,
   												correctOrientation: true});
-	alert()
 }
 function deviceReady() {
 	console.log("device is ready");
     //loadfromParse();
 
 	$('#newTask').bind('pagebeforeshow',resetNewTask);
-	$('#newTask').bind('pageinit',initNewTask);
+	
 	$('#editTaskButton').bind('tap',setToEditTask);
 	$('#home').bind('pageinit',initHome);
 	addNewListToDropdown('example','Example List');
@@ -30,8 +29,36 @@ function deviceReady() {
 }
 function init(){
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
+		$('#onceOptions').show();
 		$('#dailyOptions').hide();
 		$('#weekOptions').hide();
+	});
+	$('#editTaskButton').bind('click',setToEditTask);
+	$('#newListAccept').bind('click',function(){
+		var name = $('#listnameinput').val();
+		$("#listnameinput").val('');
+		addNewListToDropdown(name,name);
+		$('option:selected').each(function(idx, elem){
+			$(elem).removeAttr('selected');
+		});
+		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
+		history.back();
+		return false;
+	});
+	$('#listselect').bind('change',function(){
+		var selectedList = $('option:selected').val();
+		if(selectedList == 'new')
+		{
+			$('#newListLink').click();
+		}
+	})
+	addNewListToDropdown('example','Example List');
+	$('option:selected').each(function(idx, elem){
+			$(elem).removeAttr('selected');
+		});
+	$('#listselect option[value="example"]').attr('selected', 'selected');
+	$('#new').bind('tap',function(){
+		$('#newtasklink').click();
 	});
 	$('input[name="taskfrequency"]').bind('change',function(){
 		var selection = $("input[name='taskfrequency']:checked").val(),
@@ -54,6 +81,7 @@ function init(){
 			weekly.show();
 		}
 	});
+	$('#newTask').bind('pageinit',initNewTask);
 	document.addEventListener('deviceready',deviceReady, false);
 }
 function newListViewTask(img, id, name, desc, datetime){
@@ -70,7 +98,7 @@ function newListViewTask(img, id, name, desc, datetime){
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" href="#newTask"><span>Edit Task</span></a></li>';
+	html += '</a><a id="editTaskButton" href="#newTask">Edit Task</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
@@ -216,24 +244,70 @@ function initNewTask(){
 function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
-	var taskDate = $("#dateField").val();
-	var taskTime = $("#dateTime").val();
-	
 	$.mobile.changePage($('#home'));
+	var dateObj = getDateTimeInfo(),
+		datetime,
+		freq;
 	var imgsrc = $('#taskPic').attr('src');
 	if (taskName === "")
 		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
-	else
-		newListViewTask(imgsrc,taskName,taskDesc, taskDate);
+	else{
+		if(dateObj.freq=='taskOnce'){
+			datetime = dateObj.date + " at " + dateObj.time;
+			freq= 'Once';
+		}
+		else if(dateObj.freq=='taskDaily'){
+			datetime = dateObj.time;
+			freq = 'Daily';
+		}
+		else if(dateObj.freq=='taskWeekly'){
+			datetime = dateObj.time;
+			freq = 'Weekly';
+		}
+		newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);
+	}
+	resetDateTimeDialog();
 	var testObject = new TestObject();
     testObject.save({taskName:taskName,
     				 taskDesc:taskDesc,
-    				 taskDue:taskDate,
+    				 taskDate:datetime,
+    				 taskFrequency: dateObj.freq,
     				 creator:CurrentUser});
 }
+function getDateTimeInfo(){
+	var output = new Object(),
+		freq = $('input.dtfreq:checked').attr('id');
+		console.log(freq);
+		output.freq = freq;
+		if(freq=='taskOnce'){
+			output.date = $('#oDate').val();
+			output.time = $('#oTime').val();
+		}
+		else if(freq=='taskDaily'){
+			output.time = $('#dTime').val();
+		}
+		else if(freq=='taskWeekly'){
+			output.time = $('#wTime').val();
+			$('input.daycheck:checked').each(function(idx, elem){
+				output['day'+idx]=$(elem).attr('id');
+			});
+		}
+	return output;
+}
+
 function cancelNewTask(){
 	resetNewTask();
+	resetDateTimeDialog();
 	$.mobile.changePage($('#home'));
+}
+function resetDateTimeDialog(){
+	$('.dialoginput').each(function(idx, elem){
+		var cur = $(elem);
+		if(cur.attr('checked')=='checked')
+			cur.removeAttr('checked');
+		if(cur.attr('type')=='date' || cur.attr('type') =='time')
+			cur.val('');
+	});
 }
 function uploadPhoto(imageURI, id, uname, tid, pid){
 	var options = new FileUploadOptions(),
@@ -251,6 +325,30 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 
     var ft = new FileTransfer();
     ft.upload(imageURI, "http://184.166.26.100/services/upload.php?uid="+id+"&uname="+uname+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+}
+function setupDateTime(datetime){
+
+	if(datetime.freq=='taskOnce'){
+		$('#oDate').val(datetime.date);
+		$('#oTime').val(datetime.time);
+	}
+	else if(datetime.freq=='taskDaily'){
+		$('#dTime').val(datetime.time);
+	}
+	else if(dateObj.freq=='taskWeekly'){
+		var i=0;
+		$('#wTime').val(datetime.time);
+		while(datetime['day'+i]){
+			$('input.daycheck[id="'+datetime['day'+i]+'"]').attr('checked','checked');
+			i++;
+		}
+	}
+}
+function setupEdit(imgURL, name, desc, datetime){
+	$('#taskPic').attr('src',imgURL);
+	$('#nameField').val(name);
+	$('#descArea').val(desc);
+	setupDateTime(datetime);
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
@@ -273,6 +371,7 @@ function addPhoto(data){
 function resetNewTask(){
 	photoCounter=1;
 	var s='';
+	resetDateTimeDialog();
 	$('#extraPhotos').html(s).listview('refresh');
 }
 function setToNewTask(){
@@ -281,6 +380,7 @@ function setToNewTask(){
 }
 function setToEditTask(taskid){
 	$('#editTaskHeading').html('Edit Task');
+	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '11/16/2012', time: '03:33:00'});
 	console.log('editing...');
 }
 function addPhotoSpace(){

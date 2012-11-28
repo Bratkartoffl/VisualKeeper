@@ -76,7 +76,20 @@
 		<div data-role = "footer" data-position="fixed">
 		</div>
 	</div>
-
+	<div data-role = "page" id = "newTaskListDialog">
+		<div data-role="header">
+			<h3>Create new task list</h3>
+		</div>
+		<div data-role = "content">
+			<form>
+				<label for="listnameinput">List Name:</label><input type="text" id="listnameinput" />
+			</form>
+		</div>
+		<div data-role="footer">
+			<a data-role="button" id="newListAccept">Accept</a>
+			<a data-rel ="back" data-role="button" id="newListCancel">Cancel</a>
+		</div>
+	</div>
 	<div data-role ="page" id="home" data-theme="a">
 
 		<div data-role = "header" id="homeheader">
@@ -96,14 +109,19 @@
 	
 		<div data-role="popup" id="menuPopup">
 			<ul data-role="listview">
-				<li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
+				<!-- <li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
 				<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
-				<li><a href="#settings">Settings</a></li>
+				<li><a href="#settings">Settings</a></li> -->
 				<li><a href="#summarySchedule">Schedule Summary</a></li>
 				<li>Share</li>
 			</ul>
 		</div>
-		
+		<div data-role="popup" id="taskListPopup">
+			<ul data-role="listview" id="taskLists">
+				<li><a id="newListLink" href="#newTaskListDialog" data-rel="dialog">New Task List</a></li>
+			</ul>
+		</div>
+
 		<div data-role = "content" >
 			<ul data-role="listview" id="taskList" data-split-icon="gear">
 			
@@ -128,10 +146,10 @@
 
 			<label for="descViewBox">Description</label>
 			<textarea name="DescriptionBox" id="descViewBox" disabled="disabled"></textarea>
-			<div id="notifycheckbox">
+			<!-- <div id="notifycheckbox">
 				<input type="checkbox" name="Notify" id="notifyCheck"/>
 				<label for="notifyCheck">Notify Me</label>
-			</div>
+			</div> -->
 			<p id="addlPhotoLabel">Additional Photos</p>
 			<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
 				
@@ -147,13 +165,13 @@
 		<div data-role="header" >
 			<form>
 			<fieldset data-role="controlgroup" data-type="horizontal" >
-				<input type="radio" name="taskfrequency" id="taskOnce" value="once" checked="checked" />
+				<input type="radio" name="taskfrequency" id="taskOnce" class="dtfreq" value="once" checked="checked" />
 	     		<label for="taskOnce">Once</label>
 
-	     		<input type="radio" name="taskfrequency" id="taskDaily" value="daily"/>
+	     		<input type="radio" name="taskfrequency" id="taskDaily" class="dtfreq" value="daily"/>
 	     		<label for="taskDaily">Daily</label>
 
-	     		<input type="radio" name="taskfrequency" id="taskWeekly" value="weekly" />
+	     		<input type="radio" name="taskfrequency" id="taskWeekly" class="dtfreq" value="weekly" />
 	     		<label for="taskWeekly">Weekly</label>
 			</fieldset>
 			</form>
@@ -167,44 +185,44 @@
 			
 			<div id="onceOptions">
 				<ul data-role="listview">
-					<li><label for="oDate">Day</label><input type="date" name="date" id="oDate" /></li>
-					<li><label for="oTime">Time</label><input type="time" name="time" id="oTime" /></li>
+					<li><label for="oDate">Day</label><input type="date" name="date" id="oDate" class = "dialoginput" /></li>
+					<li><label for="oTime">Time</label><input type="time" name="time" id="oTime" class = "dialoginput" /></li>
 				</ul>
 			</div>
 			<div id="weekOptions">
 				<label for='daysfieldset'>Days</label>
 				<fieldset id="daysfieldset" data-role="controlgroup">
-					<input type="checkbox" name="dayofweek" id="suncheck" />
+					<input type="checkbox" name="dayofweek" id="suncheck" class="daycheck" class = "dialoginput" />
 	   				<label for="suncheck">Sunday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="moncheck" />
+	   				<input type="checkbox" name="dayofweek" id="moncheck" class="daycheck" class = "dialoginput" />
 	   				<label for="moncheck">Monday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="tuecheck" />
+	   				<input type="checkbox" name="dayofweek" id="tuecheck" class="daycheck" class = "dialoginput" />
 	   				<label for="tuecheck">Tuesday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="wedcheck" />
+	   				<input type="checkbox" name="dayofweek" id="wedcheck" class="daycheck" class = "dialoginput" />
 	   				<label for="wedcheck">Wednesday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="thurcheck" />
+	   				<input type="checkbox" name="dayofweek" id="thurcheck" class="daycheck" class = "dialoginput" />
 	   				<label for="thurcheck">Thursday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="fricheck" />
+	   				<input type="checkbox" name="dayofweek" id="fricheck" class="daycheck" class = "dialoginput" />
 	   				<label for="fricheck">Friday</label>
 
-	   				<input type="checkbox" name="dayofweek" id="satcheck" />
+	   				<input type="checkbox" name="dayofweek" id="satcheck" class="daycheck" class = "dialoginput" />
 	   				<label for="satcheck">Saturday</label>
 
     			</fieldset>
-				<label for="wTime">Time</label><input type="time" name="time" id="wTime" />
+				<label for="wTime">Time</label><input type="time" name="time" id="wTime" class = "dialoginput" />
 			</div>
 			<div id="dailyOptions">
-				<label for="dTime">Time</label><input type="time" name="time" id="dTime" />
+				<label for="dTime">Time</label><input type="time" name="time" id="dTime" class = "dialoginput" />
 			</div>
 
 		</div>
 		<div data-role="footer">
-			<a data-role="button" style="width:100%;">Accept</a>
+			<a data-rel="back" data-role="button" style="width:100%;">Accept</a>
 		</div>
 	</div>
 
@@ -239,10 +257,10 @@
 							<input type="datetime" name="when" id="dateField" />
 						</div> -->
 						
-						<div data-role="fieldcontain" style="width:60%;">
+						<!-- <div data-role="fieldcontain" style="width:60%;">
 							<input type="checkbox" name="notify" id="notificationCheck" />
 							<label for="notificationCheck">Enable Notifications</label>
-						</div>				
+						</div>			 -->	
 					
 					</div>
 				</fieldset>
