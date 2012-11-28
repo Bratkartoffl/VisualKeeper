@@ -2,7 +2,8 @@ var photoCounter=1;
 var CurrentUser;
 var UserObject;
 Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
-taskObject = Parse.Object.extend("TaskObject");
+var TaskObject = Parse.Object.extend("TaskObject");
+var datepickerinfo = new Object();
 
 function capturePhoto(){
 	navigator.camera.getPicture(showPhoto,null,{
@@ -13,25 +14,16 @@ function capturePhoto(){
   												quality:60,
   												correctOrientation: true});
 }
+
 function deviceReady() {
 	console.log("device is ready");
     //loadfromParse();
-
-	$('#newTask').bind('pagebeforeshow',resetNewTask);
-	
-	$('#editTaskButton').bind('tap',setToEditTask);
-	$('#home').bind('pageinit',initHome);
-	addNewListToDropdown('example','Example List');
-	$('#listselect option[value="example"]').attr('selected', 'selected');
-	$('#listselect').selectmenu();
-	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
-	
-}
-function init(){
+    $('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
 		$('#onceOptions').show();
 		$('#dailyOptions').hide();
 		$('#weekOptions').hide();
+		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
 	$('#editTaskButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
@@ -58,7 +50,6 @@ function init(){
 	$('option:selected').each(function(idx, elem){
 			$(elem).removeAttr('selected');
 		});
-	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#new').bind('tap',function(){
 		$('#newtasklink').click();
 	});
@@ -84,7 +75,23 @@ function init(){
 		}
 	});
 	$('#newTask').bind('pageinit',initNewTask);
-	document.addEventListener('deviceready',deviceReady, false);
+	
+	$('#home').bind('pageinit',initHome);
+	// addNewListToDropdown('example','Example List');
+	// $('#listselect option[value="example"]').attr('selected', 'selected');
+	// $('#listselect').selectmenu();
+	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
+	
+}
+function init(){
+	console.log('init started');
+	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+        document.addEventListener("deviceready", deviceReady, false);
+        console.log('on phone');
+    } else {
+    	console.log('on browser');
+        deviceReady();
+    }
 }
 function newListViewTask(img, id, name, desc, datetime){
 	var html = '<li><a href="#viewTask"><img id="';
@@ -104,8 +111,13 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
+	$('#editTaskButton').bind('tap',setToEditTask);
 }
 function initHome(){
+	console.log('initing home');
+	addNewListToDropdown('example','Example List');
+	$('#listselect option[value="example"]').attr('selected', 'selected');
+	$('#listselect').selectmenu();
 }
 function register(){
 	$("#regstatus").html("").removeClass("errorDiv");
@@ -242,12 +254,13 @@ function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
+	console.log('init in new task');
 }
 function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
 	$.mobile.changePage($('#home'));
-	var dateObj = getDateTimeInfo(),
+	var dateObj = datepickerinfo,// = getDateTimeInfo(),
 		datetime,
 		freq;
 	var imgsrc = $('#taskPic').attr('src');
@@ -257,44 +270,65 @@ function acceptNewTask(){
 		if(dateObj.freq=='taskOnce'){
 			datetime = dateObj.date + " at " + dateObj.time;
 			freq= 'Once';
+
 		}
 		else if(dateObj.freq=='taskDaily'){
 			datetime = dateObj.time;
 			freq = 'Daily';
 		}
 		else if(dateObj.freq=='taskWeekly'){
-			datetime = dateObj.time;
+			datetime = {days:dateObj.days, time: dateObj.time};
 			freq = 'Weekly';
+
 		}
-		newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);
-	}
-	resetDateTimeDialog();
-	var testObject = new TestObject();
-    testObject.save({taskName:taskName,
-    				 taskDesc:taskDesc,
-    				 taskDate:datetime,
-    				 taskFrequency: dateObj.freq,
-    				 creator:CurrentUser});
+		if(typeof(datetime)=='Object'){
+			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+		}
+		else{
+			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+		}
+		
+
+		var taskObject = new TaskObject();
+		taskObject.save({
+			taskName:taskName,
+			taskDesc:taskDesc,
+			taskDate:datetime,
+			taskFrequency: dateObj.freq,
+			creator:CurrentUser
+		},{
+			success: function(tO){
+				console.log('success! id: '+ tO.get('objectId'));
+		 	},
+		 	error: function(tO, error){
+		 		console.log('error saving');
+		 	}
+		});
+		uploadPhoto(imgsrc,662,'blanco',110,1);
+		resetDateTimeDialog();
+		}
+	
+	
 }
 function getDateTimeInfo(){
-	var output = new Object(),
-		freq = $('input.dtfreq:checked').attr('id');
+	var freq = $('input.dtfreq:checked').attr('id');
 		console.log(freq);
-		output.freq = freq;
+		datepickerinfo.freq = freq;
 		if(freq=='taskOnce'){
-			output.date = $('#oDate').val();
-			output.time = $('#oTime').val();
+			datepickerinfo.date = $('#oDate').val();
+			datepickerinfo.time = $('#oTime').val();
 		}
 		else if(freq=='taskDaily'){
-			output.time = $('#dTime').val();
+			datepickerinfo.time = $('#dTime').val();
 		}
 		else if(freq=='taskWeekly'){
-			output.time = $('#wTime').val();
+			datepickerinfo.time = $('#wTime').val();
+			datepickerinfo.days = new Array('no','no','no','no','no','no','no','no');
 			$('input.daycheck:checked').each(function(idx, elem){
-				output['day'+idx]=$(elem).attr('id');
+				datepickerinfo.day[idx]=$(elem).attr('id');
 			});
 		}
-	return output;
+	//return datepickerinfo;
 }
 
 function cancelNewTask(){
@@ -305,7 +339,7 @@ function cancelNewTask(){
 function resetDateTimeDialog(){
 	$('.dialoginput').each(function(idx, elem){
 		var cur = $(elem);
-		if(cur.attr('checked')=='checked')
+		if(cur.attr('checked')=='checked' && cur.attr(''))
 			cur.removeAttr('checked');
 		if(cur.attr('type')=='date' || cur.attr('type') =='time')
 			cur.val('');
@@ -331,6 +365,7 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 function setupDateTime(datetime){
 
 	if(datetime.freq=='taskOnce'){
+		console.log(datetime.time);
 		$('#oDate').val(datetime.date);
 		$('#oTime').val(datetime.time);
 	}
@@ -350,12 +385,12 @@ function setupEdit(imgURL, name, desc, datetime){
 	$('#taskPic').attr('src',imgURL);
 	$('#nameField').val(name);
 	$('#descArea').val(desc);
+	console.log('about to set up date time');
 	setupDateTime(datetime);
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
 	pic.attr('src', data);
-	uploadPhoto(data,662,'blanco',110,1);
 }
 function captureAdditionalPhoto(e){
 	var im=$(e.target);
@@ -382,7 +417,7 @@ function setToNewTask(){
 }
 function setToEditTask(taskid){
 	$('#editTaskHeading').html('Edit Task');
-	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '11/16/2012', time: '03:33:00'});
+	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
 	console.log('editing...');
 }
 function addPhotoSpace(){
