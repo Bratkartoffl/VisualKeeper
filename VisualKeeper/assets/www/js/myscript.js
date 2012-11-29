@@ -18,6 +18,9 @@ function deviceReady() {
 		$('#weekOptions').hide();
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
+	$('#testButton').bind('click',function(){
+		return populateViewTask('LOWMqaHiqi');
+	});
 	$('#editTaskButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
 		var name = $('#listnameinput').val();
@@ -112,6 +115,49 @@ function initNewTask(){
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
 	console.log('init in new task');
+}
+function populateViewTask(taskId){
+	var query = new Parse.Query(TaskObject);
+	query.equalTo('objectId',taskId);
+	query.find({
+		success: function(results){
+			var name = results[0].attributes.taskName,
+				desc = results[0].attributes.taskDesc,
+				freq = results[0].attributes.taskFrequency,
+				date = results[0].attributes.taskDate,
+				user = results[0].attributes.creator, 
+				time = results[0].attributes.taskTime,
+				imURL;
+			imURL = makeImgURL(user,taskId,'main');
+
+			if(freq == 'taskOnce')
+				freq='Once';
+			else if(freq=='taskDaily')
+				freq='Daily';
+			else
+				freq='Weekly'
+			$('#vTaskPic').attr('src',imURL);
+			$('#vTaskName').append(name);
+			$('#vDescBox').append(desc);
+			$('#vTaskFreq').append(freq);
+			$('#vTaskTime').append(time);
+			$('#vTaskDate').append(date);
+
+		},
+		error: function(error){
+			alert('error retrieving data from server');
+		}
+	});
+}
+function makeImgURL(user,taskid,photoid){
+	var server = 'http://localhost/user_images/',
+		folderName = user.id+'/',
+		imageName = taskid+photoid+'.jpg',
+		imageURL;
+
+		imageURL = server+folderName+imageName;
+		return imageURL;
+
 }
 function acceptNewTask(){
 

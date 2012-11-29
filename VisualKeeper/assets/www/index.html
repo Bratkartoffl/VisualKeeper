@@ -140,22 +140,31 @@
 				<h2 id="viewTaskHeading">View Task</h2>
 			</div>
 			<div data-role = "content" id="viewTaskContent">
-				<h2>Task Name</h2>
-				<img id="taskViewPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
-				<p>Time</p>
-				<p>Date</p>
-				<p>Frequency</p>
-
-				<label for="descViewBox">Description</label>
-				<textarea name="DescriptionBox" id="descViewBox" disabled="disabled"></textarea>
+				<h2 id = "vTaskName"></h2>
+				<img id="vTaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
+				<span class = 'dispContainer'>
+					<p id="vTaskTime"><b>Time: </b></p>
+				</span>
+				<span class = 'dispContainer'> 
+					<p id="vTaskDate"><b>Date: </b></p>
+				</span>
+				<span class = 'dispContainer'>
+					<p id="vTaskFreq"><b>Frequency: </b></p>
+				</span>
+				<span class = 'dispContainer'>
+					<b>Description:</b>
+					<p id="vDescBox" ></p>
+				</span>
 				<!-- <div id="notifycheckbox">
 					<input type="checkbox" name="Notify" id="notifyCheck"/>
 					<label for="notifyCheck">Notify Me</label>
 				</div> -->
-				<p id="addlPhotoLabel">Additional Photos</p>
+				<br><br>
+				<b id="addlPhotoLabel">Additional Photos</b>
 				<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
 					
 				</ul>
+				<a data-role = "button" id="testButton">Click Me</a>
 
 			</div>
 			<div data-role = "footer" data-position="fixed">
