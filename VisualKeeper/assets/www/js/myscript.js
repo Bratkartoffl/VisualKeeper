@@ -515,13 +515,13 @@ function addPhotoView(){
 function capturePhoto(){
 	picNum++;
 	console.log(picNum);
-	// navigator.camera.getPicture(showPhoto,null,{
-	// 											destinationType : Camera.DestinationType.FILE_URI, 
- // 												sourceType : Camera.PictureSourceType.CAMERA, 
- //  												allowEdit : true,
- //  												encodingType: Camera.EncodingType.JPEG,
- //  												quality:60,
- //  												correctOrientation: true});
+	navigator.camera.getPicture(showPhoto,null,{
+												destinationType : Camera.DestinationType.FILE_URI, 
+ 												sourceType : Camera.PictureSourceType.CAMERA, 
+  												allowEdit : true,
+  												encodingType: Camera.EncodingType.JPEG,
+  												quality:60,
+  												correctOrientation: true});
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
