@@ -391,7 +391,6 @@ function loadfromParse() {
 	 	}
 	 });
 }
-<<<<<<< HEAD
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
@@ -480,8 +479,6 @@ function getDateTimeInfo(){
 		}
 	//return datepickerinfo;
 }
-=======
->>>>>>> Testing Photo Increment
 
 // PICTURE STUFF
 function uploadPhoto(imageURI, id, uname, tid, pid){
