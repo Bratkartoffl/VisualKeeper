@@ -2,7 +2,6 @@ var photoCounter=1;
 var CurrentUser;
 var UserObject;
 var picNum;
-var parsePicName="";
 Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 var TaskObject = Parse.Object.extend("TaskObject");
 var datepickerinfo = new Object();
@@ -19,7 +18,7 @@ function deviceReady() {
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
 	$('#testButton').bind('click',function(){
-		return populateViewTask('v8XMspdi4x');
+		return populateViewTask('0Edd6s8Ugw');
 	});
 	$('#editTaskButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
@@ -119,73 +118,6 @@ function addNewListToDropdown(value, name){
 	$('#homeheader').trigger("create");
 }
 
-
-//	New Task
-function initNewTask(){
-	$('#cancelButton').bind('tap',cancelNewTask);
-	$('#acceptButton').bind('tap',acceptNewTask);
-	setToNewTask();
-	console.log('init in new task');
-}
-// function acceptNewTask(){
-
-// 	// VALIDATION AND PROCESSING
-// 	taskName = $("#nameField").val();
-// 	taskDesc = $("#descArea").val();
-// 	taskDate = $("#").val();
-// 	taskTime = $("#").val();
-
-// 	$.mobile.changePage($('#home'));
-// 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
-// 		datetime,
-// 		freq;
-// 	var imgsrc = $('#taskPic').attr('src');
-// 	if (taskName === "")
-// 		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
-// 	else{
-// 		if(dateObj.freq=='taskOnce'){
-// 			freq= 'Once';
-// 			datetime = dateObj.date + " at " + dateObj.time;
-// 		}
-// 		else if(dateObj.freq=='taskDaily'){
-// 			datetime = dateObj.time;
-// 			freq = 'Daily';
-// 		}
-// 		else if(dateObj.freq=='taskWeekly'){
-// 			datetime = {days:dateObj.days, time: dateObj.time};
-// 			freq = 'Weekly';
-// 		}
-// 		if(typeof(datetime)=='Object'){
-// 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
-// 		}
-// 		else{
-// 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
-// 		}
-// 		uploadPhoto(imgsrc,662,'blanco',110,1);
-// 		if(parsePicName==="")
-// 			parsePicName = "No Picture Data";
-// 		console.log(parsePicName);
-// 		var taskObject = new TaskObject();
-// 		taskObject.save({
-// 			taskName:taskName,
-// 			taskDesc:taskDesc,
-// 			taskDate:dateObj.date,
-// 			taskTime:dateObj.time,
-// 			taskFrequency: dateObj.freq,
-// 			creator:CurrentUser,
-// 			image:parsePicName
-// 			//imagenum:imagenum
-// 		},{
-// 			success: function(tO){
-// 				console.log('success! id: '+ tO.get('objectId'));
-// 		 	},
-// 		 	error: function(tO, error){
-// 				console.log('error saving');
-// 		 	}
-// 		});
-// 		resetDateTimeDialog();
-// 	}
-// }
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
@@ -460,6 +392,7 @@ function populateScheduleSummary(weekTasks){
 	}
 }
 function initNewTask(){
+	picNum = 0;
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
@@ -479,7 +412,6 @@ function acceptNewTask(){
 		if(dateObj.freq=='taskOnce'){
 			datetime = dateObj.date + " at " + dateObj.time;
 			freq= 'Once';
-
 		}
 		else if(dateObj.freq=='taskDaily'){
 			datetime = dateObj.time;
@@ -488,7 +420,6 @@ function acceptNewTask(){
 		else if(dateObj.freq=='taskWeekly'){
 			datetime = {days:dateObj.days, time: dateObj.time};
 			freq = 'Weekly';
-
 		}
 		if(typeof(datetime)=='Object'){
 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
@@ -497,30 +428,31 @@ function acceptNewTask(){
 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
 		}
 		
-
+		console.log("Here is "+picNum);
 		var taskObject = new TaskObject();
 		taskObject.save({
 			taskName:taskName,
 			taskDesc:taskDesc,
-			taskDateTime:dateObj,
-			taskFrequency: dateObj.freq,
-			creator:CurrentUser
+			taskDescateTime:dateObj,
+			creator:CurrentUser,
+			picCounter:picNum,
 		},{
 			success: function(tO){
-				console.log('success! id: '+ tO.get('taskName'));
+				console.log('success! id: '+ tO.id);
+				uploadPhoto(imgsrc,CurrentUser,tO.id,1);
 		 	},
 		 	error: function(tO, error){
 		 		console.log('error saving');
 		 	}
 		});
-		uploadPhoto(imgsrc,662,'blanco',110,1);
+		
 		resetDateTimeDialog();
-		}	
+	}	
 }
 
 
 // PICTURE STUFF -------------------------
-function uploadPhoto(imageURI, id, uname, tid, pid){
+function uploadPhoto(imageURI, id, tid, pid){
 	var options = new FileUploadOptions(),
 		params = new Object();
 	options.fileKey="file";
@@ -529,25 +461,20 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 	console.log(options.fileName);
 	
 	params.uid = id;
-	parsePicName.id = id;
     
-    params.uname=uname;
-    parsePicName.name = uname;
-    
+ 
     params.taskid=tid;
-    parsePicName.taskid = tid;
 
     params.photoid=pid;
     
-    parsePicName=id+" "+uname+" "+tid+" "+pid;
-
     options.params=params;
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "http://184.166.26.100/services/upload.php?uid="+id+"&uname="+uname+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+    ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
 }
 function addPhotoSpace(){
+	picNum++;
 	var list = $('#extraPhotos'),
 		fieldName = "nameField"+photoCounter,
 		fieldDesc = "descField"+photoCounter,
@@ -586,13 +513,15 @@ function addPhotoView(){
 	console.log('photo view added');
 }
 function capturePhoto(){
-	navigator.camera.getPicture(showPhoto,null,{
-												destinationType : Camera.DestinationType.FILE_URI, 
- 												sourceType : Camera.PictureSourceType.CAMERA, 
-  												allowEdit : true,
-  												encodingType: Camera.EncodingType.JPEG,
-  												quality:60,
-  												correctOrientation: true});
+	picNum++;
+	console.log(picNum);
+	// navigator.camera.getPicture(showPhoto,null,{
+	// 											destinationType : Camera.DestinationType.FILE_URI, 
+ // 												sourceType : Camera.PictureSourceType.CAMERA, 
+ //  												allowEdit : true,
+ //  												encodingType: Camera.EncodingType.JPEG,
+ //  												quality:60,
+ //  												correctOrientation: true});
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
