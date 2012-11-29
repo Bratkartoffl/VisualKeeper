@@ -1,328 +1,324 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-	<title>VisualKeeper</title>
-	<link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
-	<link rel="stylesheet" href="themes/VisualKeeper.css" />
-	<link rel="stylesheet" type="text/css" href="css/tabletPhone.css" />
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
-	<script src="phonegap.js"></script>
-	<script type="text/javascript" src="js/parse-1.1.13.min.js"></script>
-	<script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js"></script>
-	<script type="text/javascript" src="js/zepto.min.js"></script>
-    <script type="text/javascript" src="js/cylon.js"></script>
-	<script type="text/javascript" charset="utf-8" src="js/myscript.js"></script>
-</head>
-<body onload="init();">
-	<div data-role ="page" id="intro" data-theme="a">
-		<div data-role = "header" id="homeheader"></div>
-		<div data-role = "content" >
-			<div class="menu">
-				<a href="#login" data-role="button">Login</a>
-				<a href="#register" data-role="button">Register</a>
+	<head>
+		<title>VisualKeeper</title>
+		<link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
+		<link rel="stylesheet" href="themes/VisualKeeper.css" />
+		<link rel="stylesheet" type="text/css" href="css/tabletPhone.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+		<script src="phonegap.js"></script>
+		<script type="text/javascript" src="js/parse-1.1.13.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.2.0.min.js"></script>
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+	    <script type="text/javascript" src="js/cylon.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/myscript.js"></script>
+	</head>
+	<body onload="init();">
+
+		<div data-role="page" id="intro" data-theme="a">
+			<div data-role = "header" id="homeheader"></div>
+			<div data-role = "content" >
+				<div class="menu">
+					<a href="#login" data-role="button">Login</a>
+					<a href="#register" data-role="button">Register</a>
+				</div>
 			</div>
+			<div data-role = "footer" data-position="fixed"></div>
 		</div>
-		<div data-role = "footer" data-position="fixed"></div>
-	</div>
 
-	<div data-role ="page" id="register" data-theme="a">
-		<div data-role = "header" id="homeheader">
-			<a href="javascript:history.go(-1)">Back</a>
-			<h1>Register</h1>
-		</div>
-		<div data-role = "content" >
-			<div id="regstatus"></div>
-			<br />
-			<form>
-				<label for="username">Username:</label>
-				<input type="text" id="username">
-				<span id="usernameerror" style="visibility:hidden;">Username Required</span><hr />
-
-				<label for="password">Password:</label>
-				<input type="password" id="password">
-				<span id="passworderror" style="visibility:hidden;">Password Required</span><hr />
-
-				<label for="email">Email: </label>
-				<input type="text" id="email">
-				<span id="emailerror" style="visibility:hidden;">Email Required</span><hr />
-
-				<a data-role="button" id="registerForm" onclick="register()">Register</a>
-			</form>
-		</div>
-		<div data-role = "footer" data-position="fixed">
-		</div>
-	</div>
-
-	<div data-role ="page" id="login" data-theme="a">
-		<div data-role = "header" id="homeheader">
-			<a href="javascript:history.go(-1)">Back</a>
-			<H1>Welcome to Visual Keeper</h1>
-		</div>
-		<div data-role = "content" >
-			<div id="logstatus"></div>
-			<form>
-				<label for="username">Username:</label>
-				<input type="text" id="usernamelogin">
-				<span id="loginuser" style="visibility:hidden">Username Required</span><br />
-				<label for="password">Password: </label>
-				<input type="password" id="passwordlogin">
-				<span id="loginpass" style="visibility:hidden">Password Required</span>
+		<div data-role="page" id="register" data-theme="a">
+			<div data-role = "header" id="homeheader">
+				<a href="javascript:history.go(-1)">Back</a>
+				<h1>Register</h1>
+			</div>
+			<div data-role = "content" >
+				<div id="regstatus"></div>
 				<br />
-				<a data-role="button" id="loginForm" onclick="login();">Login</a>
-			</form>
-			<hr />
-		</div>
-		<div data-role = "footer" data-position="fixed">
-		</div>
-	</div>
-	<div data-role = "page" id = "newTaskListDialog">
-		<div data-role="header">
-			<h3>Create new task list</h3>
-		</div>
-		<div data-role = "content">
-			<form>
-				<label for="listnameinput">List Name:</label><input type="text" id="listnameinput" />
-			</form>
-		</div>
-		<div data-role="footer">
-			<a data-role="button" id="newListAccept">Accept</a>
-			<a data-rel ="back" data-role="button" id="newListCancel">Cancel</a>
-		</div>
-	</div>
-	<div data-role ="page" id="home" data-theme="a">
+				<form>
+					<label for="username">Username:</label>
+					<input type="text" id="username">
+					<span id="usernameerror" style="visibility:hidden;">Username Required</span><hr />
 
-		<div data-role = "header" id="homeheader">
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:50%;">Menu</a>
-				</div>
-				<div class="ui-block-b">
-					<select name="selectedList" id="listselect" data-icon="arrow-d">
-						<optgroup label="">
-							<option value="new" id="new">Add new list</option>
-						</optgroup>
-					</select>
-				</div>
+					<label for="password">Password:</label>
+					<input type="password" id="password">
+					<span id="passworderror" style="visibility:hidden;">Password Required</span><hr />
+
+					<label for="email">Email: </label>
+					<input type="text" id="email">
+					<span id="emailerror" style="visibility:hidden;">Email Required</span><hr />
+
+					<a data-role="button" id="registerForm" onclick="register()">Register</a>
+				</form>
+			</div>
+			<div data-role = "footer" data-position="fixed">
 			</div>
 		</div>
-	
-		<div data-role="popup" id="menuPopup">
-			<ul data-role="listview">
-				<!-- <li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
-				<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
-				<li><a href="#settings">Settings</a></li> -->
-				<li><a href="#summarySchedule">Schedule Summary</a></li>
-				<li>Share</li>
-			</ul>
-		</div>
-		<div data-role="popup" id="taskListPopup">
-			<ul data-role="listview" id="taskLists">
-				<li><a id="newListLink" href="#newTaskListDialog" data-rel="dialog">New Task List</a></li>
-			</ul>
+
+		<div data-role="page" id="login" data-theme="a">
+			<div data-role = "header" id="homeheader">
+				<a href="javascript:history.go(-1)">Back</a>
+				<H1>Welcome to Visual Keeper</h1>
+			</div>
+			<div data-role = "content" >
+				<div id="logstatus"></div>
+				<form>
+					<label for="username">Username:</label>
+					<input type="text" id="usernamelogin">
+					<span id="loginuser" style="visibility:hidden">Username Required</span><br />
+					<label for="password">Password: </label>
+					<input type="password" id="passwordlogin">
+					<span id="loginpass" style="visibility:hidden">Password Required</span>
+					<br />
+					<a data-role="button" id="loginForm" onclick="login();">Login</a>
+				</form>
+				<hr />
+			</div>
+			<div data-role = "footer" data-position="fixed">
+			</div>
 		</div>
 
-		<div data-role = "content" >
-			<ul data-role="listview" id="taskList" data-split-icon="gear">
-			
-			</ul>
+		<div data-role="page" id ="newTaskListDialog" data-theme="b">
+			<div data-role="header">
+				<h3>Create new task list</h3>
+			</div>
+			<div data-role = "content">
+				<form>
+					<label for="listnameinput">List Name:</label><input type="text" id="listnameinput" />
+				</form>
+			</div>
+			<div data-role="footer">
+				<a data-role="button" id="newListAccept">Accept</a>
+				<a data-rel ="back" data-role="button" id="newListCancel">Cancel</a>
+			</div>
 		</div>
+
+		<div data-role="page" id="home" data-theme="a">
+			<div data-role = "header" id="homeheader">
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:50%;">Menu</a>
+					</div>
+					<div class="ui-block-b">
+						<select name="selectedList" id="listselect" data-icon="arrow-d">
+							<optgroup label="">
+								<option value="new" id="new">Add new list</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+			</div>
 		
-		<div data-role = "footer" data-position="fixed">
-			<a href="#newTask" data-role="button" data-transition="flip" style="width:100%;">New Task</a>
-		</div>
-	</div>
-
-	<div data-role ="page" id="viewTask" data-add-back-btn="true">
-		<div data-role = "header">
-			<h2 id="viewTaskHeading">View Task</h2>
-		</div>
-		<div data-role = "content" id="viewTaskContent">
-			<h2>Task Name</h2>
-			<img id="taskViewPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
-			<p>Time</p>
-			<p>Date</p>
-			<p>Frequency</p>
-
-			<label for="descViewBox">Description</label>
-			<textarea name="DescriptionBox" id="descViewBox" disabled="disabled"></textarea>
-			<!-- <div id="notifycheckbox">
-				<input type="checkbox" name="Notify" id="notifyCheck"/>
-				<label for="notifyCheck">Notify Me</label>
-			</div> -->
-			<p id="addlPhotoLabel">Additional Photos</p>
-			<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
-				
-			</ul>
-
-		</div>
-		<div data-role = "footer" data-position="fixed">
-			<a href="#newTask" data-role="button" style="width:100%;">Edit Task</a>
-		</div>
-	</div>
-
-	<div data-role="page" id="dateTimeDialog" style="text-align:center;">
-		<div data-role="header" >
-			<form>
-			<fieldset data-role="controlgroup" data-type="horizontal" >
-				<input type="radio" name="taskfrequency" id="taskOnce" class="dtfreq" value="once" checked="checked" />
-	     		<label for="taskOnce">Once</label>
-
-	     		<input type="radio" name="taskfrequency" id="taskDaily" class="dtfreq" value="daily"/>
-	     		<label for="taskDaily">Daily</label>
-
-	     		<input type="radio" name="taskfrequency" id="taskWeekly" class="dtfreq" value="weekly" />
-	     		<label for="taskWeekly">Weekly</label>
-			</fieldset>
-			</form>
-			<!-- <ul data-role="controlgroup" data-type="horizontal">
-				<a data-role="button">Once</a>
-				<a data-role="button">Daily</a>
-				<a data-role="button">Weekly</a>
-			</ul> -->
-		</div>
-		<div data-role="content">
-			
-			<div id="onceOptions">
+			<div data-role="popup" id="menuPopup">
 				<ul data-role="listview">
-					<li><label for="oDate">Day</label><input type="date" name="date" id="oDate" class = "dialoginput" /></li>
-					<li><label for="oTime">Time</label><input type="time" name="time" id="oTime" class = "dialoginput" /></li>
+					<!-- <li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
+					<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
+					<li><a href="#settings">Settings</a></li> -->
+					<li><a href="#summarySchedule">Schedule Summary</a></li>
+					<li>Share</li>
 				</ul>
 			</div>
-			<div id="weekOptions">
-				<label for='daysfieldset'>Days</label>
-				<fieldset id="daysfieldset" data-role="controlgroup">
-					<input type="checkbox" name="dayofweek" id="suncheck" class="daycheck" class = "dialoginput" />
-	   				<label for="suncheck">Sunday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="moncheck" class="daycheck" class = "dialoginput" />
-	   				<label for="moncheck">Monday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="tuecheck" class="daycheck" class = "dialoginput" />
-	   				<label for="tuecheck">Tuesday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="wedcheck" class="daycheck" class = "dialoginput" />
-	   				<label for="wedcheck">Wednesday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="thurcheck" class="daycheck" class = "dialoginput" />
-	   				<label for="thurcheck">Thursday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="fricheck" class="daycheck" class = "dialoginput" />
-	   				<label for="fricheck">Friday</label>
-
-	   				<input type="checkbox" name="dayofweek" id="satcheck" class="daycheck" class = "dialoginput" />
-	   				<label for="satcheck">Saturday</label>
-
-    			</fieldset>
-				<label for="wTime">Time</label><input type="time" name="time" id="wTime" class = "dialoginput" />
-			</div>
-			<div id="dailyOptions">
-				<label for="dTime">Time</label><input type="time" name="time" id="dTime" class = "dialoginput" />
+			<div data-role="popup" id="taskListPopup">
+				<ul data-role="listview" id="taskLists">
+					<li><a id="newListLink" href="#newTaskListDialog" data-rel="dialog">New Task List</a></li>
+				</ul>
 			</div>
 
+			<div data-role = "content" >
+				<ul data-role="listview" id="taskList" data-split-icon="gear">
+				
+				</ul>
+			</div>
+			
+			<div data-role = "footer" data-position="fixed">
+				<a href="#newTask" data-role="button" data-transition="flip" style="width:100%;">New Task</a>
+			</div>
 		</div>
-		<div data-role="footer">
-			<a id = 'datePickerAccept' data-rel="back" data-role="button" style="width:100%;">Accept</a>
-		</div>
-	</div>
 
-	<div data-role ="page" id="newTask" data-theme="a">
-		<div data-role = "header">
-			<h1 id="editTaskHeading">New Task</h1>
-		</div>
-		<div data-role = "content" data-theme="a" id="newTaskContent">
-			<form>
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a" id="taskPhoto">
-						<h2 id="loggedIn">Tasks for </h2>
-						<h2 style="padding-left:80px;">Task Photo</h2>
-						<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
-						</br>
-					</div>
-					<div class="ui-block-b" id="taskInfo">
-						<h2 style="margin-bottom:15px;">Task Information</h2>
-						<div data-role="fieldcontain">
-							<label for="nameField">Name:</label>
-		   					<input type="text" name="taskName" id="nameField" value=""  />
-		   				</div>
-		   				
-		   				<div data-role="fieldcontain">
-		   					<label for="descArea">Description:</label>
-							<textarea name="desc" id="descArea"></textarea>
-						</div>
-						
-						<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
-						
-						<!-- <div data-role="fieldcontain" style="width:60%;">
-							<input type="checkbox" name="notify" id="notificationCheck" />
-							<label for="notificationCheck">Enable Notifications</label>
-						</div>			 -->	
+		<div data-role="page" id="viewTask" data-add-back-btn="true">
+			<div data-role = "header">
+				<h2 id="viewTaskHeading">View Task</h2>
+			</div>
+			<div data-role = "content" id="viewTaskContent">
+				<h2>Task Name</h2>
+				<img id="taskViewPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
+				<p>Time</p>
+				<p>Date</p>
+				<p>Frequency</p>
+
+				<label for="descViewBox">Description</label>
+				<textarea name="DescriptionBox" id="descViewBox" disabled="disabled"></textarea>
+				<!-- <div id="notifycheckbox">
+					<input type="checkbox" name="Notify" id="notifyCheck"/>
+					<label for="notifyCheck">Notify Me</label>
+				</div> -->
+				<p id="addlPhotoLabel">Additional Photos</p>
+				<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
 					
-					</div>
-				</fieldset>
-			</form>
-			<div class="ui-grid-solo">
-				<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
-				<div class="ui-block-a" >
-					<form>
-						<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
-					</form>
+				</ul>
+
+			</div>
+			<div data-role = "footer" data-position="fixed">
+				<a href="#newTask" data-role="button" style="width:100%;">Edit Task</a>
+			</div>
+		</div>
+
+		<div data-role="page" id="dateTimeDialog" style="text-align:center;">
+			
+			<!-- FREQUENCY RADIO -->
+			<div data-role="header" >
+				<form>
+					<fieldset data-role="controlgroup" data-type="horizontal" >
+						<input type="radio" name="taskfrequency" id="taskOnce" class="dtfreq" value="once" checked="checked" />
+			     		<label for="taskOnce">Once</label>
+
+			     		<input type="radio" name="taskfrequency" id="taskDaily" class="dtfreq" value="daily"/>
+			     		<label for="taskDaily">Daily</label>
+
+			     		<input type="radio" name="taskfrequency" id="taskWeekly" class="dtfreq" value="weekly" />
+			     		<label for="taskWeekly">Weekly</label>
+					</fieldset>
+				</form>
+			</div>
+			<div data-role="content">
+				<div id="onceOptions">
+					<ul data-role="listview">
+						<li><label for="oDate">Day</label><input type="date" name="date" id="oDate" class = "dialoginput" /></li>
+						<li><label for="oTime">Time</label><input type="time" name="time" id="oTime" class = "dialoginput" /></li>
+					</ul>
+				</div>
+				<div id="weekOptions">
+					<label for='daysfieldset'>Days</label>
+					<fieldset id="daysfieldset" data-role="controlgroup">
+
+						<input type="checkbox" name="dayofweek" id="suncheck" class="daycheck" class = "dialoginput" />
+		   				<label for="suncheck">Sunday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="moncheck" class="daycheck" class = "dialoginput" />
+		   				<label for="moncheck">Monday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="tuecheck" class="daycheck" class = "dialoginput" />
+		   				<label for="tuecheck">Tuesday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="wedcheck" class="daycheck" class = "dialoginput" />
+		   				<label for="wedcheck">Wednesday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="thurcheck" class="daycheck" class = "dialoginput" />
+		   				<label for="thurcheck">Thursday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="fricheck" class="daycheck" class = "dialoginput" />
+		   				<label for="fricheck">Friday</label>
+
+		   				<input type="checkbox" name="dayofweek" id="satcheck" class="daycheck" class = "dialoginput" />
+		   				<label for="satcheck">Saturday</label>
+
+	    			</fieldset>
+					<label for="wTime">Time</label><input type="time" name="time" id="wTime" class = "dialoginput" />
+				</div>
+				<div id="dailyOptions">
+					<label for="dTime">Time</label><input type="time" name="time" id="dTime" class = "dialoginput" />
 				</div>
 			</div>
+			<div data-role="footer">
+				<a id='datePickerAccept' data-rel="back" data-role="button" style="width:100%;">Accept</a>
+			</div>
 		</div>
-		<div data-role = "footer" data-position="fixed">
-			<fieldset class="ui-grid-a">
-				<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
-				<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
-			</fieldset>
-		</div>
-	</div>
 
-	<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
-		<div data-role="header">
-			<h3>Tasks This Week</h3>
+		<div data-role="page" id="newTask" data-theme="a">
+			<div data-role = "header">
+				<h1 id="editTaskHeading">New Task</h1>
+			</div>
+			<div data-role = "content" data-theme="a" id="newTaskContent">
+				<form>
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a" id="taskPhoto">
+							<h2 id="loggedIn">Tasks for </h2>
+							<h2 style="padding-left:80px;">Task Photo</h2>
+							<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
+							</br>
+						</div>
+						<div class="ui-block-b" id="taskInfo">
+							<h2 style="margin-bottom:15px;">Task Information</h2>
+							<div data-role="fieldcontain">
+								<label for="nameField">Name:</label>
+			   					<input type="text" name="taskName" id="nameField" value=""  />
+			   				</div>
+			   				
+			   				<div data-role="fieldcontain">
+			   					<label for="descArea">Description:</label>
+								<textarea name="desc" id="descArea"></textarea>
+							</div>
+							
+							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+							
+							<!-- <div data-role="fieldcontain" style="width:60%;">
+								<input type="checkbox" name="notify" id="notificationCheck" />
+								<label for="notificationCheck">Enable Notifications</label>
+							</div>			 -->	
+						
+						</div>
+					</fieldset>
+				</form>
+				<div class="ui-grid-solo">
+					<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
+					<div class="ui-block-a" >
+						<form>
+							<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div data-role = "footer" data-position="fixed">
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
+					<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
+				</fieldset>
+			</div>
 		</div>
-		<div data-role="content">
-			<ul data-role="listview" >
-				<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li>
-				<li>Task 1</li>
-				<li id="monDivide" data-role="list-divider">Monday</li>
-				<li>Task 2</li>
-				<li>Task 3</li>
-				<li id="tueDivide" data-role="list-divider">Tuesday</li>
-				<li id="wedDivide" data-role="list-divider">Wednesday</li>
-				<li id="thurDivide" data-role="list-divider">Thursday</li>
-				<li id="friDivide" data-role="list-divider">Friday</li>
-				<li id="satDivide" data-role="list-divider">Saturday</li>
-			</ul>
-		</div>
-	</div>
 
-	<div data-role="page" id="settings" data-theme="a">
-		<div data-role="header">
+		<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
+			<div data-role="header">
+				<h3>Tasks This Week</h3>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" >
+					<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li>
+					<li>Task 1</li>
+					<li id="monDivide" data-role="list-divider">Monday</li>
+					<li>Task 2</li>
+					<li>Task 3</li>
+					<li id="tueDivide" data-role="list-divider">Tuesday</li>
+					<li id="wedDivide" data-role="list-divider">Wednesday</li>
+					<li id="thurDivide" data-role="list-divider">Thursday</li>
+					<li id="friDivide" data-role="list-divider">Friday</li>
+					<li id="satDivide" data-role="list-divider">Saturday</li>
+				</ul>
+			</div>
 		</div>
-		<div data-role="content">
-		</div>
-		<div data-role="footer">
-		</div>
-	</div>
 
-	<div data-role="page" id="sortDialog" data-theme="a">
-		<div data-role="header">
-			<h3>Sort By</h3>
+		<div data-role="page" id="settings" data-theme="a">
+			<div data-role="header">
+			</div>
+			<div data-role="content">
+			</div>
+			<div data-role="footer">
+			</div>
 		</div>
-		<div data-role="content">
-			<ul data-role="listview">
-				<li>Date</li>
-				<li>Location</li>
-				<li>Name</li>
-			</ul>
-		</div>
-		<div data-role="footer">
-			<a href="#home" data-role="button">Cancel</a>
-		</div>
-	</div>
 
-
-</body>
+		<div data-role="page" id="sortDialog" data-theme="a">
+			<div data-role="header">
+				<h3>Sort By</h3>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview">
+					<li>Date</li>
+					<li>Location</li>
+					<li>Name</li>
+				</ul>
+			</div>
+			<div data-role="footer">
+				<a href="#home" data-role="button">Cancel</a>
+			</div>
+		</div>
+	</body>
 </html>

@@ -1,19 +1,12 @@
 var photoCounter=1;
 var CurrentUser;
 var UserObject;
+var picNum;
+var parsePicName="";
 Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 var TaskObject = Parse.Object.extend("TaskObject");
 var datepickerinfo = new Object();
 
-function capturePhoto(){
-	navigator.camera.getPicture(showPhoto,null,{
-												destinationType : Camera.DestinationType.FILE_URI, 
- 												sourceType : Camera.PictureSourceType.CAMERA, 
-  												allowEdit : true,
-  												encodingType: Camera.EncodingType.JPEG,
-  												quality:60,
-  												correctOrientation: true});
-}
 
 function deviceReady() {
 	console.log("device is ready");
@@ -81,7 +74,6 @@ function deviceReady() {
 	// $('#listselect option[value="example"]').attr('selected', 'selected');
 	// $('#listselect').selectmenu();
 	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
-	
 }
 function init(){
 	console.log('init started');
@@ -93,6 +85,8 @@ function init(){
         deviceReady();
     }
 }
+
+//TASKS
 function newListViewTask(img, id, name, desc, datetime){
 	var html = '<li><a href="#viewTask"><img id="';
 	html += id;
@@ -113,6 +107,164 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist.trigger("create");
 	$('#editTaskButton').bind('tap',setToEditTask);
 }
+function initNewTask(){
+	$('#cancelButton').bind('tap',cancelNewTask);
+	$('#acceptButton').bind('tap',acceptNewTask);
+	setToNewTask();
+	console.log('init in new task');
+}
+function acceptNewTask(){
+
+	// VALIDATION AND PROCESSING
+	taskName = $("#nameField").val();
+	taskDesc = $("#descArea").val();
+	taskDate = $("#").val();
+	taskTime = $("#").val();
+
+	$.mobile.changePage($('#home'));
+	var dateObj = datepickerinfo,// = getDateTimeInfo(),
+		datetime,
+		freq;
+	var imgsrc = $('#taskPic').attr('src');
+	if (taskName === "")
+		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
+	else{
+		if(dateObj.freq=='taskOnce'){
+			freq= 'Once';
+			datetime = dateObj.date + " at " + dateObj.time;
+		}
+		else if(dateObj.freq=='taskDaily'){
+			datetime = dateObj.time;
+			freq = 'Daily';
+		}
+		else if(dateObj.freq=='taskWeekly'){
+			datetime = {days:dateObj.days, time: dateObj.time};
+			freq = 'Weekly';
+		}
+		if(typeof(datetime)=='Object'){
+			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+		}
+		else{
+			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+		}
+		uploadPhoto(imgsrc,662,'blanco',110,1);
+		if(parsePicName==="")
+			parsePicName = "No Picture Data";
+		console.log(parsePicName);
+		var taskObject = new TaskObject();
+		taskObject.save({
+			taskName:taskName,
+			taskDesc:taskDesc,
+			taskDate:dateObj.date,
+			taskTime:dateObj.time,
+			taskFrequency: dateObj.freq,
+			creator:CurrentUser,
+			image:parsePicName
+			//imagenum:imagenum
+		},{
+			success: function(tO){
+				console.log('success! id: '+ tO.get('objectId'));
+		 	},
+		 	error: function(tO, error){
+				console.log('error saving');
+		 	}
+		});
+		resetDateTimeDialog();
+	}
+}
+function cancelNewTask(){
+	resetNewTask();
+	resetDateTimeDialog();
+	$.mobile.changePage($('#home'));
+}
+function resetNewTask(){
+	photoCounter=1;
+	var s='';
+	resetDateTimeDialog();
+	$('#extraPhotos').html(s).listview('refresh');
+}
+function setToNewTask(){
+	$('#editTaskHeading').html('New Task');
+	console.log('making new task...');
+}
+function setToEditTask(taskid){
+	$('#editTaskHeading').html('Edit Task');
+	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
+	console.log('editing...');
+}
+
+//LISTS
+function addNewListToDropdown(value, name){
+	var html = '<option value="';
+	html += value+'"> '+name+'</option>';
+	$('#listselect').prepend(html).selectmenu('refresh',true);
+	$('#homeheader').trigger("create");
+}
+
+//SCHEDULE SUMMARY
+function populateScheduleSummary(weekTasks){
+	var html="", i;
+	for(i=0;i<weekTasks.length;i++){
+		html += "<li><a href='#viewTask'><h1>";
+		html += weekTasks[i].tName + ' id: '+weekTasks[i].tId;
+		html += "</h1></a></li>";
+	}
+}
+
+
+//DATE TIME DIALOG
+function resetDateTimeDialog(){
+	$('.dialoginput').each(function(idx, elem){
+		var cur = $(elem);
+		if(cur.attr('checked')=='checked' && cur.attr(''))
+			cur.removeAttr('checked');
+		if(cur.attr('type')=='date' || cur.attr('type') =='time')
+			cur.val('');
+	});
+}
+function setupDateTime(datetime){
+
+	if(datetime.freq=='taskOnce'){
+		console.log(datetime.time);
+		$('#oDate').val(datetime.date);
+		$('#oTime').val(datetime.time);
+	}
+	else if(datetime.freq=='taskDaily'){
+		$('#dTime').val(datetime.time);
+	}
+	else if(dateObj.freq=='taskWeekly'){
+		var i=0;
+		$('#wTime').val(datetime.time);
+		while(datetime['day'+i]){
+			$('input.daycheck[id="'+datetime['day'+i]+'"]').attr('checked','checked');
+			i++;
+		}
+	}
+}
+function getDateTimeInfo(){
+	var freq = $('input.dtfreq:checked').attr('id');
+	console.log(freq);
+	datepickerinfo.freq = freq;
+	if(freq=='taskOnce') {
+		datepickerinfo.date = $('#oDate').val();
+		datepickerinfo.time = $('#oTime').val();
+	}
+	else if(freq=='taskDaily') {
+		datepickerinfo.time = $('#dTime').val();
+	}
+	else if(freq=='taskWeekly') {
+		datepickerinfo.time = $('#wTime').val();
+		datepickerinfo.days = new Array('no','no','no','no','no','no','no','no');
+		$('input.daycheck:checked').each(function(idx, elem){
+			datepickerinfo.day[idx]=$(elem).attr('id');
+		});
+	}
+	console.log(datepickerinfo.date);
+	//return datepickerinfo;
+}
+
+
+// PARSE STUFF
 function initHome(){
 	console.log('initing home');
 	addNewListToDropdown('example','Example List');
@@ -204,13 +356,12 @@ function login(){
     } else
     	$("#loginpass").css("visibility","hidden");
 
-    //alert(username+" "+password);
     Parse.User.logIn(username, password, {
         success:function(user) {
             CurrentUser = user;
              $("#loginstatus").html("<b>Logging in...</b>");
              $("#loggedIn").append(CurrentUser.get("username"));
-            //alert("successful Login");
+             console.log("Successfule Login");
             $.mobile.changePage("#home");
 
         },
@@ -219,9 +370,7 @@ function login(){
             console.log("ERROR!");
             console.dir(error);
             
-            //location.reload();
-             $.mobile.changePage("#login");
-            //$("#loginstatus").html(error.message).addClass("errorDiv");
+            $.mobile.changePage("#login");
         }
     });
 }
@@ -242,6 +391,7 @@ function loadfromParse() {
 	 	}
 	 });
 }
+<<<<<<< HEAD
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
@@ -330,21 +480,10 @@ function getDateTimeInfo(){
 		}
 	//return datepickerinfo;
 }
+=======
+>>>>>>> Testing Photo Increment
 
-function cancelNewTask(){
-	resetNewTask();
-	resetDateTimeDialog();
-	$.mobile.changePage($('#home'));
-}
-function resetDateTimeDialog(){
-	$('.dialoginput').each(function(idx, elem){
-		var cur = $(elem);
-		if(cur.attr('checked')=='checked' && cur.attr(''))
-			cur.removeAttr('checked');
-		if(cur.attr('type')=='date' || cur.attr('type') =='time')
-			cur.val('');
-	});
-}
+// PICTURE STUFF
 function uploadPhoto(imageURI, id, uname, tid, pid){
 	var options = new FileUploadOptions(),
 		params = new Object();
@@ -352,73 +491,25 @@ function uploadPhoto(imageURI, id, uname, tid, pid){
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 	options.mimeType="text/plain";
 	console.log(options.fileName);
+	
 	params.uid = id;
+	parsePicName.id = id;
+    
     params.uname=uname;
+    parsePicName.name = uname;
+    
     params.taskid=tid;
+    parsePicName.taskid = tid;
+
     params.photoid=pid;
+    
+    parsePicName=id+" "+uname+" "+tid+" "+pid;
+
     options.params=params;
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
     ft.upload(imageURI, "http://184.166.26.100/services/upload.php?uid="+id+"&uname="+uname+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
-}
-function setupDateTime(datetime){
-
-	if(datetime.freq=='taskOnce'){
-		console.log(datetime.time);
-		$('#oDate').val(datetime.date);
-		$('#oTime').val(datetime.time);
-	}
-	else if(datetime.freq=='taskDaily'){
-		$('#dTime').val(datetime.time);
-	}
-	else if(dateObj.freq=='taskWeekly'){
-		var i=0;
-		$('#wTime').val(datetime.time);
-		while(datetime['day'+i]){
-			$('input.daycheck[id="'+datetime['day'+i]+'"]').attr('checked','checked');
-			i++;
-		}
-	}
-}
-function setupEdit(imgURL, name, desc, datetime){
-	$('#taskPic').attr('src',imgURL);
-	$('#nameField').val(name);
-	$('#descArea').val(desc);
-	console.log('about to set up date time');
-	setupDateTime(datetime);
-}
-function showPhoto(data){
-	var pic = $('#taskPic');
-	pic.attr('src', data);
-}
-function captureAdditionalPhoto(e){
-	var im=$(e.target);
-	navigator.camera.getPicture(generateSuccess(im),null,{sourceType:1,quality:60});
-}
-function generateSuccess(image){
-	return function(data){
-		image.attr('src',data);
-	}
-}
-function addPhoto(data){
-	$('#exPhoto1').attr('src',data);
-	$('#extraPhotos').listview('refresh');
-}
-function resetNewTask(){
-	photoCounter=1;
-	var s='';
-	resetDateTimeDialog();
-	$('#extraPhotos').html(s).listview('refresh');
-}
-function setToNewTask(){
-	$('#editTaskHeading').html('New Task');
-	console.log('making new task...');
-}
-function setToEditTask(taskid){
-	$('#editTaskHeading').html('Edit Task');
-	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
-	console.log('editing...');
 }
 function addPhotoSpace(){
 	var list = $('#extraPhotos'),
@@ -458,9 +549,36 @@ function addPhotoView(){
 	$('#viewTaskContent').trigger("create");
 	console.log('photo view added');
 }
-function addNewListToDropdown(value, name){
-	var html = '<option value="';
-	html += value+'"> '+name+'</option>';
-	$('#listselect').prepend(html).selectmenu('refresh',true);
-	$('#homeheader').trigger("create");
+function capturePhoto(){
+	navigator.camera.getPicture(showPhoto,null,{
+												destinationType : Camera.DestinationType.FILE_URI, 
+ 												sourceType : Camera.PictureSourceType.CAMERA, 
+  												allowEdit : true,
+  												encodingType: Camera.EncodingType.JPEG,
+  												quality:60,
+  												correctOrientation: true});
+}
+function showPhoto(data){
+	var pic = $('#taskPic');
+	pic.attr('src', data);
+}
+function captureAdditionalPhoto(e){
+	var im=$(e.target);
+	navigator.camera.getPicture(generateSuccess(im),null,{sourceType:1,quality:60});
+}
+function generateSuccess(image){
+	return function(data){
+		image.attr('src',data);
+	}
+}
+function addPhoto(data){
+	$('#exPhoto1').attr('src',data);
+	$('#extraPhotos').listview('refresh');
+}
+function setupEdit(imgURL, name, desc, datetime){
+	$('#taskPic').attr('src',imgURL);
+	$('#nameField').val(name);
+	$('#descArea').val(desc);
+	console.log('about to set up date time');
+	setupDateTime(datetime);
 }
