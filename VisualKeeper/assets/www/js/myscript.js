@@ -19,7 +19,7 @@ function deviceReady() {
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
 	$('#testButton').bind('click',function(){
-		return populateViewTask('LOWMqaHiqi');
+		return populateViewTask('v8XMspdi4x');
 	});
 	$('#editTaskButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
@@ -127,65 +127,65 @@ function initNewTask(){
 	setToNewTask();
 	console.log('init in new task');
 }
-function acceptNewTask(){
+// function acceptNewTask(){
 
-	// VALIDATION AND PROCESSING
-	taskName = $("#nameField").val();
-	taskDesc = $("#descArea").val();
-	taskDate = $("#").val();
-	taskTime = $("#").val();
+// 	// VALIDATION AND PROCESSING
+// 	taskName = $("#nameField").val();
+// 	taskDesc = $("#descArea").val();
+// 	taskDate = $("#").val();
+// 	taskTime = $("#").val();
 
-	$.mobile.changePage($('#home'));
-	var dateObj = datepickerinfo,// = getDateTimeInfo(),
-		datetime,
-		freq;
-	var imgsrc = $('#taskPic').attr('src');
-	if (taskName === "")
-		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
-	else{
-		if(dateObj.freq=='taskOnce'){
-			freq= 'Once';
-			datetime = dateObj.date + " at " + dateObj.time;
-		}
-		else if(dateObj.freq=='taskDaily'){
-			datetime = dateObj.time;
-			freq = 'Daily';
-		}
-		else if(dateObj.freq=='taskWeekly'){
-			datetime = {days:dateObj.days, time: dateObj.time};
-			freq = 'Weekly';
-		}
-		if(typeof(datetime)=='Object'){
-			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
-		}
-		else{
-			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
-		}
-		uploadPhoto(imgsrc,662,'blanco',110,1);
-		if(parsePicName==="")
-			parsePicName = "No Picture Data";
-		console.log(parsePicName);
-		var taskObject = new TaskObject();
-		taskObject.save({
-			taskName:taskName,
-			taskDesc:taskDesc,
-			taskDate:dateObj.date,
-			taskTime:dateObj.time,
-			taskFrequency: dateObj.freq,
-			creator:CurrentUser,
-			image:parsePicName
-			//imagenum:imagenum
-		},{
-			success: function(tO){
-				console.log('success! id: '+ tO.get('objectId'));
-		 	},
-		 	error: function(tO, error){
-				console.log('error saving');
-		 	}
-		});
-		resetDateTimeDialog();
-	}
-}
+// 	$.mobile.changePage($('#home'));
+// 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
+// 		datetime,
+// 		freq;
+// 	var imgsrc = $('#taskPic').attr('src');
+// 	if (taskName === "")
+// 		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
+// 	else{
+// 		if(dateObj.freq=='taskOnce'){
+// 			freq= 'Once';
+// 			datetime = dateObj.date + " at " + dateObj.time;
+// 		}
+// 		else if(dateObj.freq=='taskDaily'){
+// 			datetime = dateObj.time;
+// 			freq = 'Daily';
+// 		}
+// 		else if(dateObj.freq=='taskWeekly'){
+// 			datetime = {days:dateObj.days, time: dateObj.time};
+// 			freq = 'Weekly';
+// 		}
+// 		if(typeof(datetime)=='Object'){
+// 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+// 		}
+// 		else{
+// 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+// 		}
+// 		uploadPhoto(imgsrc,662,'blanco',110,1);
+// 		if(parsePicName==="")
+// 			parsePicName = "No Picture Data";
+// 		console.log(parsePicName);
+// 		var taskObject = new TaskObject();
+// 		taskObject.save({
+// 			taskName:taskName,
+// 			taskDesc:taskDesc,
+// 			taskDate:dateObj.date,
+// 			taskTime:dateObj.time,
+// 			taskFrequency: dateObj.freq,
+// 			creator:CurrentUser,
+// 			image:parsePicName
+// 			//imagenum:imagenum
+// 		},{
+// 			success: function(tO){
+// 				console.log('success! id: '+ tO.get('objectId'));
+// 		 	},
+// 		 	error: function(tO, error){
+// 				console.log('error saving');
+// 		 	}
+// 		});
+// 		resetDateTimeDialog();
+// 	}
+// }
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
@@ -217,18 +217,27 @@ function populateViewTask(taskId){
 			var name = results[0].attributes.taskName,
 				desc = results[0].attributes.taskDesc,
 				freq = results[0].attributes.taskFrequency,
-				date = results[0].attributes.taskDate,
+				datetime = results[0].attributes.taskDateTime,
 				user = results[0].attributes.creator, 
-				time = results[0].attributes.taskTime,
+				time,
+				date,
 				imURL;
 			imURL = makeImgURL(user,taskId,'main');
 
-			if(freq == 'taskOnce')
+			if(freq == 'taskOnce'){
 				freq='Once';
-			else if(freq=='taskDaily')
+			}
+			else if(freq=='taskDaily'){
 				freq='Daily';
-			else
+				$('#vTaskDate').hide();
+			}
+			else{
 				freq='Weekly'
+				$('#vTaskDate').hide();
+			}
+
+			date = datetime.date;
+			time = datetime.time;
 			$('#vTaskPic').attr('src',imURL);
 			$('#vTaskName').append(name);
 			$('#vDescBox').append(desc);
