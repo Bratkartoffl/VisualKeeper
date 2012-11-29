@@ -442,7 +442,7 @@ function acceptNewTask(){
 		taskObject.save({
 			taskName:taskName,
 			taskDesc:taskDesc,
-			taskDate:datetime,
+			taskDateTime:dateObj,
 			taskFrequency: dateObj.freq,
 			creator:CurrentUser
 		},{
