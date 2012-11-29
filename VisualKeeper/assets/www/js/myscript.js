@@ -520,8 +520,7 @@ function capturePhoto(){
  												sourceType : Camera.PictureSourceType.CAMERA, 
   												allowEdit : true,
   												encodingType: Camera.EncodingType.JPEG,
-  												quality:60,
-  												correctOrientation: true});
+  												quality:60});
 }
 function showPhoto(data){
 	var pic = $('#taskPic');
