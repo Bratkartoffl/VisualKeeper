@@ -23,6 +23,7 @@ function deviceReady() {
 	$('#listselect').bind('change',function(){
 		pullList();
 	});
+	$('#editAcceptButton').bind('click',submitEdits);
 	$('#testButton').bind('click',function(){
 		return populateViewTask('0Edd6s8Ugw');
 	});
@@ -216,24 +217,19 @@ function makeImgURL(user,taskid,photoid){
 }
 function submitEdits(){
 	var tid = $('#editTaskId').html(),
-		query = new Parse.Query;
+		query = new Parse.Query(TaskObject);
 
 	query.get(tid,{
 		success: function(task){
-			var taskName = $("#nameField").val();
-			var taskDesc = $("#descArea").val();
+			var taskName = $("#enameField").val();
+			var taskDesc = $("#edescArea").val();
 			task.set('taskName',taskName);
 			task.set('taskDesc',taskDesc);
 			task.set('taskTime',datepickerinfo);
-
-			task.save(null,{
-				success: function(){
-					$.mobile.changePage('home');
-				},
-				error: function(){
-					console.log('error saving edits');
-				}
-			});
+			console.log('saving: '+taskName+" "+taskDesc);
+			task.save();
+			console.log('saved');
+			$.mobile.changePage('#home');
 		},
 		error: function(){
 			console.log('error setting up edit submission')
