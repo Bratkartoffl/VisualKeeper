@@ -9,7 +9,6 @@ function deviceReady() {
 	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 	TaskObject = Parse.Object.extend("TaskObject");
 	console.log("device is ready");
-    //loadfromParse();
     $('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
 		$('#onceOptions').show();
@@ -174,7 +173,7 @@ function populateViewTask(taskId){
 
 		},
 		error: function(error){
-			alert('error retrieving data from server');
+			console.log('error retrieving data from server');
 		}
 	});
 }
@@ -253,7 +252,7 @@ function getDateTimeInfo(){
 // PARSE STUFF -----------------------------
 function initHome(){
 	console.log('initing home');
-	//loadfromParse();
+	loadfromParse();
 	addNewListToDropdown('example','Example List');
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
@@ -348,24 +347,22 @@ function login(){
             CurrentUser = user;
              $("#loginstatus").html("<b>Logging in...</b>");
              $("#loggedIn").append(CurrentUser.get("username"));
-             console.log("Successfule Login");
+             console.log("Successful Login!!");
             $.mobile.changePage("#home");
 
         },
         error:function(user, error) {
             alert("Login Fail!!\nPlease Register");
-            console.log("ERROR!");
-            console.dir(error);
-            
+            console.log("ERROR!");    
             $.mobile.changePage("#login");
         }
     });
 }
 function loadfromParse() {
-	UserObject = Parse.User.current;
+	UserObject = Parse.User.current();
 	var imgsrc = $('#taskPic').attr('src');
 	var query = new Parse.Query(TaskObject);
-	query.equalTo(UserObject,"creator");
+	query.equalTo("creator",UserObject);
 	query.find({
 	 	success:function(results){
 	 		for(var i=0,len=results.length; i<len; i++){
