@@ -451,9 +451,9 @@ function acceptNewTask(){
 		resetDateTimeDialog();
 	}	
 }
-function CLEARFORM(){
-	document.
-}
+// function CLEARFORM(){
+// 	document.
+// }
 
 
 // PICTURE STUFF -------------------------
