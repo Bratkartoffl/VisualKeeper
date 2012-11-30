@@ -316,6 +316,16 @@ function register(){
             console.dir(error);
         }
     });
+    $("#username").v();
+    $("#password").val();
+    $("#email").val();
+}
+function logOut() {
+	console.log("Logout");
+	Parse.User.logOut();
+	CurrentUser="";
+	UserObject="";
+	 $.mobile.changePage("#login");
 }
 function login(){
 
@@ -359,6 +369,7 @@ function login(){
     });
 }
 function loadfromParse() {
+
 	UserObject = Parse.User.current();
 	var imgsrc = $('#taskPic').attr('src');
 	var query = new Parse.Query(TaskObject);
@@ -439,6 +450,9 @@ function acceptNewTask(){
 		
 		resetDateTimeDialog();
 	}	
+}
+function CLEARFORM(){
+	document.
 }
 
 

@@ -21,8 +21,8 @@
 			<div data-role = "header" id="homeheader"></div>
 			<div data-role = "content" >
 				<div class="menu">
-					<a href="#login" data-role="button">Login</a>
-					<a href="#register" data-role="button">Register</a>
+					<a href="#login" data-role="button" onclick="CLEARFORM();">Login</a>
+					<a href="#register" data-role="button" onclick="CLEARFORM();">Register</a>
 				</div>
 			</div>
 			<div data-role = "footer" data-position="fixed"></div>
@@ -86,7 +86,6 @@
 		</div>
 		<!-- ******* END OF LOGIN PAGE ************* -->
 
-
 		<!-- ======= NEW TASK LIST DIALOG ==================== -->
 		<div data-role="page" id ="newTaskListDialog" data-theme="b">
 			<div data-role="header">
@@ -104,13 +103,12 @@
 		</div>
 		<!-- ******* END OF NEW TASK LIST DIALOG ************* -->
 
-
 		<!-- ======= HOME PAGE ==================== -->
 		<div data-role="page" id="home" data-theme="a">
 			<div data-role = "header" id="homeheader">
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:50%;">Menu</a>
+						<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:25%;">Menu</a>
 					</div>
 					<div class="ui-block-b">
 						<select name="selectedList" id="listselect" data-icon="arrow-d">
@@ -122,13 +120,14 @@
 				</div>
 			</div>
 		
-			<div data-role="popup" id="menuPopup">
+			<div data-role="popup" id="menuPopup" style="z-index:999999;">
 				<ul data-role="listview">
 					<!-- <li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
 					<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
 					<li><a href="#settings">Settings</a></li> -->
 					<li><a href="#summarySchedule">Schedule Summary</a></li>
 					<li>Share</li>
+					<li data-icon="false"><a onclick="logOut();">Logout</a></li>
 				</ul>
 			</div>
 			<div data-role="popup" id="taskListPopup">
@@ -148,7 +147,6 @@
 			</div>
 		</div>
 		<!-- ******* END OF HOME PAGE ************* -->
-
 
 		<!-- ======= VIEW TASK PAGE ==================== -->
 		<div data-role="page" id="viewTask" data-add-back-btn="true">
@@ -188,7 +186,6 @@
 			</div>
 		</div>
 		<!-- ******* END OF VIEW TASK PAGE ************* -->
-
 
 		<!-- ======= DATE/TIME DIALOG ==================== -->
 		<div data-role="page" id="dateTimeDialog" style="text-align:center;">
@@ -249,10 +246,8 @@
 			</div>
 			<div data-role="footer">
 				<a id='datePickerAccept' data-rel="back" data-role="button" style="width:100%;">Accept</a>
-			</div>
-		</div>
+			</div></div>
 		<!-- ******* END OF DATE/TIME DIALOG ************* -->
-
 
 		<!-- ======= NEW TASK PAGE ==================== -->
 		<div data-role="page" id="newTask" data-theme="a">
@@ -308,7 +303,6 @@
 		</div>
 		<!-- ******* END OF NEW TASK PAGE ************* -->
 
-
 		<!-- ======= SUMMARY SCHEDULE PAGE ==================== -->
 		<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">
 			<div data-role="header">
@@ -330,7 +324,6 @@
 			</div>
 		</div>
 		<!-- ******* END OF SUMMARY SCHEDULE PAGE ************* -->
-
 
 		<!-- ======= SETTINGS PAGE ==================== -->
 		<div data-role="page" id="settings" data-theme="a">
