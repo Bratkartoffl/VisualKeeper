@@ -21,8 +21,8 @@
 			<div data-role = "header" id="homeheader"></div>
 			<div data-role = "content" >
 				<div class="menu">
-					<a href="#login" data-role="button" onclick="CLEARFORM();">Login</a>
-					<a href="#register" data-role="button" onclick="CLEARFORM();">Register</a>
+					<a href="#login" data-role="button" >Login</a>
+					<a href="#register" data-role="button" >Register</a>
 				</div>
 			</div>
 			<div data-role = "footer" data-position="fixed"></div>
@@ -41,15 +41,15 @@
 				<br />
 				<form>
 					<label for="username">Username:</label>
-					<input type="text" id="username">
+					<input type="text" id="username" class="preloginput">
 					<span id="usernameerror" style="visibility:hidden;">Username Required</span><hr />
 
 					<label for="password">Password:</label>
-					<input type="password" id="password">
+					<input type="password" id="password" class="preloginput">
 					<span id="passworderror" style="visibility:hidden;">Password Required</span><hr />
 
 					<label for="email">Email: </label>
-					<input type="text" id="email">
+					<input type="text" id="email" class="preloginput">
 					<span id="emailerror" style="visibility:hidden;">Email Required</span><hr />
 
 					<a data-role="button" id="registerForm" onclick="register()">Register</a>
@@ -71,10 +71,10 @@
 				<div id="logstatus"></div>
 				<form>
 					<label for="username">Username:</label>
-					<input type="text" id="usernamelogin">
+					<input type="text" id="usernamelogin" class="preloginput">
 					<span id="loginuser" style="visibility:hidden">Username Required</span><br />
 					<label for="password">Password: </label>
-					<input type="password" id="passwordlogin">
+					<input type="password" id="passwordlogin" class="preloginput">
 					<span id="loginpass" style="visibility:hidden">Password Required</span>
 					<br />
 					<a data-role="button" id="loginForm" onclick="login();">Login</a>
@@ -311,6 +311,7 @@
 				<h1 id="editTaskHeading">Edit Task</h1>
 			</div>
 			<div data-role = "content" data-theme="a" id="editTaskContent">
+				<p id = "editTaskId" style="display:none;"></p>
 				<form>
 					<fieldset class="ui-grid-a">
 						<div class="ui-block-a" id="taskPhoto">
@@ -351,8 +352,8 @@
 			</div>
 			<div data-role = "footer" data-position="fixed">
 				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><p id="editAcceptButton" data-role="button" data-transition="flip">Accept</p></div>
-					<div class="ui-block-b"><p id="editCancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
+					<div class="ui-block-a"><a id="editAcceptButton" data-role="button" data-transition="flip">Accept</a></div>
+					<div class="ui-block-b"><a data-rel="back" id="editCancelButton" data-role="button" data-transition="flip">Cancel</a></div>	   
 				</fieldset>
 			</div>
 		</div>

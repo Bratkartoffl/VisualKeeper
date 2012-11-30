@@ -18,6 +18,8 @@ function deviceReady() {
 		$('#weekOptions').hide();
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
+	$('#register').bind('pagebeforeshow',CLEARFORM);
+	$('#login').bind('pagebeforeshow',CLEARFORM);
 	$('#listselect').bind('change',function(){
 		pullList();
 	});
@@ -150,7 +152,7 @@ function setToEditTask(taskid){
 		success: function(results){
 			var task = results[0],
 				imgurl = makeImgURL(user,taskid,1);
-			setupEdit(imgurl,task.attributes.taskName,task.attributes.taskDesc,{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
+			setupEdit(imgurl, task.attributes.taskName, task.attributes.taskDesc, task.attributes.taskTime, task.id);
 			console.log('editing...');
 		},
 		error: function(){
@@ -211,6 +213,32 @@ function makeImgURL(user,taskid,photoid){
 
 		imageURL = server+folderName+imageName;
 		return imageURL;
+}
+function submitEdits(){
+	var tid = $('#editTaskId').html(),
+		query = new Parse.Query;
+
+	query.get(tid,{
+		success: function(task){
+			var taskName = $("#nameField").val();
+			var taskDesc = $("#descArea").val();
+			task.set('taskName',taskName);
+			task.set('taskDesc',taskDesc);
+			task.set('taskTime',datepickerinfo);
+
+			task.save(null,{
+				success: function(){
+					$.mobile.changePage('home');
+				},
+				error: function(){
+					console.log('error saving edits');
+				}
+			});
+		},
+		error: function(){
+			console.log('error setting up edit submission')
+		}
+	});
 }
 
 //	SCHEDULE SUMMARY---------------------------
@@ -573,7 +601,9 @@ function acceptNewTask(){
 	}	
 }
 function CLEARFORM(){
-	
+	$('.preloginput').each(function(idx, elem){
+		$(elem).val('');
+	});
 }
 
 
@@ -672,10 +702,12 @@ function addPhoto(data){
 	$('#exPhoto1').attr('src',data);
 	$('#extraPhotos').listview('refresh');
 }
-function setupEdit(imgURL, name, desc, datetime){
+function setupEdit(imgURL, name, desc, datetime, tid){
 	$('#etaskPic').attr('src',imgURL);
 	$('#enameField').val(name);
 	$('#edescArea').val(desc);
+	console.log(tid);
+	$('#editTaskId').html(tid);
 	console.log('about to set up date time');
 	setupDateTime(datetime);
 }
