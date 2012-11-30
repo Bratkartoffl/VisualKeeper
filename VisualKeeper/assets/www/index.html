@@ -156,6 +156,7 @@
 				<h2 id="viewTaskHeading">View Task</h2>
 			</div>
 			<div data-role = "content" id="viewTaskContent">
+				<p id = "vtaskID" style="display:none;"></p>
 				<h2 id = "vTaskName"></h2>
 				<img id="vTaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
 				<span class = 'dispContainer'>
@@ -183,7 +184,7 @@
 
 			</div>
 			<div data-role = "footer" data-position="fixed">
-				<a href="#newTask" data-role="button" style="width:100%;">Edit Task</a>
+				<a href="#editTask" id= "vEditButton" data-role="button" style="width:100%;">Edit Task</a>
 			</div>
 		</div>
 		<!-- ******* END OF VIEW TASK PAGE ************* -->
@@ -303,6 +304,59 @@
 			</div>
 		</div>
 		<!-- ******* END OF NEW TASK PAGE ************* -->
+
+		<!-- ======= EDIT TASK PAGE ==================== -->
+		<div data-role="page" id="editTask" data-theme="a">
+			<div data-role = "header">
+				<h1 id="editTaskHeading">Edit Task</h1>
+			</div>
+			<div data-role = "content" data-theme="a" id="editTaskContent">
+				<form>
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a" id="taskPhoto">
+							<h2 style="padding-left:80px;">Task Photo</h2>
+							<a onclick="capturePhoto();"><img id="etaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
+							</br>
+						</div>
+						<div class="ui-block-b" id="taskInfo">
+							<h2 style="margin-bottom:15px;">Task Information</h2>
+							<div data-role="fieldcontain">
+								<label for="nameField">Name:</label>
+			   					<input type="text" name="taskName" id="enameField" value=""  />
+			   				</div>
+			   				
+			   				<div data-role="fieldcontain">
+			   					<label for="descArea">Description:</label>
+								<textarea name="desc" id="edescArea"></textarea>
+							</div>
+							
+							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+							
+							<!-- <div data-role="fieldcontain" style="width:60%;">
+								<input type="checkbox" name="notify" id="notificationCheck" />
+								<label for="notificationCheck">Enable Notifications</label>
+							</div>			 -->	
+						
+						</div>
+					</fieldset>
+				</form>
+				<div class="ui-grid-solo">
+					<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
+					<div class="ui-block-a" >
+						<form>
+							<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div data-role = "footer" data-position="fixed">
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a"><p id="editAcceptButton" data-role="button" data-transition="flip">Accept</p></div>
+					<div class="ui-block-b"><p id="editCancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
+				</fieldset>
+			</div>
+		</div>
+		<!-- ******* END OF EDIT TASK PAGE ************* -->
 
 		<!-- ======= SUMMARY SCHEDULE PAGE ==================== -->
 		<div data-role="page" id="summarySchedule" data-theme="a" data-add-back-btn="true">

@@ -24,7 +24,7 @@ function deviceReady() {
 	$('#testButton').bind('click',function(){
 		return populateViewTask('0Edd6s8Ugw');
 	});
-	$('#editTaskButton').bind('click',setToEditTask);
+	$('#vEditButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
 		var name = $('#listnameinput').val();
 		console.log('list name: '+name);
@@ -84,7 +84,6 @@ function init(){
 
 //  TASKS  PAGES ------------------
 function newListViewTask(img, id, name, desc, datetime, objId){
-	console.log('name: '+name+'  '+objId);
 	if(objId == undefined)
 		objId = 'zzzzzzz';
 	var html = '<li><a class ="task" data-task = "'+objId+'" href="#viewTask"><img id="';
@@ -100,7 +99,7 @@ function newListViewTask(img, id, name, desc, datetime, objId){
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" href="#newTask">Edit Task</a></li>';
+	html += '</a><a id="editTaskButton" href="#editTask">Edit Task</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
@@ -133,7 +132,7 @@ function resetNewTask(){
 	$('#extraPhotos').html(s).listview('refresh');
 }
 function setToNewTask(){
-	$('#editTaskHeading').html('New Task');
+	//$('#editTaskHeading').html('New Task');
 	console.log('making new task...');
 }
 
@@ -141,8 +140,25 @@ function setToNewTask(){
 //	EDIT TASK--------------------------------
 function setToEditTask(taskid){
 	$('#editTaskHeading').html('Edit Task');
-	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
-	console.log('editing...');
+
+	var user = Parse.User.current(),
+		query = new Parse.Query(TaskObject),
+		tid = $('#vtaskID').html();
+
+	query.equalTo('objectId',tid);
+	query.find({
+		success: function(results){
+			var task = results[0],
+				imgurl = makeImgURL(user,taskid,1);
+			setupEdit(imgurl,task.attributes.taskName,task.attributes.taskDesc,{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
+			console.log('editing...');
+		},
+		error: function(){
+			console.log('error getting info for edit');
+		}
+	});
+
+	
 }
 function populateViewTask(taskId){
 	var query = new Parse.Query(TaskObject);
@@ -173,7 +189,7 @@ function populateViewTask(taskId){
 
 			date = datetime.date;
 			time = datetime.time;
-
+			$('#vtaskID').html(results[0].id);
 			$('#vTaskPic').attr('src',imURL);
 			$('#vTaskName').html(name);
 			$('#vDescBox').html(desc);
@@ -300,7 +316,6 @@ function pullList(){
 		success: function(tasks){
 			for(var i=0;i<tasks.length;i++){
 				var task = tasks[i];
-				console.log(task.id);
 				var imgsrc = makeImgURL(user,task.objectId,1),
 					dtime = task.attributes.taskTime;
 				newListViewTask(imgsrc, task.id,task.attributes.taskName,task.attributes.taskDesc,dtime.time+" on "+dtime.date,task.id);
@@ -658,9 +673,9 @@ function addPhoto(data){
 	$('#extraPhotos').listview('refresh');
 }
 function setupEdit(imgURL, name, desc, datetime){
-	$('#taskPic').attr('src',imgURL);
-	$('#nameField').val(name);
-	$('#descArea').val(desc);
+	$('#etaskPic').attr('src',imgURL);
+	$('#enameField').val(name);
+	$('#edescArea').val(desc);
 	console.log('about to set up date time');
 	setupDateTime(datetime);
 }
