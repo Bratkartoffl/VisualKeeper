@@ -18,31 +18,26 @@ function deviceReady() {
 		$('#weekOptions').hide();
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
+	$('#listselect').bind('change',function(){
+		pullList();
+	});
 	$('#testButton').bind('click',function(){
 		return populateViewTask('0Edd6s8Ugw');
 	});
 	$('#editTaskButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
 		var name = $('#listnameinput').val();
+		console.log('list name: '+name);
 		$("#listnameinput").val('');
 		addListToParse(name,name);
-		$('option:selected').each(function(idx, elem){
-			$(elem).removeAttr('selected');
-		});
-		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
+		
 		history.back();
 		return false;
 	});
-	$('#listselect').bind('change',function(){
-		var selectedList = $('option:selected').val();
-		if(selectedList == 'new')
-		{
-			$('#newListLink').click();
-		}
+	$('#home').bind('pagebeforeshow',function(){
+		pullList();
 	})
-	$('option:selected').each(function(idx, elem){
-			$(elem).removeAttr('selected');
-		});
+
 	$('#new').bind('tap',function(){
 		$('#newtasklink').click();
 	});
@@ -88,8 +83,11 @@ function init(){
 
 
 //  TASKS  PAGES ------------------
-function newListViewTask(img, id, name, desc, datetime){
-	var html = '<li><a href="#viewTask"><img id="';
+function newListViewTask(img, id, name, desc, datetime, objId){
+	console.log('name: '+name+'  '+objId);
+	if(objId == undefined)
+		objId = 'zzzzzzz';
+	var html = '<li><a class ="task" data-task = "'+objId+'" href="#viewTask"><img id="';
 	html += id;
 	html += '" src="';
 	html += img;
@@ -108,12 +106,18 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist.trigger("create");
 	$('#editTaskButton').bind('tap',setToEditTask);
 }
-
+function clearTaskListView(){
+	$('#taskList').html('');
+}
 function addNewListToDropdown(value, name){
 	var html = '<option value="';
 	html += value+'"> '+name+'</option>';
 	$('#listselect').prepend(html);
 	$('#listselect option[value="'+value+'"]').attr('selected', 'selected');
+	$('option:selected').each(function(idx, elem){
+			$(elem).removeAttr('selected');
+		});
+		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
 	$('#listselect').selectmenu('refresh',true);
 	$('#homeheader').trigger("create");
 }
@@ -147,14 +151,14 @@ function populateViewTask(taskId){
 		success: function(results){
 			var name = results[0].attributes.taskName,
 				desc = results[0].attributes.taskDesc,
-				freq = results[0].attributes.taskFrequency,
-				datetime = results[0].attributes.taskDateTime,
+				freq,
+				datetime = results[0].attributes.taskTime,
 				user = results[0].attributes.creator, 
 				time,
 				date,
 				imURL;
 			imURL = makeImgURL(user,taskId,'main');
-
+			freq = datetime.freq;
 			if(freq == 'taskOnce'){
 				freq='Once';
 			}
@@ -169,12 +173,13 @@ function populateViewTask(taskId){
 
 			date = datetime.date;
 			time = datetime.time;
+
 			$('#vTaskPic').attr('src',imURL);
-			$('#vTaskName').append(name);
-			$('#vDescBox').append(desc);
-			$('#vTaskFreq').append(freq);
-			$('#vTaskTime').append(time);
-			$('#vTaskDate').append(date);
+			$('#vTaskName').html(name);
+			$('#vDescBox').html(desc);
+			$('#vTaskFreq').html('<b>Frequency: </b>'+freq);
+			$('#vTaskTime').html('<b>Time: </b>'+time);
+			$('#vTaskDate').html('<b>Date: </b>'+date);
 
 		},
 		error: function(error){
@@ -258,7 +263,8 @@ function getDateTimeInfo(){
 function initHome(){
 	console.log('initing home');
 	loadLists();
-	loadfromParse();
+	//loadfromParse();
+	//pullList();
 	addNewListToDropdown('default','Default List');
 	$('#listselect option[value="default"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
@@ -273,12 +279,41 @@ function loadLists(){
 		success: function(lists){
 			console.log('lists found: '+lists.length);
 			for(var i=0;i<lists.length;i++){
-				addNewListToDropdown(lists[i].name,lists[i].value);
+				var list = lists[i];
+				addNewListToDropdown(list.attributes.name,list.attributes.value);
 			}
 			
 		},
 		error: function(list, error){
 			console.log('error finding lists');
+		}
+	});
+}
+function pullList(){
+	var list = $('#listselect > option:selected').val(),
+		user = Parse.User.current(),
+		query = new Parse.Query(TaskObject);
+	clearTaskListView();
+	query.equalTo('creator',user);
+	query.equalTo('listName',list);
+	query.find({
+		success: function(tasks){
+			for(var i=0;i<tasks.length;i++){
+				var task = tasks[i];
+				console.log(task.id);
+				var imgsrc = makeImgURL(user,task.objectId,1),
+					dtime = task.attributes.taskTime;
+				newListViewTask(imgsrc, task.id,task.attributes.taskName,task.attributes.taskDesc,dtime.time+" on "+dtime.date,task.id);
+			}
+			$('.task').each(function(idx, elem){
+				$(elem).bind('click',function(){
+					var taskid = $(elem).data('task');
+					populateViewTask(taskid);
+				});
+			});
+		},
+		error: function(tasks, err){
+			console.log('error pulling list');
 		}
 	});
 }
@@ -409,7 +444,7 @@ function loadfromParse() {
 	 			var result=results[i];
 	 		  	dtime = result.attributes.taskTime;
 	 		  	if(result.attributes.listName == 'default'){
-	 		  		newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date);
+	 		  		newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date, result.id);
 	 		  	}
 	 		  	else if(result.attributes.listName!=undefined){
 	 		  	}
@@ -423,8 +458,8 @@ function loadfromParse() {
 function addListToParse(value, name){
 	var list = new ListObject();
 	var UserObject = Parse.User.current();
-	var query = Parse.Query(ListObject);
-	query.equalTo('value',value)
+	var query = new Parse.Query(ListObject);
+	query.equalTo('name',name);
 	query.find({
 		success: function(results){
 			if(results.length>0){
@@ -478,7 +513,7 @@ function acceptNewTask(){
 		freq;
 	var imgsrc = $('#taskPic').attr('src');
 	if (taskName === "")
-		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm');
+		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm', 'zzzzzzz');
 	else{
 		if(dateObj.freq=='taskOnce'){
 			datetime = dateObj.date + " at " + dateObj.time;
@@ -522,9 +557,9 @@ function acceptNewTask(){
 		resetDateTimeDialog();
 	}	
 }
-// function CLEARFORM(){
-// 	document.
-// }
+function CLEARFORM(){
+	
+}
 
 
 // PICTURE STUFF -------------------------
