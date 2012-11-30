@@ -102,11 +102,11 @@ function newListViewTask(img, id, name, desc, datetime, objId){
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" href="#editTask">Edit Task</a></li>';
+	html += '</a><a id="editTaskButton" data-icon="delete">Delete</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
-	$('#editTaskButton').bind('tap',setToEditTask);
+	///$('#editTaskButton').bind('tap',setToEditTask);
 }
 function clearTaskListView(){
 	$('#taskList').html('');
