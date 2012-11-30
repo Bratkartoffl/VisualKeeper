@@ -4,6 +4,7 @@ var UserObject;
 var picNum;
 var datepickerinfo = new Object();
 
+
 //   INITIALIZATION -------------------
 function deviceReady() {
 	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
@@ -253,7 +254,7 @@ function getDateTimeInfo(){
 function initHome(){
 	console.log('initing home');
 	loadfromParse();
-	addNewListToDropdown('example','Example List');
+	addNewListToDropdown('default','Default List');
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
 }
@@ -370,15 +371,20 @@ function login(){
 }
 function loadfromParse() {
 
-	UserObject = Parse.User.current();
-	var imgsrc = $('#taskPic').attr('src');
+	var UserObject = Parse.User.current(),
+		imgsrc = $('#taskPic').attr('src');
+
 	var query = new Parse.Query(TaskObject);
-	query.equalTo("creator",UserObject);
+	var userid = UserObject.id;
+	var dtime;
+	query.equalTo('creator',UserObject);
 	query.find({
 	 	success:function(results){
+			console.log('num results: '+results.length);
 	 		for(var i=0,len=results.length; i<len; i++){
-	 		  	var result=results[i];
-	 		  	newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,result.attributes.timeDue+" on "+result.attributes.dateDue);
+	 			var result=results[i];
+	 		  	dtime = result.attributes.taskTime;
+	 		  	newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date);
 	 		}
 	 	},
 	 	error: function(error){
