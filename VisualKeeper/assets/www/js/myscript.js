@@ -2,12 +2,12 @@ var photoCounter=1;
 var CurrentUser;
 var UserObject;
 var picNum;
-Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
-var TaskObject = Parse.Object.extend("TaskObject");
 var datepickerinfo = new Object();
 
-//INITIALIZATION -------------------
+//   INITIALIZATION -------------------
 function deviceReady() {
+	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
+	TaskObject = Parse.Object.extend("TaskObject");
 	console.log("device is ready");
     //loadfromParse();
     $('#newTask').bind('pagebeforeshow',resetNewTask);
@@ -89,8 +89,7 @@ function init(){
 }
 
 
-//TASKS  PAGES ------------------
-//	Main Task List
+//  TASKS  PAGES ------------------
 function newListViewTask(img, id, name, desc, datetime){
 	var html = '<li><a href="#viewTask"><img id="';
 	html += id;
@@ -117,7 +116,6 @@ function addNewListToDropdown(value, name){
 	$('#listselect').prepend(html).selectmenu('refresh',true);
 	$('#homeheader').trigger("create");
 }
-
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
@@ -135,7 +133,7 @@ function setToNewTask(){
 }
 
 
-//	Edit Task
+//	EDIT TASK--------------------------------
 function setToEditTask(taskid){
 	$('#editTaskHeading').html('Edit Task');
 	setupEdit('http://192.168.2.7/user_images/blanco662/1101.jpg','Some Task','Here is some description stuff',{freq: 'taskOnce', date: '2012-11-10', time: '03:33'});
@@ -193,8 +191,7 @@ function makeImgURL(user,taskid,photoid){
 		return imageURL;
 }
 
-
-//	Schedule Summary
+//	SCHEDULE SUMMARY---------------------------
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
@@ -205,7 +202,7 @@ function populateScheduleSummary(weekTasks){
 }
 
 
-// Date/Time Dialog
+// DATE/TIME DIALOG-----------------------
 function resetDateTimeDialog(){
 	$('.dialoginput').each(function(idx, elem){
 		var cur = $(elem);
@@ -259,6 +256,7 @@ function getDateTimeInfo(){
 // PARSE STUFF -----------------------------
 function initHome(){
 	console.log('initing home');
+	loadfromParse();
 	addNewListToDropdown('example','Example List');
 	$('#listselect option[value="example"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
@@ -367,19 +365,21 @@ function login(){
     });
 }
 function loadfromParse() {
-	userObject = Parse.User.id;
+	UserObject = Parse.User.id;
+	alert(UserObject);
 	var imgsrc = $('#taskPic').attr('src');
-	var query = new Parse.Query(taskObject);
-	query.equalTo("creator",userObject);
+	var query = new Parse.Query(TaskObject);
+	query.equalTo("creator",UserObject);
 	query.find({
 	 	success:function(results){
 	 		for(var i=0,len=results.length; i<len; i++){
 	 		  	var result=results[i];
+	 		  	console.log("HERE");
 	 		  	newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,result.attributes.timeDue+" on "+result.attributes.dateDue);
 	 		}
 	 	},
 	 	error: function(error){
-	 		alert("Error: "+error.code+" "+error.message)
+	 		console.log("Error: "+error.code+" "+error.message)
 	 	}
 	 });
 }
@@ -427,7 +427,6 @@ function acceptNewTask(){
 		else{
 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
 		}
-		
 		console.log("Here is "+picNum);
 		var taskObject = new TaskObject();
 		taskObject.save({
@@ -513,9 +512,8 @@ function addPhotoView(){
 	console.log('photo view added');
 }
 function capturePhoto(){
-	picNum++;
 	console.log(picNum);
-	navigator.camera.getPicture(showPhoto,null,{
+	navigator.camera.getPicture(showPhoto,photoFail,{
 												destinationType : Camera.DestinationType.FILE_URI, 
  												sourceType : Camera.PictureSourceType.CAMERA, 
   												allowEdit : true,
@@ -523,8 +521,16 @@ function capturePhoto(){
   												quality:60});
 }
 function showPhoto(data){
+	picNum++;
 	var pic = $('#taskPic');
 	pic.attr('src', data);
+}
+function photoFail() {
+	if(picNum <= 1){
+		picNum = 0;
+	}else{
+		picNum--; 
+	}
 }
 function captureAdditionalPhoto(e){
 	var im=$(e.target);
