@@ -9,6 +9,7 @@ var datepickerinfo = new Object();
 function deviceReady() {
 	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 	TaskObject = Parse.Object.extend("TaskObject");
+	ListObject = Parse.Object.extend("ListObject");
 	console.log("device is ready");
     $('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
@@ -24,7 +25,7 @@ function deviceReady() {
 	$('#newListAccept').bind('click',function(){
 		var name = $('#listnameinput').val();
 		$("#listnameinput").val('');
-		addNewListToDropdown(name,name);
+		addListToParse(name,name);
 		$('option:selected').each(function(idx, elem){
 			$(elem).removeAttr('selected');
 		});
@@ -107,10 +108,13 @@ function newListViewTask(img, id, name, desc, datetime){
 	tasklist.trigger("create");
 	$('#editTaskButton').bind('tap',setToEditTask);
 }
+
 function addNewListToDropdown(value, name){
 	var html = '<option value="';
 	html += value+'"> '+name+'</option>';
-	$('#listselect').prepend(html).selectmenu('refresh',true);
+	$('#listselect').prepend(html);
+	$('#listselect option[value="'+value+'"]').attr('selected', 'selected');
+	$('#listselect').selectmenu('refresh',true);
 	$('#homeheader').trigger("create");
 }
 function cancelNewTask(){
@@ -253,10 +257,30 @@ function getDateTimeInfo(){
 // PARSE STUFF -----------------------------
 function initHome(){
 	console.log('initing home');
+	loadLists();
 	loadfromParse();
 	addNewListToDropdown('default','Default List');
-	$('#listselect option[value="example"]').attr('selected', 'selected');
+	$('#listselect option[value="default"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
+}
+function loadLists(){
+	var listObject = new ListObject(),
+		query = new Parse.Query(ListObject),
+		user = Parse.User.current();
+
+	query.equalTo('user',user.id);
+	query.find({
+		success: function(lists){
+			console.log('lists found: '+lists.length);
+			for(var i=0;i<lists.length;i++){
+				addNewListToDropdown(lists[i].name,lists[i].value);
+			}
+			
+		},
+		error: function(list, error){
+			console.log('error finding lists');
+		}
+	});
 }
 function register(){
 	$("#regstatus").html("").removeClass("errorDiv");
@@ -384,13 +408,51 @@ function loadfromParse() {
 	 		for(var i=0,len=results.length; i<len; i++){
 	 			var result=results[i];
 	 		  	dtime = result.attributes.taskTime;
-	 		  	newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date);
+	 		  	if(result.attributes.listName == 'default'){
+	 		  		newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date);
+	 		  	}
+	 		  	else if(result.attributes.listName!=undefined){
+	 		  	}
 	 		}
 	 	},
 	 	error: function(error){
 	 		console.log("Error: "+error.code+" "+error.message)
 	 	}
 	 });
+}
+function addListToParse(value, name){
+	var list = new ListObject();
+	var UserObject = Parse.User.current();
+	var query = Parse.Query(ListObject);
+	query.equalTo('value',value)
+	query.find({
+		success: function(results){
+			if(results.length>0){
+				alert('That list already exists');
+			}
+			else{
+				list.save({
+					value:value,
+					name:name,
+					user:UserObject.id
+				}, {
+					success: function(listobj){
+						console.log('success');
+						addNewListToDropdown(value,name);
+					},
+					error: function(listobj, error){
+						console.log('error on saving list: '+error.code);
+					}
+				});
+			}
+
+		},
+		error: function(){
+			console.log('error finding lists');
+
+		}
+	});
+	
 }
 function populateScheduleSummary(weekTasks){
 	var html="", i;
@@ -437,6 +499,8 @@ function acceptNewTask(){
 			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
 		}
 		console.log("Here is "+picNum);
+		var listname = $('#listselect > option:selected').attr('value');
+		console.log(listname);
 		var taskObject = new TaskObject();
 		taskObject.save({
 			taskName:taskName,
@@ -444,6 +508,7 @@ function acceptNewTask(){
 			taskTime:dateObj,
 			creator:CurrentUser,
 			picCounter:picNum,
+			listName:listname
 		},{
 			success: function(tO){
 				console.log('success! id: '+ tO.id);
