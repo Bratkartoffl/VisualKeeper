@@ -5,12 +5,39 @@ var picNum;
 var datepickerinfo = new Object();
 
 
-//   INITIALIZATION -------------------
+//////////////////////////////////////////
+//   INITIALIZATION
+//////////////////////////////////////////
 function deviceReady() {
+	
+	//////////////////////////////////////////
+	//   PARSE INIT
+	//////////////////////////////////////////
 	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 	TaskObject = Parse.Object.extend("TaskObject");
 	ListObject = Parse.Object.extend("ListObject");
 	console.log("device is ready");
+	$('#newTask').bind('pageinit',initNewTask);
+
+	//////////////////////////////////////////
+	//   TOGGLE
+	//////////////////////////////////////////
+	$(function() {
+		$("#emailReset").toggle(
+		function() {
+			$("#hiddenDiv").css({"visibility":"visible",
+	 			  					      "display":"inline"});
+		},
+		function(){
+			$("#hiddenDiv").css({"visibility":"hidden",
+	 			  			       "display":"none"});
+		});
+	});
+
+	
+	//////////////////////////////////////////
+	//   BEFORE PAGE SHOWS BINDS
+	//////////////////////////////////////////
     $('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
 		$('#onceOptions').show();
@@ -23,6 +50,14 @@ function deviceReady() {
 	$('#listselect').bind('change',function(){
 		pullList();
 	});
+	$('#home').bind('pagebeforeshow',function(){
+		pullList();
+	});
+
+
+	//////////////////////////////////////////
+	//   CLICK BINDS
+	//////////////////////////////////////////
 	$('#editAcceptButton').bind('click',submitEdits);
 	$('#testButton').bind('click',function(){
 		return populateViewTask('0Edd6s8Ugw');
@@ -37,13 +72,13 @@ function deviceReady() {
 		history.back();
 		return false;
 	});
-	$('#home').bind('pagebeforeshow',function(){
-		pullList();
-	})
-
 	$('#new').bind('tap',function(){
 		$('#newtasklink').click();
 	});
+
+	//////////////////////////////////////////
+	//   SET FREQUENCY RADIO
+	//////////////////////////////////////////
 	$('input[name="taskfrequency"]').bind('change',function(){
 		var selection = $("input[name='taskfrequency']:checked").val(),
 			once = $('#onceOptions'),
@@ -65,30 +100,56 @@ function deviceReady() {
 			weekly.show();
 		}
 	});
-	$('#newTask').bind('pageinit',initNewTask);
+
 	
+	
+
+	//////////////////////////////////////////
+	//  RESET LOG STATUS
+	//////////////////////////////////////////
+	$("#login").live('pageshow',function(){
+		$("#logstatus").html("");
+	});
+
+	//////////////////////////////////////////
+	// LOAD ON PAGE INIT
+	//////////////////////////////////////////
 	$('#home').bind('pageinit',initHome);
-	// addNewListToDropdown('example','Example List');
-	// $('#listselect option[value="example"]').attr('selected', 'selected');
-	// $('#listselect').selectmenu();
 	$('#addlPhotoLabel').bind('pageinit',addPhotoView);
 }
 function init(){
+	
 	console.log('init started');
+
+	//////////////////////////////////////////
+	// CHECK IF MATCH DEVICE
+	//////////////////////////////////////////
 	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
         document.addEventListener("deviceready", deviceReady, false);
         console.log('on phone');
     } else {
+
+	    //////////////////////////////////////////
+	    // ELSE BROWSER
+	    //////////////////////////////////////////
     	console.log('on browser');
         deviceReady();
     }
 }
 
 
-//  TASKS  PAGES ------------------
-function newListViewTask(img, id, name, desc, datetime, objId){
-	if(objId == undefined)
+//////////////////////////////////////////
+//  TASK STUFF - LISTVIEW
+//////////////////////////////////////////
+function newListViewTask(img, id, name, desc, datetime, objId) {
+
+
+	//////////////////////////////////////////
+	// CREATE LIST VIEW REPRESENTATION OF TASK
+	//////////////////////////////////////////
+	if(objId == undefined) {
 		objId = 'zzzzzzz';
+	}
 	var html = '<li><a class ="task" data-task = "'+objId+'" href="#viewTask"><img id="';
 	html += id;
 	html += '" src="';
@@ -106,62 +167,6 @@ function newListViewTask(img, id, name, desc, datetime, objId){
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
-	///$('#editTaskButton').bind('tap',setToEditTask);
-}
-function clearTaskListView(){
-	$('#taskList').html('');
-}
-function addNewListToDropdown(value, name){
-	var html = '<option value="';
-	html += value+'"> '+name+'</option>';
-	$('#listselect').prepend(html);
-	$('#listselect option[value="'+value+'"]').attr('selected', 'selected');
-	$('option:selected').each(function(idx, elem){
-			$(elem).removeAttr('selected');
-		});
-		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
-	$('#listselect').selectmenu('refresh',true);
-	$('#homeheader').trigger("create");
-}
-function cancelNewTask(){
-	resetNewTask();
-	resetDateTimeDialog();
-	$.mobile.changePage($('#home'));
-}
-function resetNewTask(){
-	photoCounter=1;
-	var s='';
-	resetDateTimeDialog();
-	$('#extraPhotos').html(s).listview('refresh');
-}
-function setToNewTask(){
-	//$('#editTaskHeading').html('New Task');
-	console.log('making new task...');
-}
-
-
-//	EDIT TASK--------------------------------
-function setToEditTask(taskid){
-	$('#editTaskHeading').html('Edit Task');
-
-	var user = Parse.User.current(),
-		query = new Parse.Query(TaskObject),
-		tid = $('#vtaskID').html();
-
-	query.equalTo('objectId',tid);
-	query.find({
-		success: function(results){
-			var task = results[0],
-				imgurl = makeImgURL(user,taskid,1);
-			setupEdit(imgurl, task.attributes.taskName, task.attributes.taskDesc, task.attributes.taskTime, task.id);
-			console.log('editing...');
-		},
-		error: function(){
-			console.log('error getting info for edit');
-		}
-	});
-
-	
 }
 function populateViewTask(taskId){
 	var query = new Parse.Query(TaskObject);
@@ -206,14 +211,69 @@ function populateViewTask(taskId){
 		}
 	});
 }
-function makeImgURL(user,taskid,photoid){
-	var server = 'http://localhost/user_images/',
-		folderName = user.id+'/',
-		imageName = taskid+photoid+'.jpg',
-		imageURL;
+function clearTaskListView() {
+	//////////////////////////////////////////
+	// CLEAR TASK LIST VIEW
+	//////////////////////////////////////////
+	$('#taskList').html('');
+}
+function cancelNewTask(){
+	resetNewTask();
+	resetDateTimeDialog();
+	$.mobile.changePage($('#home'));
+}
+function resetNewTask(){
+	photoCounter=1;
+	var s='';
+	resetDateTimeDialog();
+	$('#extraPhotos').html(s).listview('refresh');
+}
+function setToNewTask(){
+	//$('#editTaskHeading').html('New Task');
+	console.log('making new task...');
+}
 
-		imageURL = server+folderName+imageName;
-		return imageURL;
+
+//////////////////////////////////////////
+// TASK STUFF - LISTDROPDOWN
+//////////////////////////////////////////
+function addNewListToDropdown(value, name) {
+
+	var html = '<option value="';
+	html += value+'"> '+name+'</option>';
+	$('#listselect').prepend(html);
+	$('#listselect option[value="'+value+'"]').attr('selected', 'selected');
+	$('option:selected').each(function(idx, elem){
+			$(elem).removeAttr('selected');
+		});
+		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
+	$('#listselect').selectmenu('refresh',true);
+	$('#homeheader').trigger("create");
+}
+
+
+//////////////////////////////////////////
+//	EDIT TASK
+//////////////////////////////////////////
+function setToEditTask(taskid){
+	$('#editTaskHeading').html('Edit Task');
+
+	var user = Parse.User.current(),
+		query = new Parse.Query(TaskObject),
+		tid = $('#vtaskID').html();
+
+	query.equalTo('objectId',tid);
+	query.find({
+		success: function(results){
+			var task = results[0],
+				imgurl = makeImgURL(user,taskid,1);
+			setupEdit(imgurl, task.attributes.taskName, task.attributes.taskDesc, task.attributes.taskTime, task.id);
+			console.log('editing...');
+		},
+		error: function(){
+			console.log('error getting info for edit');
+		}
+	});
 }
 function submitEdits(){
 	var tid = $('#editTaskId').html(),
@@ -237,7 +297,10 @@ function submitEdits(){
 	});
 }
 
-//	SCHEDULE SUMMARY---------------------------
+
+//////////////////////////////////////////
+//	SCHEDULE SUMMARY
+//////////////////////////////////////////
 function populateScheduleSummary(weekTasks){
 	var html="", i;
 	for(i=0;i<weekTasks.length;i++){
@@ -248,7 +311,9 @@ function populateScheduleSummary(weekTasks){
 }
 
 
-// DATE/TIME DIALOG-----------------------
+//////////////////////////////////////////
+// DATE/TIME
+//////////////////////////////////////////
 function resetDateTimeDialog(){
 	$('.dialoginput').each(function(idx, elem){
 		var cur = $(elem);
@@ -299,7 +364,9 @@ function getDateTimeInfo(){
 }
 
 
-// PARSE STUFF -----------------------------
+//////////////////////////////////////////
+// PARSE STUFF - HOME
+//////////////////////////////////////////
 function initHome(){
 	console.log('initing home');
 	loadLists();
@@ -309,6 +376,8 @@ function initHome(){
 	$('#listselect option[value="default"]').attr('selected', 'selected');
 	$('#listselect').selectmenu();
 }
+function loadHome() {setTimeout( function(){ window.location = "#home"; }, 1000 );}
+
 function loadLists(){
 	var listObject = new ListObject(),
 		query = new Parse.Query(ListObject),
@@ -356,6 +425,11 @@ function pullList(){
 		}
 	});
 }
+
+
+//////////////////////////////////////////
+// PARSE STUFF - USER
+//////////////////////////////////////////
 function register(){
 	$("#regstatus").html("").removeClass("errorDiv");
 
@@ -388,13 +462,7 @@ function register(){
 
 	} else
 		$("#emailerror").css("visibility","hidden");
-
-    if(error !== "") {
-        $("#regstatus").html(error).addClass("errorDiv");
-        $.mobile.changePage("#register");
-        return;
-    }else
-    	$("#regstatus").html("<b>Registering user...</b>");
+    
     //try to register with Parse and see if it works.
     var user = new Parse.User();
     user.set("username", username);
@@ -415,9 +483,6 @@ function register(){
             console.dir(error);
         }
     });
-    $("#username").v();
-    $("#password").val();
-    $("#email").val();
 }
 function logOut() {
 	console.log("Logout");
@@ -428,44 +493,52 @@ function logOut() {
 }
 function login(){
 
-    $("#loginstatus").html("").removeClass("errorDiv");
-
-    //get values
+    //////////////////////////////////////////
+    // GET VALS
+    //////////////////////////////////////////
     var username = $("#usernamelogin").val();
     var password = $("#passwordlogin").val();
 
-    var errors="";
-
-    //do some basic validation here
+    //////////////////////////////////////////
+    //  BASIC VALIDATION
+    //////////////////////////////////////////
     if(username === ""){
-    	$("#loginuser").css("color","red");
-    	$("#loginuser").css("visibility","visible");
-    	errors +="userlogin "
+    	$("#loginuser").css({"color":"red",
+    		                 "visibility":"visible"});
     } else
 		$("#loginuser").css("visibility","hidden");
 
     if(password === ""){
-    	$("#loginpass").css("color","red");
-    	$("#loginpass").css("visibility","visible");
-    	errors += "passlogin "
+    	$("#loginpass").css({"color":"red",
+    						 "visibility":"visible",});
     } else
     	$("#loginpass").css("visibility","hidden");
 
+	//////////////////////////////////////////
+    //  LOGIN
+    //////////////////////////////////////////
     Parse.User.logIn(username, password, {
         success:function(user) {
             CurrentUser = user;
-             $("#loginstatus").html("<b>Logging in...</b>");
-             $("#loggedIn").append(CurrentUser.get("username"));
-             console.log("Successful Login!!");
-            $.mobile.changePage("#home");
-
+            $("#logstatus").css({"color":"green",
+        						 "text-align":"center"});
+            $("#logstatus").html("<b>Logging in...</b>");
+            $("#loggedIn").append(CurrentUser.get("username"));
+            loadHome();
         },
         error:function(user, error) {
-            alert("Login Fail!!\nPlease Register");
+        	$("#logstatus").css({"color":"red",
+        						 "text-align":"center"});
+        	$("#logstatus").html("<p><b>Unsuccessful Login!</b>\nPlease retry or register</p>").fadeIn().show("slow");
             console.log("ERROR!");    
             $.mobile.changePage("#login");
         }
     });
+}
+function CLEARFORM(){
+	$('.preloginput').each(function(idx, elem){
+		$(elem).val('');
+	});
 }
 function loadfromParse() {
 
@@ -526,15 +599,6 @@ function addListToParse(value, name){
 
 		}
 	});
-	
-}
-function populateScheduleSummary(weekTasks){
-	var html="", i;
-	for(i=0;i<weekTasks.length;i++){
-		html += "<li><a href='#viewTask'><h1>";
-		html += weekTasks[i].tName + ' id: '+weekTasks[i].tId;
-		html += "</h1></a></li>";
-	}
 }
 function initNewTask(){
 	picNum = 0;
@@ -596,14 +660,26 @@ function acceptNewTask(){
 		resetDateTimeDialog();
 	}	
 }
-function CLEARFORM(){
-	$('.preloginput').each(function(idx, elem){
-		$(elem).val('');
-	});
+function sendRes(){
+    var email = $("#passwordResetEmail").val();
+
+    if(email === "") {
+    	return;
+	}
+    Parse.User.requestPasswordReset(email, {
+        success:function() {
+            alert("Reset instructions emailed to you.");
+        },
+        error:function(error) {
+            alert(error.message);
+        }
+    });
 }
 
 
-// PICTURE STUFF -------------------------
+//////////////////////////////////////////
+// PIC STUFF
+//////////////////////////////////////////
 function uploadPhoto(imageURI, id, tid, pid){
 	var options = new FileUploadOptions(),
 		params = new Object();
@@ -693,6 +769,15 @@ function generateSuccess(image){
 	return function(data){
 		image.attr('src',data);
 	}
+}
+function makeImgURL(user,taskid,photoid){
+	var server = 'http://localhost/user_images/',
+		folderName = user.id+'/',
+		imageName = taskid+photoid+'.jpg',
+		imageURL;
+
+		imageURL = server+folderName+imageName;
+		return imageURL;
 }
 function addPhoto(data){
 	$('#exPhoto1').attr('src',data);
