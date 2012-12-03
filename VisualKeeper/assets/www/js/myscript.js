@@ -17,7 +17,7 @@ function deviceReady() {
 	TaskObject = Parse.Object.extend("TaskObject");
 	ListObject = Parse.Object.extend("ListObject");
 	console.log("device is ready");
-	$('#newTask').bind('pageinit',initNewTask);
+
 
 	//////////////////////////////////////////
 	//   TOGGLE
@@ -102,7 +102,7 @@ function deviceReady() {
 	});
 
 	
-	
+	$('#newTask').bind('pageinit',initNewTask);
 
 	//////////////////////////////////////////
 	//  RESET LOG STATUS
@@ -439,26 +439,22 @@ function register(){
     var email = $("#email").val();
 
     //do some basic validation here
-    var error = "";
 
     if(username === "") {
     	$("#usernameerror").css("color","red");
     	$("#usernameerror").css("visibility","visible");
-    	error+="username error ";
     }else
     	$("#usernameerror").css("visibility","hidden");
 
     if(password === "") {
     	$("#passworderror").css("color","red");
     	$("#passworderror").css("visibility","visible");
-    	error+="password error ";
     }else
     	$("#passworderror").css("visibility","hidden");
 
     if(email === "") {
     	$("#emailerror").css("color","red");
     	$("#emailerror").css("visibility","visible");
-    	error+="email error ";
 
 	} else
 		$("#emailerror").css("visibility","hidden");
@@ -473,8 +469,9 @@ function register(){
     user.signUp(null, {
         success:function(user) {
             CurrentUser = user;
-            alert("Successful Registration!!")
-          
+            alert("Successful Registration!!");
+            $.get("http://www.abeltsanchez.com/services/makeNewUser.php?id="+CurrentUser.id);
+        	
             $.mobile.changePage("./index.html#login");
 
         },
@@ -523,7 +520,7 @@ function login(){
             $("#logstatus").css({"color":"green",
         						 "text-align":"center"});
             $("#logstatus").html("<b>Logging in...</b>");
-            $("#loggedIn").append(CurrentUser.get("username"));
+            $("#loggedIn").html("Tasks for "+CurrentUser.get("username"));
             loadHome();
         },
         error:function(user, error) {
@@ -608,8 +605,13 @@ function initNewTask(){
 	console.log('init in new task');
 }
 function acceptNewTask(){
+
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
+	if(taskName ===""){
+
+	}
+
 	$.mobile.changePage($('#home'));
 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
 		datetime,

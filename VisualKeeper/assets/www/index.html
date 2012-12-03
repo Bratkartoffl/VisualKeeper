@@ -18,13 +18,13 @@
 
 		<!-- ======= LOGIN PAGE ==================== -->
 		<div data-role="page" id="login" data-theme="a">
-			<div data-role = "header" id="homeheader">
+			<div data-role = "header" id="loginheader">
 				<H1>Visual Keeper</h1>
 			</div>
 			<div data-role = "content" >
 				<div class="menu">
 					<h3 style="text-align:center"><strong>Don't have an account? Create one, it's simple.</strong></h3>
-					<hr width="50%">
+					<hr style="width:50%">
 					<div style="align:center">
 						<a href="#register" data-role="button" data-icon="arrow-r" data-iconpos="right" data-transition="slide">Register</a>
 						<a data-role="button" data-icon="arrow-d" data-iconpos="right" id ="emailReset">Reset password by email</a>
@@ -56,12 +56,11 @@
 
 		<!-- ======= REGISTER PAGE ==================== -->
 		<div data-role="page" id="register" data-theme="a">
-			<div data-role = "header" id="homeheader">
+			<div data-role = "header" id="registerheader">
 				<a href="index.html">Back</a>
 				<h1>Register</h1>
 			</div>
 			<div data-role = "content" >
-				<div id="regstatus"></div>
 				<br />
 				<form>
 					<label for="username">Username:</label>
@@ -107,7 +106,7 @@
 						<a href="#menuPopup" data-role="button" data-rel="popup" id="menuButton" style="width:50%;">Menu</a>
 					</div>
 					<div class="ui-block-b">
-						<div data-role="controlgroup" data-type="horizontal" style="float:right;" style="width:80%">
+						<div data-role="controlgroup" data-type="horizontal" style="float:right;width:80%">
 							
 							<select name="selectedList" id="listselect" data-icon="arrow-d" >
 							
@@ -153,7 +152,7 @@
 			<div data-role = "content" id="viewTaskContent">
 				<p id = "vtaskID" style="display:none;"></p>
 				<h2 id = "vTaskName"></h2>
-				<img id="vTaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px">
+				<img id="vTaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px" alt="TASK_IMAGE">
 				<span class = 'dispContainer'>
 					<p id="vTaskTime"><b>Time: </b></p>
 				</span>
@@ -206,7 +205,7 @@
 					</ul>
 				</div>
 				<div id="weekOptions">
-					<label for='daysfieldset'>Days</label>
+					<label>Days</label>
 					<fieldset id="daysfieldset" data-role="controlgroup">
 
 						<input type="checkbox" name="dayofweek" id="suncheck" class="daycheck" class = "dialoginput" />
@@ -245,36 +244,45 @@
 		<!-- ======= NEW TASK PAGE ==================== -->
 		<div data-role="page" id="newTask" data-theme="a">
 			<div data-role = "header">
-				<h1 id="editTaskHeading">New Task</h1>
+				<h1>New Task</h1>
 			</div>
 			<div data-role = "content" data-theme="a" id="newTaskContent">
 				<form>
 					<fieldset class="ui-grid-a">
-						<div class="ui-block-a" id="taskPhoto">
-							<h2 id="loggedIn">Tasks for </h2>
+						<div class="ui-block-a" id="editTaskPhoto">
+							<h2 id="loggedIn"></h2>
 							<h2 style="padding-left:80px;">Task Photo</h2>
-							<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
-							</br>
+							<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px" alt="NEW_TASK_PHOTO"></a>
+							<br />
 						</div>
 						<div class="ui-block-b" id="taskInfo">
 							<h2 style="margin-bottom:15px;">Task Information</h2>
 							<div data-role="fieldcontain">
 								<label for="nameField">Name:</label>
 			   					<input type="text" name="taskName" id="nameField" value=""  />
+			   					<span id="taskNameError" style="visibility:hidden;text-align:">TaskName Required</span><hr />
 			   				</div>
 			   				
 			   				<div data-role="fieldcontain">
 			   					<label for="descArea">Description:</label>
 								<textarea name="desc" id="descArea"></textarea>
+								<span id="taskDescError" style="visibility:hidden;">Task Description Required</span><hr />
 							</div>
 							
 							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+							<div id="dateDisplay" style="visibility:hidden;">
+								<h4>Date:</h4>
+								<h4>Time:</h4>
+								<h4>Frequency:</h4>
+
 						</div>
 					</fieldset>
 				</form>
 				<div class="ui-grid-solo">
-					<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
-					<div class="ui-block-a" >
+					<div id="addlPhotoButton">
+						<button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button>
+					</div>
+					<div class="ui-block-a">
 						<form>
 							<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
 						</form>
@@ -283,8 +291,12 @@
 			</div>
 			<div data-role = "footer" data-position="fixed">
 				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><p id="acceptButton" data-role="button" data-transition="flip">Accept</p></div>
-					<div class="ui-block-b"><p id="cancelButton" data-role="button" data-transition="flip">Cancel</p></div>	   
+					<div class="ui-block-a">
+						<p id="acceptButton" data-role="button" data-transition="flip">Accept</p>
+					</div>
+					<div class="ui-block-b">
+						<p id="cancelButton" data-role="button" data-transition="flip">Cancel</p>
+					</div>	   
 				</fieldset>
 			</div>
 		</div>
@@ -301,10 +313,10 @@
 					<fieldset class="ui-grid-a">
 						<div class="ui-block-a" id="taskPhoto">
 							<h2 style="padding-left:80px;">Task Photo</h2>
-							<a onclick="capturePhoto();"><img id="etaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px"></a>
-							</br>
+							<a onclick="capturePhoto();"><img id="etaskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px" alt="EDIT TASK PHOTO"></a>
+							<br />
 						</div>
-						<div class="ui-block-b" id="taskInfo">
+						<div class="ui-block-b" id="editTaskInfo">
 							<h2 style="margin-bottom:15px;">Task Information</h2>
 							<div data-role="fieldcontain">
 								<label for="nameField">Name:</label>
@@ -316,15 +328,15 @@
 								<textarea name="desc" id="edescArea"></textarea>
 							</div>
 							
-							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
+							<a href="#dateTimeDialog" data-role="button" id="editDateButton" data-rel="dialog">Set Date/Time</a>
 						</div>
 					</fieldset>
 				</form>
 				<div class="ui-grid-solo">
-					<div id="addlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
+					<div id="editAddlPhotoButton"><button data-role="button" onclick="addPhotoSpace();">Add Additional Photo</button></div>
 					<div class="ui-block-a" >
 						<form>
-							<ul id="extraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
+							<ul id="editExtraPhotos" data-role="listview" data-inset="true" data-theme="b"></ul>
 						</form>
 					</div>
 				</div>
