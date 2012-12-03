@@ -586,7 +586,7 @@ function acceptNewTask(){
 		},{
 			success: function(tO){
 				console.log('success! id: '+ tO.id);
-				uploadPhoto(imgsrc,CurrentUser,tO.id,1);
+				uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
 		 	},
 		 	error: function(tO, error){
 		 		console.log('error saving');
@@ -671,7 +671,7 @@ function capturePhoto(){
  												sourceType : Camera.PictureSourceType.CAMERA, 
   												allowEdit : true,
   												encodingType: Camera.EncodingType.JPEG,
-  												quality:60});
+  												quality:30});
 }
 function showPhoto(data){
 	picNum++;
