@@ -16,24 +16,48 @@
 	</head>
 	<body onload="init();">
 
-		<!-- ======= INTRO PAGE ==================== -->
-		<div data-role="page" id="intro" data-theme="a">
-			<div data-role = "header" id="homeheader"></div>
+		<!-- ======= LOGIN PAGE ==================== -->
+		<div data-role="page" id="login" data-theme="a">
+			<div data-role = "header" id="homeheader">
+				<H1>Visual Keeper</h1>
+			</div>
 			<div data-role = "content" >
 				<div class="menu">
-					<a href="#login" data-role="button" >Login</a>
-					<a href="#register" data-role="button" >Register</a>
+					<h3 style="text-align:center"><strong>Don't have an account? Create one, it's simple.</strong></h3>
+					<hr width="50%">
+					<div style="align:center">
+						<a href="#register" data-role="button" data-icon="arrow-r" data-iconpos="right" data-transition="slide">Register</a>
+						<a data-role="button" data-icon="arrow-d" data-iconpos="right" id ="emailReset">Reset password by email</a>
+						<div id="hiddenDiv" style="visibility:hidden;display:none;">
+							<input type="email" class="preloginput" placeholder="Email" id="passwordResetEmail">
+							<a data-role="button" data-icon="arrow-r" data-iconpos="right" data-transition="slide" id="resetButton" onclick="sendRes();">Send</a>
+						</div>
+						<div id="regstatus"></div>
+					</div>
+					<br >
+					<hr />
 				</div>
+				<form>
+					<label for="username"><strong>Username:</strong></label>
+					<input type="text" id="usernamelogin" class="preloginput">
+					<span id="loginuser" style="visibility:hidden">Username Required</span><br/>
+					<label for="password"><strong>Password:</strong></label>
+					<input type="password" id="passwordlogin" class="preloginput">
+					<span id="loginpass" style="visibility:hidden">Password Required</span>
+					<br />
+					<div id="logstatus"></div>
+					<a data-role="button" id="loginForm" onclick="login();">Login</a>
+				</form>
 			</div>
-			<div data-role = "footer" data-position="fixed"></div>
+			<div data-role = "footer" data-position="fixed">
+			</div>
 		</div>
-		<!-- ******* END OF INTRO PAGE ************* -->
-
+		<!-- ******* END OF LOGIN PAGE ************* -->
 
 		<!-- ======= REGISTER PAGE ==================== -->
 		<div data-role="page" id="register" data-theme="a">
 			<div data-role = "header" id="homeheader">
-				<a href="javascript:history.go(-1)">Back</a>
+				<a href="index.html">Back</a>
 				<h1>Register</h1>
 			</div>
 			<div data-role = "content" >
@@ -59,32 +83,6 @@
 			</div>
 		</div>
 		<!-- ******* END OF REGISTER PAGE ************* -->
-
-
-		<!-- ======= LOGIN PAGE ==================== -->
-		<div data-role="page" id="login" data-theme="a">
-			<div data-role = "header" id="homeheader">
-				<a href="javascript:history.go(-1)">Back</a>
-				<H1>Welcome to Visual Keeper</h1>
-			</div>
-			<div data-role = "content" >
-				<div id="logstatus"></div>
-				<form>
-					<label for="username">Username:</label>
-					<input type="text" id="usernamelogin" class="preloginput">
-					<span id="loginuser" style="visibility:hidden">Username Required</span><br />
-					<label for="password">Password: </label>
-					<input type="password" id="passwordlogin" class="preloginput">
-					<span id="loginpass" style="visibility:hidden">Password Required</span>
-					<br />
-					<a data-role="button" id="loginForm" onclick="login();">Login</a>
-				</form>
-				<hr />
-			</div>
-			<div data-role = "footer" data-position="fixed">
-			</div>
-		</div>
-		<!-- ******* END OF LOGIN PAGE ************* -->
 
 		<!-- ======= NEW TASK LIST DIALOG ==================== -->
 		<div data-role="page" id ="newTaskListDialog" data-theme="b">
@@ -124,9 +122,6 @@
 		
 			<div data-role="popup" id="menuPopup" style="z-index:999999;">
 				<ul data-role="listview">
-					<!-- <li><input type="search" name="taskSearch" id="tSearch" value="" /></li>
-					<li><a href="#sortDialog" data-rel="dialog">Sort</a></li>
-					<li><a href="#settings">Settings</a></li> -->
 					<li><a href="#summarySchedule">Schedule Summary</a></li>
 					<li>Share</li>
 					<li data-icon="false"><a onclick="logOut();">Logout</a></li>
@@ -172,10 +167,6 @@
 					<b>Description:</b>
 					<p id="vDescBox" ></p>
 				</span>
-				<!-- <div id="notifycheckbox">
-					<input type="checkbox" name="Notify" id="notifyCheck"/>
-					<label for="notifyCheck">Notify Me</label>
-				</div> -->
 				<br><br>
 				<b id="addlPhotoLabel">Additional Photos</b>
 				<ul id="addlPhotos" data-role="listview" data-inset="true" data-theme="a">
@@ -278,12 +269,6 @@
 							</div>
 							
 							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
-							
-							<!-- <div data-role="fieldcontain" style="width:60%;">
-								<input type="checkbox" name="notify" id="notificationCheck" />
-								<label for="notificationCheck">Enable Notifications</label>
-							</div>			 -->	
-						
 						</div>
 					</fieldset>
 				</form>
@@ -332,12 +317,6 @@
 							</div>
 							
 							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
-							
-							<!-- <div data-role="fieldcontain" style="width:60%;">
-								<input type="checkbox" name="notify" id="notificationCheck" />
-								<label for="notificationCheck">Enable Notifications</label>
-							</div>			 -->	
-						
 						</div>
 					</fieldset>
 				</form>
