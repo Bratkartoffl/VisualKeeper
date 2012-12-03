@@ -685,7 +685,7 @@ function uploadPhoto(imageURI, id, tid, pid){
 		params = new Object();
 	options.fileKey="file";
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-	options.mimeType="text/plain";
+	options.mimeType="image/jpeg";
 	console.log(options.fileName);
 	
 	params.uid = id;
