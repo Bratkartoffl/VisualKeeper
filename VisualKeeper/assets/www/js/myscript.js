@@ -173,8 +173,6 @@ function populateViewTask(taskId){
 	query.equalTo('objectId',taskId);
 	query.find({
 		success: function(results){
-			console.log('length of results: '+results.length);
-			console.log('result: '+results);
 			var name = results[0].attributes.taskName,
 				desc = results[0].attributes.taskDesc,
 				freq,
@@ -411,6 +409,7 @@ function pullList(){
 		success: function(tasks){
 			for(var i=0;i<tasks.length;i++){
 				var task = tasks[i];
+				console.log('task: '+task.objectId);
 				var imgsrc = makeImgURL(user,task.objectId,1),
 					dtime = task.attributes.taskTime;
 				newListViewTask(imgsrc, task.id,task.attributes.taskName,task.attributes.taskDesc,dtime.time+" on "+dtime.date,task.id);
