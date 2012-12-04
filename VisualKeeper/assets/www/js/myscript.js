@@ -409,8 +409,8 @@ function pullList(){
 		success: function(tasks){
 			for(var i=0;i<tasks.length;i++){
 				var task = tasks[i];
-				console.log('task: '+task.objectId);
-				var imgsrc = makeImgURL(user,task.objectId,1),
+				console.log('task: '+task.id);
+				var imgsrc = makeImgURL(user,task.id,1),
 					dtime = task.attributes.taskTime;
 				newListViewTask(imgsrc, task.id,task.attributes.taskName,task.attributes.taskDesc,dtime.time+" on "+dtime.date,task.id);
 			}
