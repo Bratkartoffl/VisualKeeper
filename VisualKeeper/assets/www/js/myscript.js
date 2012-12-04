@@ -779,6 +779,7 @@ function makeImgURL(user,taskid,photoid){
 		imageURL;
 
 		imageURL = server+folderName+imageName;
+		console.log('image is: '+imageURL);
 		return imageURL;
 }
 function addPhoto(data){
