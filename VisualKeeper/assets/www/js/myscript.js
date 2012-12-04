@@ -183,7 +183,7 @@ function populateViewTask(taskId){
 				time,
 				date,
 				imURL;
-			imURL = makeImgURL(user,taskId,'main');
+			imURL = makeImgURL(user,taskId,1);
 			freq = datetime.freq;
 			if(freq == 'taskOnce'){
 				freq='Once';
