@@ -610,7 +610,7 @@ function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
 	if(taskName ===""){
-
+		
 	}
 
 	$.mobile.changePage($('#home'));

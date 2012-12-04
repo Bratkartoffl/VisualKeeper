@@ -253,6 +253,7 @@
 							<h2 id="loggedIn"></h2>
 							<h2 style="padding-left:80px;">Task Photo</h2>
 							<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px" alt="NEW_TASK_PHOTO"></a>
+							<span id="taskPicError" style="visibility:hidden;display:none;text-align:center">
 							<br />
 						</div>
 						<div class="ui-block-b" id="taskInfo">
@@ -260,7 +261,7 @@
 							<div data-role="fieldcontain">
 								<label for="nameField">Name:</label>
 			   					<input type="text" name="taskName" id="nameField" value=""  />
-			   					<span id="taskNameError" style="visibility:hidden;text-align:">TaskName Required</span><hr />
+			   					<span id="taskNameError" style="visibility:hidden;display:none;text-align:center">TaskName Required</span><hr />
 			   				</div>
 			   				
 			   				<div data-role="fieldcontain">
@@ -274,6 +275,8 @@
 								<h4>Date:</h4>
 								<h4>Time:</h4>
 								<h4>Frequency:</h4>
+							</div>
+							<span id="taskDescError" style="visibility:hidden;">Task Description Required</span>
 
 						</div>
 					</fieldset>
