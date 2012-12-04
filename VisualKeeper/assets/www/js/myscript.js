@@ -173,6 +173,8 @@ function populateViewTask(taskId){
 	query.equalTo('objectId',taskId);
 	query.find({
 		success: function(results){
+			console.log('length of results: '+results.length);
+			console.log('result: '+results);
 			var name = results[0].attributes.taskName,
 				desc = results[0].attributes.taskDesc,
 				freq,
