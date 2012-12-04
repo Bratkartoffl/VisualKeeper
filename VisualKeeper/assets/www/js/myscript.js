@@ -773,7 +773,7 @@ function generateSuccess(image){
 	}
 }
 function makeImgURL(user,taskid,photoid){
-	var server = 'http://localhost/user_images/',
+	var server = 'http://abeltsanchez.com/user_images/',
 		folderName = user.id+'/',
 		imageName = taskid+photoid+'.jpg',
 		imageURL;
