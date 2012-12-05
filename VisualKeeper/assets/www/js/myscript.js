@@ -229,6 +229,9 @@ function resetNewTask(){
 	var s='';
 	resetDateTimeDialog();
 	$('#extraPhotos').html(s).listview('refresh');
+	$('#taskPic').attr('src','camera.jpg');
+	$('#nameField').val('');
+	$('#descArea').val('');
 }
 function setToNewTask(){
 	//$('#editTaskHeading').html('New Task');
