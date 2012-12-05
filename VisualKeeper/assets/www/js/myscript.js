@@ -3,6 +3,7 @@ var CurrentUser;
 var UserObject;
 var picNum;
 var datepickerinfo = new Object();
+var currentObj;
 
 
 //////////////////////////////////////////
@@ -142,8 +143,9 @@ function init(){
 //  TASK STUFF - LISTVIEW
 //////////////////////////////////////////
 function newListViewTask(img, id, name, desc, datetime, objId) {
-
-
+	
+	//console.log(objId);
+	
 	//////////////////////////////////////////
 	// CREATE LIST VIEW REPRESENTATION OF TASK
 	//////////////////////////////////////////
@@ -163,7 +165,7 @@ function newListViewTask(img, id, name, desc, datetime, objId) {
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" data-icon="delete">Delete</a></li>';
+	html += '</a><a id="editTaskButton" data-icon="delete" onclick="deleteTask("'+objId+'");">Delete</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
@@ -677,6 +679,10 @@ function sendRes(){
             alert(error.message);
         }
     });
+}
+function deleteTask(objId) {
+	//var placer="";
+	//placer+=objId;
 }
 
 
