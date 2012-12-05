@@ -39,7 +39,7 @@ function deviceReady() {
 	//////////////////////////////////////////
 	//   BEFORE PAGE SHOWS BINDS
 	//////////////////////////////////////////
-    $('#newTask').bind('pagebeforeshow',resetNewTask);
+    //$('#newTask').bind('pagebeforeshow',resetNewTask);
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
 		$('#onceOptions').show();
 		$('#dailyOptions').hide();
@@ -61,7 +61,7 @@ function deviceReady() {
 			preset: 'time', 
 			display: 'inline',
         	mode: 'scroller' });
-		
+
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
 	$('#register').bind('pagebeforeshow',CLEARFORM);
@@ -95,6 +95,9 @@ function deviceReady() {
 		$('#newtasklink').click();
 	});
 
+	%('#newTaskButton').bind('tap',function(){
+		resetNewTask();
+	});
 	//////////////////////////////////////////
 	//   SET FREQUENCY RADIO
 	//////////////////////////////////////////
