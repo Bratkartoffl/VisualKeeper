@@ -44,6 +44,24 @@ function deviceReady() {
 		$('#onceOptions').show();
 		$('#dailyOptions').hide();
 		$('#weekOptions').hide();
+		$("#oDate").scroller({ 
+			preset: 'date', 
+			display: 'inline',
+        	mode: 'scroller'
+        });
+		$("#oTime").scroller({ 
+			preset: 'time', 
+			display: 'inline',
+        	mode: 'scroller' });
+		$("#wTime").scroller({ 
+			preset: 'time', 
+			display: 'inline',
+        	mode: 'scroller' });
+		$("#dTime").scroller({ 
+			preset: 'time', 
+			display: 'inline',
+        	mode: 'scroller' });
+		
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
 	});
 	$('#register').bind('pagebeforeshow',CLEARFORM);
@@ -103,6 +121,7 @@ function deviceReady() {
 	});
 
 	
+
 	$('#newTask').bind('pageinit',initNewTask);
 
 	//////////////////////////////////////////
@@ -218,6 +237,9 @@ function clearTaskListView() {
 	// CLEAR TASK LIST VIEW
 	//////////////////////////////////////////
 	$('#taskList').html('');
+}
+function fillInScheduleSummary(){
+
 }
 function cancelNewTask(){
 	resetNewTask();
