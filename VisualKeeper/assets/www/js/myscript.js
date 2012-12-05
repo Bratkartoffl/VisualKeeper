@@ -1,4 +1,4 @@
-var photoCounter=1;
+var photoCounter=0;
 var CurrentUser;
 var UserObject;
 var picNum;
@@ -95,7 +95,7 @@ function deviceReady() {
 		$('#newtasklink').click();
 	});
 
-	%('#newTaskButton').bind('tap',function(){
+	$('#newTaskButton').bind('tap',function(){
 		resetNewTask();
 	});
 	//////////////////////////////////////////
@@ -241,9 +241,7 @@ function clearTaskListView() {
 	//////////////////////////////////////////
 	$('#taskList').html('');
 }
-function fillInScheduleSummary(){
 
-}
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
@@ -595,6 +593,12 @@ function loadfromParse() {
 	 	}
 	 });
 }
+function fillInScheduleSummary(){
+	var UserObject = Parse.User.current(),
+		query = new Parse.Query(TaskObject);
+		query.equalTo('creator',UserObject);
+
+}
 function addListToParse(value, name){
 	var list = new ListObject();
 	var UserObject = Parse.User.current();
@@ -678,7 +682,7 @@ function acceptNewTask(){
 			taskDesc:taskDesc,
 			taskTime:dateObj,
 			creator:CurrentUser,
-			picCounter:picNum,
+			picCounter:photoCounter,
 			listName:listname
 		},{
 			success: function(tO){
