@@ -1,9 +1,11 @@
 var photoCounter=0;
 var CurrentUser;
-var UserObject;
+var tUserObject;
 var picNum;
 var datepickerinfo = new Object();
 var currentObj;
+var sharedUser;
+var sharedList;
 
 
 //////////////////////////////////////////
@@ -17,6 +19,7 @@ function deviceReady() {
 	Parse.initialize("yNTwoqpiw9bABPUWs5IgvqI3DdTEWMgaOvSLoNIM", "pnoupPXYoWczbF3HMcMlwfreJaoHFDmYHGow2eA7");
 	TaskObject = Parse.Object.extend("TaskObject");
 	ListObject = Parse.Object.extend("ListObject");
+	UserObject = Parse.Object.extend("User");
 	console.log("device is ready");
 
 
@@ -271,7 +274,7 @@ function setToNewTask(){
 
 
 //////////////////////////////////////////
-	// TASK d = 'monDivide';STUFF - LISTDROPDOWN
+	// TASK STUFF - LISTDROPDOWN
 //////////////////////////////////////////
 function addNewListToDropdown(value, name) {
 
@@ -445,7 +448,6 @@ function initHome(){
 	$('#listselect').selectmenu('refresh');
 }
 function loadHome() {setTimeout( function(){ window.location = "#home"; }, 1000 );}
-
 function loadLists(){
 	var listObject = new ListObject(),
 		query = new Parse.Query(ListObject),
@@ -459,7 +461,7 @@ function loadLists(){
 				var list = lists[i];
 				addNewListToDropdown(list.attributes.name,list.attributes.value);
 			}
-			
+			sharedList = list.id;
 		},
 		error: function(list, error){
 			console.log('error finding lists');
@@ -554,7 +556,7 @@ function logOut() {
 	console.log("Logout");
 	Parse.User.logOut();
 	CurrentUser="";
-	UserObject="";
+	tUserObject="";
 	 $.mobile.changePage("#login");
 }
 function login(){
@@ -608,13 +610,13 @@ function CLEARFORM(){
 }
 function loadfromParse() {
 
-	var UserObject = Parse.User.current(),
+	var tUserObject = Parse.User.current(),
 		imgsrc = $('#taskPic').attr('src');
 
 	var query = new Parse.Query(TaskObject);
-	var userid = UserObject.id;
+	var userid = tUserObject.id;
 	var dtime;
-	query.equalTo('creator',UserObject);
+	query.equalTo('creator',tUserObject);
 	query.find({
 	 	success:function(results){
 			console.log('num results: '+results.length);
@@ -635,7 +637,7 @@ function loadfromParse() {
 	 });
 }
 function fillInScheduleSummary(){
-	var UserObject = Parse.User.current(),
+	var tUserObject = Parse.User.current(),
 		query = new Parse.Query(TaskObject),
 		date = new Date();
 
@@ -643,7 +645,7 @@ function fillInScheduleSummary(){
 		week = getWeekNumber(date);
 		console.log('week#: '+week);
 
-		query.equalTo('creator',UserObject);
+		query.equalTo('creator',tUserObject);
 
 		query.find({
 			success: function(results){
@@ -668,11 +670,11 @@ function fillInScheduleSummary(){
 				console.log('error: '+error.code+" "+error.message);
 			}
 		});
-
 }
 function addListToParse(value, name){
+	var share = "not share";
 	var list = new ListObject();
-	var UserObject = Parse.User.current();
+	var tUserObject = Parse.User.current();
 	var query = new Parse.Query(ListObject);
 	query.equalTo('name',name);
 	query.find({
@@ -684,7 +686,8 @@ function addListToParse(value, name){
 				list.save({
 					value:value,
 					name:name,
-					user:UserObject.id
+					user:tUserObject.id,
+					share:share,
 				}, {
 					success: function(listobj){
 						console.log('success');
@@ -714,9 +717,6 @@ function acceptNewTask(){
 
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
-	if(taskName ===""){
-		
-	}
 
 	$.mobile.changePage($('#home'));
 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
@@ -786,7 +786,38 @@ function deleteTask(objId) {
 	//var placer="";
 	//placer+=objId;
 }
+function shareList() {
+	var shareEmail="";
+	shareEmail += $("#shareInput").val();
+	console.log(shareEmail);
+	//var tUserObject = Parse.User.current();
+	var shareuserObject = new UserObject();
+	var queryUser = new Parse.Query(UserObject);
+	queryUser.equalTo("email",shareEmail);
+	queryUser.find({
+		success:function(results) {
+			for(var i=0;i<results.length;i++){
+				var result = results[i];
+				sharedUser = result.id;
+			}
+			if(CurrentUser.id === sharedUser){
+				$("#shareInput").val("");
+				alert("You can't share with you, try again");
+				$.mobile.changePage($('#shareDialog'));
+			}
 
+			console.log("The list "+sharedList+" needs to be shared with user "+sharedUser);
+			//queriedUser = results[0].attributes.username;
+			//console.log(queriedUser);
+		},
+		error:function(error){
+			console.log("Failure To Create Queried User");
+		}
+	});
+	//var addList = new Parse.Query(ListObject);
+	//console.log(tUserObject.email);
+	$.mobile.changePage($('#home'));
+}
 
 //////////////////////////////////////////
 // PIC STUFF
@@ -904,7 +935,6 @@ function setupEdit(imgURL, name, desc, datetime, tid){
 	console.log('about to set up date time');
 	setupDateTime(datetime);
 }
-
 function getWeekNumber(indate) {
     //d = new Date(d);
     d = indate;
@@ -917,7 +947,6 @@ function getWeekNumber(indate) {
    
     return weekNo;
 }
-
 Date.prototype.getWeek = function() {
 	var onejan = new Date(this.getFullYear(),0,1);
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
