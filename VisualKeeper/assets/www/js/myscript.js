@@ -49,15 +49,18 @@ function deviceReady() {
 		$("#oTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller' });
+        	mode: 'scroller'
+        });
 		$("#wTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller' });
+        	mode: 'scroller'
+        });
 		$("#dTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller' });
+        	mode: 'scroller'
+        });
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
     });
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
@@ -192,7 +195,7 @@ function newListViewTask(img, id, name, desc, datetime, objId) {
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" data-icon="delete" onclick="deleteTask("'+objId+'");">Delete</a></li>';
+	html += '</a><a id="editTaskButton" data-icon="delete">Delete</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
