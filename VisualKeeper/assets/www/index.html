@@ -121,6 +121,7 @@
 
 			</div>
 		
+
 			<div data-role="popup" id="menuPopup" style="z-index:999999;">
 				<ul data-role="listview">
 					<li><a href="#summarySchedule">Schedule Summary</a></li>
@@ -145,6 +146,33 @@
 			</div>
 		</div>
 		<!-- ******* END OF HOME PAGE ************* -->
+
+
+		<!-- ******* DELETE DIALOG     ************* -->
+		<div data-role="page" id="deleteDialog" data-theme="b">
+			<div data-role="header">
+				<h3>Confirm Delete</h3>
+			</div>
+			<div data-role="content">
+				<b>Are you sure you want to delete <div id='deleteName'></div> </b>
+				<p>This cannot be undone</p>
+				<p style="display:none;" id="deleteTaskId"></p>
+				<a href="#deletePopup" data-rel="popup" style="display:none;" id="dPopButton" data-position-to="window"></a>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<a data-role="button" id="deleteConfirmButton">Delete</a>
+					</div>
+					<div class="ui-block-b">
+						<a data-role="button" data-rel="back" id="deleteCancel">Cancel</a>
+					</div>
+				</div>
+				<p id="deleteResult"></p>
+				<!-- <div data-role="popup" id="deleteConfirmPopup" style="z-index:1000;">
+					<b id="deleteResult"></b>
+				</div> -->
+			</div>
+		</div>
+		<!-- ******* END OF DELETE DIALOG************* -->
 
 
 		<!-- ******* SHARE DIALOG     ************* -->

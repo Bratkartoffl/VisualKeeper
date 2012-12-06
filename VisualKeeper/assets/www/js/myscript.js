@@ -79,6 +79,14 @@ function deviceReady() {
 			
 		});
     });
+    $('#deleteDialog').bind('pageinit',function(){
+    	$('#deleteConfirmButton').bind('tap',function(event){
+    		var id = $('#deleteTaskId').html();
+    		console.log(id);
+    		deleteTask(id);
+    	});
+    });
+
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
 		$('#errorMsg').hide();
 		$('#onceOptions').show();
@@ -212,10 +220,11 @@ function newListViewTask(img, id, name, desc, datetime, objId) {
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a href ="deleteDialog" data-rel="dialog" id="deleteButton" data-icon="delete">Delete</a></li>';
+	html += '</a><a href ="#deleteDialog" data-task="'+objId+'" data-rel="dialog" id="deleteButton" data-icon="delete">Delete</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
+	$('#deleteButton').bind('tap', setupDelete);
 }
 function populateViewTask(taskId){
 	var query = new Parse.Query(TaskObject);
@@ -288,7 +297,7 @@ function setToNewTask(){
 
 
 //////////////////////////////////////////
-	// TASK STUFF - LISTDROPDOWN
+// TASK STUFF - LISTDROPDOWN
 //////////////////////////////////////////
 function addNewListToDropdown(value, name) {
 
@@ -304,6 +313,23 @@ function addNewListToDropdown(value, name) {
 
 }
 
+function setupDelete(event){
+	var tid = event.delegateTarget,
+	query = new Parse.Query(TaskObject);
+	tid = $(tid).data('task');
+	query.get(tid,{
+		success: function(task){
+			console.log('task to delete: '+task.attributes.taskName);
+			$('#deleteName').html('"'+task.attributes.taskName+'"');
+			$('#deleteTaskId').html(task.id);
+			$('#deleteResult').hide();
+		},
+		error: function(){
+			console.log('error setting up delete');
+		}
+	});
+
+}
 
 //////////////////////////////////////////
 //	EDIT TASK
@@ -796,9 +822,30 @@ function sendRes(){
     });
 }
 function deleteTask(objId) {
-
-	//var placer="";
-	//placer+=objId;
+	var query = new Parse.Query(TaskObject);
+	query.get(objId,{
+		success: function(task){
+			task.destroy({
+				success: function(obj){
+					$('#deleteResult').html('Task successfully deleted').show();
+					window.setTimeout(function(){
+						history.back();	
+					},2000);
+					
+				},
+				error: function(obj, error){
+					$('#deleteResult').html('Delete Failed').show();
+					$('#dPopButton').trigger('tap');
+					window.setTimeout(function(){
+						history.back();	
+					},2000);
+				}
+			});
+		},
+		error: function(error){
+			console.log('error finding task to delete');
+		}
+	});
 }
 function shareList() {
 	var shareEmail="";
