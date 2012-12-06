@@ -40,11 +40,8 @@ function deviceReady() {
 	//   BEFORE PAGE SHOWS BINDS
 	//////////////////////////////////////////
     //$('#newTask').bind('pagebeforeshow',resetNewTask);
-	$('#dateTimeDialog').bind('pagebeforeshow',function(){
-		$('#onceOptions').show();
-		$('#dailyOptions').hide();
-		$('#weekOptions').hide();
-		$("#oDate").scroller({ 
+    $('#dateTimeDialog').bind('pageinit',function(){
+    	$("#oDate").scroller({ 
 			preset: 'date', 
 			display: 'inline',
         	mode: 'scroller'
@@ -61,8 +58,16 @@ function deviceReady() {
 			preset: 'time', 
 			display: 'inline',
         	mode: 'scroller' });
-
 		$('#datePickerAccept').bind('tap', getDateTimeInfo);
+    });
+	$('#dateTimeDialog').bind('pagebeforeshow',function(){
+		$('#onceOptions').show();
+		$('#dailyOptions').hide();
+		$('#weekOptions').hide();
+		
+	});
+	$('#summarySchedule').bind('pagebeforeshow',function(){
+		fillInScheduleSummary();
 	});
 	$('#register').bind('pagebeforeshow',CLEARFORM);
 	$('#login').bind('pagebeforeshow',CLEARFORM);
@@ -263,20 +268,20 @@ function setToNewTask(){
 
 
 //////////////////////////////////////////
-// TASK STUFF - LISTDROPDOWN
+	// TASK d = 'monDivide';STUFF - LISTDROPDOWN
 //////////////////////////////////////////
 function addNewListToDropdown(value, name) {
 
 	var html = '<option value="';
 	html += value+'"> '+name+'</option>';
 	$('#listselect').prepend(html);
-	$('#listselect option[value="'+value+'"]').attr('selected', 'selected');
 	$('option:selected').each(function(idx, elem){
 			$(elem).removeAttr('selected');
-		});
-		$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
+	});
+	$('#listselect option[value="'+name+'"]').attr('selected', 'selected');
 	$('#listselect').selectmenu('refresh',true);
 	$('#homeheader').trigger("create");
+
 }
 
 
@@ -329,16 +334,48 @@ function submitEdits(){
 //////////////////////////////////////////
 //	SCHEDULE SUMMARY
 //////////////////////////////////////////
-function populateScheduleSummary(weekTasks){
-	var html="", i;
-	for(i=0;i<weekTasks.length;i++){
-		html += "<li><a href='#viewTask'><h1>";
-		html += weekTasks[i].tName + ' id: '+weekTasks[i].tId;
-		html += "</h1></a></li>";
+function populateScheduleSummary(task){
+	var tDate = task.attributes.taskTime,
+		tDay,
+		d,
+		html;
+
+	html = '<li>'+task.attributes.taskName+' @ '+tDate.time+'</li>';
+
+	tDate = $.scroller.parseDate('mm/dd/yy',tDate.date);
+	tDay = tDate.getDay();
+	console.log(tDay);
+	switch(tDay)
+	{
+		case 0:
+			d = 'monDivide';
+			break;
+		case 1:
+			d = 'tueDivide';
+			break;
+		case 2:
+			d = 'wedDivide';
+			break;
+		case 3:
+			d = 'thurDivide';
+			break;
+		case 4:
+			d = 'friDivide';
+			break;
+		case 5:
+			d = 'satDivide';
+			break;
+		case 6:
+			d = 'sunDivide';
+			break;
 	}
+	$('#'+d).after(html);
 }
 
-
+function resetScheduleSummary(){
+	var fresh = '<li id="sunDivide" data-role="list-divider" data-theme="a">Sunday</li><li id="monDivide" data-role="list-divider">Monday</li><li id="tueDivide" data-role="list-divider">Tuesday</li><li id="wedDivide" data-role="list-divider">Wednesday</li><li id="thurDivide" data-role="list-divider">Thursday</li><li id="friDivide" data-role="list-divider">Friday</li><li id="satDivide" data-role="list-divider">Saturday</li>';
+	$('#summaryList').html(fresh);
+}
 //////////////////////////////////////////
 // DATE/TIME
 //////////////////////////////////////////
@@ -402,7 +439,7 @@ function initHome(){
 	//pullList();
 	addNewListToDropdown('default','Default List');
 	$('#listselect option[value="default"]').attr('selected', 'selected');
-	$('#listselect').selectmenu();
+	$('#listselect').selectmenu('refresh');
 }
 function loadHome() {setTimeout( function(){ window.location = "#home"; }, 1000 );}
 
@@ -582,6 +619,7 @@ function loadfromParse() {
 	 			var result=results[i];
 	 		  	dtime = result.attributes.taskTime;
 	 		  	if(result.attributes.listName == 'default'){
+	 		  		console.log(dtime.time);
 	 		  		newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date, result.id);
 	 		  	}
 	 		  	else if(result.attributes.listName!=undefined){
@@ -589,14 +627,44 @@ function loadfromParse() {
 	 		}
 	 	},
 	 	error: function(error){
-	 		console.log("Error: "+error.code+" "+error.message)
+	 		console.log("Error: "+error.code+" "+error.message);
 	 	}
 	 });
 }
 function fillInScheduleSummary(){
 	var UserObject = Parse.User.current(),
-		query = new Parse.Query(TaskObject);
+		query = new Parse.Query(TaskObject),
+		date = new Date();
+
+		//week = date.getWeek();
+		week = getWeekNumber(date);
+		console.log('week#: '+week);
+
 		query.equalTo('creator',UserObject);
+
+		query.find({
+			success: function(results){
+				resetScheduleSummary();
+				for(var i=0;i<results.length;i++){
+					var result = results[i];
+					var taskDate = result.attributes.taskTime;
+					
+					if(taskDate){	
+						taskDate = $.scroller.parseDate('mm/dd/yy',taskDate.date);
+						if(week == getWeekNumber(taskDate))
+						{
+							populateScheduleSummary(result);
+						}
+						// console.log("date"+i+": "+taskDate.toDateString());
+						// console.log('task week#'+getWeekNumber(taskDate));
+					}
+				}
+				$('#summaryList').listview('refresh');
+			},
+			error: function(error){
+				console.log('error: '+error.code+" "+error.message);
+			}
+		});
 
 }
 function addListToParse(value, name){
@@ -667,15 +735,14 @@ function acceptNewTask(){
 			datetime = {days:dateObj.days, time: dateObj.time};
 			freq = 'Weekly';
 		}
-		if(typeof(datetime)=='Object'){
-			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
-		}
-		else{
-			newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
-		}
-		console.log("Here is "+picNum);
+		// if(typeof(datetime)=='Object'){
+		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+		// }
+		// else{
+		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+		// }
 		var listname = $('#listselect > option:selected').attr('value');
-		console.log(listname);
+		
 		var taskObject = new TaskObject();
 		taskObject.save({
 			taskName:taskName,
@@ -833,4 +900,22 @@ function setupEdit(imgURL, name, desc, datetime, tid){
 	$('#editTaskId').html(tid);
 	console.log('about to set up date time');
 	setupDateTime(datetime);
+}
+
+function getWeekNumber(indate) {
+    //d = new Date(d);
+    d = indate;
+    d.setHours(0,0,0);
+    d.setDate(d.getDate() + 4 - (d.getDay()||7));
+   
+    var yearStart = new Date(d.getFullYear(),0,1);
+   
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+   
+    return weekNo;
+}
+
+Date.prototype.getWeek = function() {
+	var onejan = new Date(this.getFullYear(),0,1);
+	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 }
