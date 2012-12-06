@@ -61,9 +61,23 @@ function deviceReady() {
 			display: 'inline',
         	mode: 'scroller'
         });
-		$('#datePickerAccept').bind('tap', getDateTimeInfo);
+		$('#datePickerAccept').bind('tap', function(){
+			getDateTimeInfo();
+			if(datepickerinfo.freq=='taskOnce'){
+				console.log(datepickerinfo.time+" is the time");
+				if(datepickerinfo.time == '' || datepickerinfo.date == ''){
+					$('#errorMsg').show();
+					console.log('must select a date to continue');
+				}
+				else{
+					history.back();
+				}
+			}
+			
+		});
     });
 	$('#dateTimeDialog').bind('pagebeforeshow',function(){
+		$('#errorMsg').hide();
 		$('#onceOptions').show();
 		$('#dailyOptions').hide();
 		$('#weekOptions').hide();
@@ -92,7 +106,7 @@ function deviceReady() {
 	$('#vEditButton').bind('click',setToEditTask);
 	$('#newListAccept').bind('click',function(){
 		var name = $('#listnameinput').val();
-		console.log('list name: '+name);
+		// console.log('list name: '+name);
 		$("#listnameinput").val('');
 		addListToParse(name,name);
 		
@@ -195,7 +209,7 @@ function newListViewTask(img, id, name, desc, datetime, objId) {
 	html += '</br>';
 	html += datetime;
 	html += '</p>';
-	html += '</a><a id="editTaskButton" data-icon="delete">Delete</a></li>';
+	html += '</a><a href ="deleteDialog" data-rel="dialog" id="deleteButton" data-icon="delete">Delete</a></li>';
 	tasklist = $('#taskList');
 	tasklist.append(html).listview('refresh');
 	tasklist.trigger("create");
@@ -266,7 +280,7 @@ function resetNewTask(){
 }
 function setToNewTask(){
 	//$('#editTaskHeading').html('New Task');
-	console.log('making new task...');
+	//console.log('making new task...');
 }
 
 
@@ -347,7 +361,7 @@ function populateScheduleSummary(task){
 
 	tDate = $.scroller.parseDate('mm/dd/yy',tDate.date);
 	tDay = tDate.getDay();
-	console.log(tDay);
+	//console.log(tDay);
 	switch(tDay)
 	{
 		case 0:
@@ -412,22 +426,21 @@ function setupDateTime(datetime){
 }
 function getDateTimeInfo(){
 	var freq = $('input.dtfreq:checked').attr('id');
-		console.log(freq);
-		datepickerinfo.freq = freq;
-		if(freq=='taskOnce'){
-			datepickerinfo.date = $('#oDate').val();
-			datepickerinfo.time = $('#oTime').val();
-		}
-		else if(freq=='taskDaily'){
-			datepickerinfo.time = $('#dTime').val();
-		}
-		else if(freq=='taskWeekly'){
-			datepickerinfo.time = $('#wTime').val();
-			datepickerinfo.days = new Array('no','no','no','no','no','no','no','no');
-			$('input.daycheck:checked').each(function(idx, elem){
-				datepickerinfo.day[idx]=$(elem).attr('id');
-			});
-		}
+	datepickerinfo.freq = freq;
+	if(freq=='taskOnce'){
+		datepickerinfo.date = $('#oDate').val();
+		datepickerinfo.time = $('#oTime').val();
+	}
+	else if(freq=='taskDaily'){
+		datepickerinfo.time = $('#dTime').val();
+	}
+	else if(freq=='taskWeekly'){
+		datepickerinfo.time = $('#wTime').val();
+		datepickerinfo.days = new Array('no','no','no','no','no','no','no','no');
+		$('input.daycheck:checked').each(function(idx, elem){
+			datepickerinfo.day[idx]=$(elem).attr('id');
+		});
+	}
 	//return datepickerinfo;
 }
 
@@ -454,7 +467,7 @@ function loadLists(){
 	query.equalTo('user',user.id);
 	query.find({
 		success: function(lists){
-			console.log('lists found: '+lists.length);
+			//console.log('lists found: '+lists.length);
 			for(var i=0;i<lists.length;i++){
 				var list = lists[i];
 				addNewListToDropdown(list.attributes.name,list.attributes.value);
@@ -477,7 +490,7 @@ function pullList(){
 		success: function(tasks){
 			for(var i=0;i<tasks.length;i++){
 				var task = tasks[i];
-				console.log('task: '+task.id);
+				//console.log('task: '+task.id);
 				var imgsrc = makeImgURL(user,task.id,1),
 					dtime = task.attributes.taskTime;
 				newListViewTask(imgsrc, task.id,task.attributes.taskName,task.attributes.taskDesc,dtime.time+" on "+dtime.date,task.id);
@@ -617,12 +630,12 @@ function loadfromParse() {
 	query.equalTo('creator',UserObject);
 	query.find({
 	 	success:function(results){
-			console.log('num results: '+results.length);
+			//console.log('num results: '+results.length);
 	 		for(var i=0,len=results.length; i<len; i++){
 	 			var result=results[i];
 	 		  	dtime = result.attributes.taskTime;
 	 		  	if(result.attributes.listName == 'default'){
-	 		  		console.log(dtime.time);
+	 		  		//console.log(dtime.time);
 	 		  		newListViewTask(imgsrc,result.id,result.attributes.taskName,result.attributes.taskDesc,dtime.time+" on "+dtime.date, result.id);
 	 		  	}
 	 		  	else if(result.attributes.listName!=undefined){
@@ -641,7 +654,7 @@ function fillInScheduleSummary(){
 
 		//week = date.getWeek();
 		week = getWeekNumber(date);
-		console.log('week#: '+week);
+		//console.log('week#: '+week);
 
 		query.equalTo('creator',UserObject);
 
@@ -687,7 +700,7 @@ function addListToParse(value, name){
 					user:UserObject.id
 				}, {
 					success: function(listobj){
-						console.log('success');
+						//console.log('success');
 						addNewListToDropdown(value,name);
 					},
 					error: function(listobj, error){
@@ -708,7 +721,7 @@ function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
-	console.log('init in new task');
+	//console.log('init in new task');
 }
 function acceptNewTask(){
 
@@ -783,6 +796,7 @@ function sendRes(){
     });
 }
 function deleteTask(objId) {
+
 	//var placer="";
 	//placer+=objId;
 }
@@ -797,7 +811,7 @@ function uploadPhoto(imageURI, id, tid, pid){
 	options.fileKey="file";
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 	options.mimeType="image/jpeg";
-	console.log(options.fileName);
+	//console.log(options.fileName);
 	
 	params.uid = id;
     
@@ -849,10 +863,10 @@ function addPhotoView(){
 
 	list.append(html).listview('refresh');
 	$('#viewTaskContent').trigger("create");
-	console.log('photo view added');
+	//console.log('photo view added');
 }
 function capturePhoto(){
-	console.log(picNum);
+	//console.log(picNum);
 	navigator.camera.getPicture(showPhoto,photoFail,{
 												destinationType : Camera.DestinationType.FILE_URI, 
  												sourceType : Camera.PictureSourceType.CAMERA, 
@@ -888,7 +902,7 @@ function makeImgURL(user,taskid,photoid){
 		imageURL;
 
 		imageURL = server+folderName+imageName;
-		console.log('image is: '+imageURL);
+		//console.log('image is: '+imageURL);
 		return imageURL;
 }
 function addPhoto(data){
@@ -899,7 +913,7 @@ function setupEdit(imgURL, name, desc, datetime, tid){
 	$('#etaskPic').attr('src',imgURL);
 	$('#enameField').val(name);
 	$('#edescArea').val(desc);
-	console.log(tid);
+	//console.log(tid);
 	$('#editTaskId').html(tid);
 	console.log('about to set up date time');
 	setupDateTime(datetime);
