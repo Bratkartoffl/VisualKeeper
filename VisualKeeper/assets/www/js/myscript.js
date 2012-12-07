@@ -1,7 +1,6 @@
 var photoCounter;
 var CurrentUser;
 var tUserObject;
-var picNum;
 var datepickerinfo = new Object();
 var currentObj;
 
@@ -748,11 +747,10 @@ function addListToParse(value, name){
 	});
 }
 function initNewTask(){
-	picNum = 0;
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
-	//console.log('init in new task');
+	console.log('init in new task');
 }
 function acceptNewTask(){
 
@@ -926,7 +924,6 @@ function uploadPhoto(imageURI, id, tid, pid){
     ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
 }
 function addPhotoSpace(){
-	picNum++;
 	var list = $('#extraPhotos'),
 		fieldName = "nameField"+photoCounter,
 		fieldDesc = "descField"+photoCounter,
@@ -965,7 +962,6 @@ function addPhotoView(){
 	//console.log('photo view added');
 }
 function capturePhoto(){
-	//console.log(picNum);
 	navigator.camera.getPicture(showPhoto,photoFail,{
 												destinationType : Camera.DestinationType.FILE_URI, 
  												sourceType : Camera.PictureSourceType.CAMERA, 
@@ -974,15 +970,15 @@ function capturePhoto(){
   												quality:30});
 }
 function showPhoto(data){
-	picNum++;
+	photoCounter++;
 	var pic = $('#taskPic');
 	pic.attr('src', data);
 }
 function photoFail() {
-	if(picNum <= 1){
-		picNum = 0;
+	if(photoCounter <= 1){
+		photoCounter = 0;
 	}else{
-		picNum--; 
+		photoCounter--; 
 	}
 }
 function captureAdditionalPhoto(e){
