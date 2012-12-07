@@ -47,22 +47,26 @@ function deviceReady() {
     	$("#oDate").scroller({ 
 			preset: 'date', 
 			display: 'inline',
-        	mode: 'scroller'
+        	mode: 'scroller',
+        	theme: 'android-ics light'
         });
 		$("#oTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller'
+        	mode: 'scroller',
+        	theme: 'android-ics light'
         });
 		$("#wTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller'
+        	mode: 'scroller',
+        	theme: 'android-ics light'
         });
 		$("#dTime").scroller({ 
 			preset: 'time', 
 			display: 'inline',
-        	mode: 'scroller'
+        	mode: 'scroller',
+        	theme: 'android-ics light'
         });
 		$('#datePickerAccept').bind('tap', function(){
 			getDateTimeInfo();

@@ -1,0 +1,37 @@
+.header{
+	background-color:#a6cd1b;
+	text-align:center;
+	border-radius:20px;
+	margin:auto;
+	padding:5px 0px 10px 0px;
+}
+body{
+	background-color:#1a4a23;
+	text-align:center;
+}
+a{
+
+}
+.content{
+	width:850px;
+	margin:10px auto;
+	background-color:white;
+	padding: 20px;
+	border-radius:10px;
+	text-align:left;
+}
+.content > h2{
+	margin:auto;
+	text-align:center;
+}
+.footer{
+	background-color:#a6cd1b;
+	text-align:center;
+	border-radius:20px;
+	margin:auto;
+	padding:20px 100px 20px 100px;
+}
+.navlink{
+	font-size:1.4em;
+	margin:0px 8px 0px 8px;
+}
