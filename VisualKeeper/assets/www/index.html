@@ -21,7 +21,7 @@
 		<!-- ======= LOGIN PAGE ==================== -->
 		<div data-role="page" id="login" data-theme="a">
 			<div data-role = "header" id="loginheader">
-				<H1>Visual Keeper</h1>
+				<h1>Visual Keeper</h1>
 			</div>
 			<div data-role = "content" >
 				<div class="menu">
@@ -109,23 +109,17 @@
 					</div>
 					<div class="ui-block-b">
 						<div data-role="controlgroup" data-type="horizontal" style="float:right;width:80%">
-							
-							<select name="selectedList" id="listselect" data-icon="arrow-d" >
-							
-							</select>
+							<select name="selectedList" id="listselect" data-icon="arrow-d" ></select>
 							<a href="#newTaskListDialog" data-rel='dialog' data-role ="button" data-icon="plus" data-iconpos="notext" id ='new'>New Task List</a>
-							
 						</div>
 					</div>
 				</div>
-
 			</div>
-		
 
 			<div data-role="popup" id="menuPopup" style="z-index:999999;">
 				<ul data-role="listview">
 					<li><a href="#summarySchedule">Schedule Summary</a></li>
-					<li><a href="#shareDialog" data-rel="dialog">Share</a></li>
+					<!--<li><a href="#shareDialog" data-rel="dialog">Share</a></li>-->
 					<li data-icon="false"><a onclick="logOut();">Logout</a></li>
 				</ul>
 			</div>
@@ -147,8 +141,7 @@
 		</div>
 		<!-- ******* END OF HOME PAGE ************* -->
 
-
-		<!-- ******* DELETE DIALOG     ************* -->
+		<!-- ============ DELETE DIALOG =================== -->
 		<div data-role="page" id="deleteDialog" data-theme="b">
 			<div data-role="header">
 				<h3>Confirm Delete</h3>
@@ -174,9 +167,7 @@
 		</div>
 		<!-- ******* END OF DELETE DIALOG************* -->
 
-
 		<!-- ******* SHARE DIALOG     ************* -->
-
 		<div data-role="page" id ="shareDialog" data-theme="b">
 			<div data-role="header">
 				<h3>Share</h3>
@@ -189,9 +180,7 @@
 				<a data-rel ="back" data-role="button" id="newListCancel">Cancel</a>
 			</div>
 		</div>
-
 		<!-- ******* END OF SHARE DIALOG************* -->
-
 
 		<!-- ======= VIEW TASK PAGE ==================== -->
 		<div data-role="page" id="viewTask" data-add-back-btn="true">
@@ -307,7 +296,9 @@
 							<h2 id="loggedIn"></h2>
 							<h2 style="padding-left:80px;">Task Photo</h2>
 							<a onclick="capturePhoto();"><img id="taskPic" src="camera.jpg" style="width:auto;height:256px;margin-left:15px;border-radius:10px" alt="NEW_TASK_PHOTO"></a>
-							<span id="taskPicError" style="visibility:hidden;display:none;text-align:center">
+							<div>
+								<span id="taskPicError" style="visibility:hidden;">A picture is required for a task to be created. Please tap the camera icon to take a picture</span>
+							</div>
 							<br />
 						</div>
 						<div class="ui-block-b" id="taskInfo">
@@ -315,22 +306,23 @@
 							<div data-role="fieldcontain">
 								<label for="nameField">Name:</label>
 			   					<input type="text" name="taskName" id="nameField" value=""  />
-			   					<span id="taskNameError" style="visibility:hidden;display:none;text-align:center">TaskName Required</span><hr />
+			   					<span id="taskNameError" style="visibility:hidden;">TaskName Required</span>
 			   				</div>
 			   				
 			   				<div data-role="fieldcontain">
 			   					<label for="descArea">Description:</label>
 								<textarea name="desc" id="descArea"></textarea>
-								<span id="taskDescError" style="visibility:hidden;">Task Description Required</span><hr />
+								<span id="taskDescError" style="visibility:hidden;">Task Description Required</span>
 							</div>
 							
 							<a href="#dateTimeDialog" data-role="button" id="dateButton" data-rel="dialog">Set Date/Time</a>
-							<div id="dateDisplay" style="visibility:hidden;">
-								<h4>Date:</h4>
-								<h4>Time:</h4>
-								<h4>Frequency:</h4>
-							</div>
-							<span id="taskDescError" style="visibility:hidden;">Task Description Required</span>
+							<span id="taskDateError" style="visibility:hidden;">Task Date, Time and Frequency Required</span>
+							<span>
+								<h4 id="date" style="visibility:hidden;"></h4>
+								<h4 id="time" style="visibility:hidden;"></h4>
+								<h4 id="frequency" style="visibility:hidden;"></h4>
+							</span>
+							
 
 						</div>
 					</fieldset>
@@ -436,7 +428,6 @@
 			</div>
 		</div>
 		<!-- ******* END OF SETTINGS PAGE ************* -->
-
 
 		<!-- ======= SORT DIALOG ==================== -->
 		<div data-role="page" id="sortDialog" data-theme="a">

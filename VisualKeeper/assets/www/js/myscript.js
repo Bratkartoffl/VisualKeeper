@@ -4,8 +4,7 @@ var tUserObject;
 var picNum;
 var datepickerinfo = new Object();
 var currentObj;
-var sharedUser;
-var sharedList;
+
 
 
 //////////////////////////////////////////
@@ -78,9 +77,9 @@ function deviceReady() {
 				}
 				else{
 					history.back();
+					$("#taskDateError").css({"visibility":"hidden"});
 				}
 			}
-			
 		});
     });
     $('#deleteDialog').bind('pageinit',function(){
@@ -279,7 +278,6 @@ function clearTaskListView() {
 	//////////////////////////////////////////
 	$('#taskList').html('');
 }
-
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
@@ -761,54 +759,67 @@ function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
 
-	$.mobile.changePage($('#home'));
 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
 		datetime,
 		freq;
 	var imgsrc = $('#taskPic').attr('src');
-	if (taskName === "")
-		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm', 'zzzzzzz');
-	else{
-		if(dateObj.freq=='taskOnce'){
-			datetime = dateObj.date + " at " + dateObj.time;
-			freq= 'Once';
-		}
-		else if(dateObj.freq=='taskDaily'){
-			datetime = dateObj.time;
-			freq = 'Daily';
-		}
-		else if(dateObj.freq=='taskWeekly'){
-			datetime = {days:dateObj.days, time: dateObj.time};
-			freq = 'Weekly';
-		}
-		// if(typeof(datetime)=='Object'){
-		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
-		// }
-		// else{
-		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
-		// }
-		var listname = $('#listselect > option:selected').attr('value');
-		
-		var taskObject = new TaskObject();
-		taskObject.save({
-			taskName:taskName,
-			taskDesc:taskDesc,
-			taskTime:dateObj,
-			creator:CurrentUser,
-			picCounter:photoCounter,
-			listName:listname
-		},{
-			success: function(tO){
-				console.log('success! id: '+ tO.id);
-				uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
-		 	},
-		 	error: function(tO, error){
-		 		console.log('error saving');
-		 	}
-		});
-		
-		resetDateTimeDialog();
-	}	
+	if (taskName === "") {
+		$("#taskNameError").css({"color":"red",
+							 	 "visibility":"visible"});
+		return;
+	} else
+		$("#taskNameError").css({"visibility":"hidden"})
+	if(taskDesc === "") {
+		$("#taskDescError").css({"color":"red",
+								 "visibility":"visible"});
+		return;
+	} else
+		$("#taskDescError").css({"visibility":"hidden"});
+	if(dateObj.freq === undefined) {
+		$("#taskDateError").css({"color":"red",
+								 "visibility":"visible"});
+		//newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm', 'zzzzzzz');
+		return;
+	}
+	if(dateObj.freq=='taskOnce'){
+		datetime = dateObj.date + " at " + dateObj.time;
+		freq= 'Once';
+	}
+	else if(dateObj.freq=='taskDaily'){
+		datetime = dateObj.time;
+		freq = 'Daily';
+	}
+	else if(dateObj.freq=='taskWeekly'){
+		datetime = {days:dateObj.days, time: dateObj.time};
+		freq = 'Weekly';
+	}
+	// if(typeof(datetime)=='Object'){
+	// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+	// }
+	// else{
+	// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+	// }
+	var listname = $('#listselect > option:selected').attr('value');
+	
+	var taskObject = new TaskObject();
+	taskObject.save({
+		taskName:taskName,
+		taskDesc:taskDesc,
+		taskTime:dateObj,
+		creator:CurrentUser,
+		picCounter:photoCounter,
+		listName:listname
+	},{
+		success: function(tO){
+			console.log('success! id: '+ tO.id);
+			uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
+	 	},
+	 	error: function(tO, error){
+	 		console.log('error saving');
+	 	}
+	});
+	$.mobile.changePage($('#home'));
+	resetDateTimeDialog();
 }
 function sendRes(){
     var email = $("#passwordResetEmail").val();
