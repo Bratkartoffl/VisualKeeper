@@ -1,4 +1,4 @@
-var photoCounter=0;
+var photoCounter;
 var CurrentUser;
 var tUserObject;
 var picNum;
@@ -284,7 +284,7 @@ function cancelNewTask(){
 	$.mobile.changePage($('#home'));
 }
 function resetNewTask(){
-	photoCounter=1;
+	photoCounter=0;
 	var s='';
 	resetDateTimeDialog();
 	$('#extraPhotos').html(s).listview('refresh');
@@ -763,6 +763,12 @@ function acceptNewTask(){
 		datetime,
 		freq;
 	var imgsrc = $('#taskPic').attr('src');
+	if (photoCounter === 0) {
+		$("#taskPicError").css({"color":"red",
+								"visibility":"visible"});
+		return;
+	} else
+		$("#taskPicError").css({"visibility":"hidden"});
 	if (taskName === "") {
 		$("#taskNameError").css({"color":"red",
 							 	 "visibility":"visible"});
