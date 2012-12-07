@@ -7,11 +7,11 @@
 
 <body>
 	<div class='header'>
-		<h1>Contents</h1>
+		<h1>Visual Keeper Tutorial - Contents</h1>
 	</div>
 
 	<div class="content">
-		<p>This tutorial is broken down into sections. I suggest you read them in order as each chapter will build off of the previous one.</p>
+		<p>This tutorial is broken down into sections. I suggest you read them in order as each chapter will build off of the previous one. <a href="mockup.html">Start Here</a></p>
 		<ul>
 			<li><a href="mockup.html">User Interface - Mockup</a></li>
 			<li><a href="ui.html">User Interface - jQuery Mobile</a></li>
@@ -22,9 +22,47 @@
 		</ul>
 		<h2>Overview</h2>
 		<p>
-			Fill in overview here...
+			Visual Keeper is a mobile application designed to help people who house sit, but could be used for many different applications. The app will have a focus on using photos to identify things. The idea is that users can create tasks and take photos for that task for quick identification of tasks and objects. You can view, edit and delete tasks from lists you create. Visual Keeper can also give you a summary of the tasks that are scheduled that week. Data is stored remotely and the app uses a login system to retrieve the correct user's data. Visual Keeper was made by Jared Cahalan and Abel Sanchez. This app is riding the bleeding edge so sometimes there aren't a lot of resources for issues. We are going to put our experience into this tutorial in hopes that someone else will have an easier time than we did. This tutorial will guide you through the steps we took when developing Visual Keeper. 
 		</p>
+		<p>
+			Before we get started on the tutorial I wanted to give you a broad overview of what tools we will use and what technologies will be used. We will explain each technology in more detail as we reach it in the tutorial All links will be listed at the end. The app will made using javascript and html files, you should have some knowledge of basic html and javascript. There are some great tutorials for html at <a href="http://www.w3schools.com">www.w3schools.com</a> and if you want to learn javascript the tutorials at <a href="http://learn.appendto.com/">http://learn.appendto.com/</a> are great. There are also tutorials at <a href="http://www.codecademy.com/learn">http://www.codecademy.com/learn</a> though I have never used them. We will be using phonegap build (<a href="http://build.phonegap.com">http://build.phonegap.com</a>) to build the app from the web documents. Phonegap build can make your web documents into apps for multiple mobile operating systems, but in this tutorial I just used the <a href="http://www.android.com/">Android</a> build, so I cannot say if the others work. <a href="http://phonegap.com/">Phonegap</a> will be used to access the native elements on the mobile device. You can see the docs for Phonegap <a href="http://http://docs.phonegap.com/">here</a>. Visual Keeper uses Phonegap to get photos from the camera and to transfer the photos to the image server. The UI and UI control will be done using <a href="http://jquerymobile.com">jQuery Mobile</a>, which uses jQuery. If you have no experience with jQuery watch the appendto tutorials. jQuery mobile has some great docs at <a href="http://jquerymobile.com/demos/">http://jquerymobile.com/demos/</a> that really show off what jQuery Mobile does and looks like. We will use <a href="http://www.parse.com">Parse.com</a> for data storage. Parse makes it easy to setup a user login/registration system and store our text information. Parse stores javascript objects so if you can fit it in a javascript object you should be able to save it on parse.(Maybe, don't blame me if you find somehting you can't.) The <a href="https://parse.com/docs/js_guide">Parse.com javascript guide</a> is a good resource on how to use the Parse.com service. The date/time picker used in Visual Keeper was done using <a href="http://mobiscroll.com/" >Mobiscroll</a>. jQuery mobile has a date/time picker but I struggled to get it to work on device so I went with Mobiscroll. The image server we use is a web server running php with some short scripts.
+		</p>
+		<p>
+			While developing Visual Keeper you can use whatever text editor you like, I recommend <a href="http://www.sublimetext.com/2" >Sublime Text 2</a> it has some cool features. Most of the time you will test the app in the browser, I recommend <a href="http://www.google.com/chrome">Google Chrome</a>, because it hase a great inspect feature that really helps you figure out why your app looks the way it does. For testing on device I used <a href="http://www.eclipse.org/">Eclipse IDE</a> to get usb debug information from the phone. If you filter the Eclipse log for javascript console output you can use it to get feedback while running your app on device. Because of the way that Phonegap Build works, you will need a github repository to build from. <a href="https://github.com/">Github</a> is a service that allows you to store your code using the <a href="http://git-scm.com/">git version control system</a>. Git and Github can be a little intimidating to learn but they are great tools for working with code. The last thing you will need is plenty of patience, sometimes things don't work out exactly why they should and it can be tough finding information on how to fix them.
+		</p>
+		<h3>Links</h3>
+		<ul>
+			<b>Tutorials</b>
+			<li>html/css/javascript tutorials - <a href="http://www.w3schools.com">www.w3schools.com</a></li>
+			<li>javascript and jQuery tutorials - <a href="http://learn.appendto.com/">http://learn.appendto.com/</a></li>
+			<li>javascript, html/css/javascript tutorials - <a href="http://www.codecademy.com/learn">http://www.codecademy.com/learn</a></li>
+			<br>
+			<b>PhoneGap</b>
+			<li>Phonegap - <a href="http://phonegap.com/">http://phonegap.com/</a></li>
+			<li>Phonegap Build - <a href="http://build.phonegap.com">http://build.phonegap.com</a></li>
+			<li>Phongap Docs - <a href="http://http://docs.phonegap.com/">http://http://docs.phonegap.com/"</a></li>
+			<br>
+			<b>jQuery</b>
+			<li>jQuery - <a href="http://jquery.com/">http://jquery.com/</a></li>
+			<li>jQuery Mobile - <a href="http://jquerymobile.com">http://jquerymobile.com</a></li>
+			<li>jQuery Mobile Docs - <a href="http://jquerymobile.com/demos/">http://jquerymobile.com/demos/</a></li>
+			<br>
+			<b>Other</b>
+			<li>Parse.com - <a href="http://www.parse.com">http://www.parse.com</a></li>
+			<li>Mobiscroll - <a href="http://mobiscroll.com/" >http://mobiscroll.com/</a></li>
+			<br>
+			<b>Development Tools</b>
+			<li>Sublime Text (Text Editor) -  <a href="http://www.sublimetext.com/2" >http://www.sublimetext.com/2</a></li>
+			<li>Google Chrome (Web Browser) - <a href="http://www.google.com/chrome">http://www.google.com/chrome</a></li>
+			<li>Eclipse IDE - <a href="http://www.eclipse.org/">http://www.eclipse.org/</a></li>
+			<li>Git - <a href="http://git-scm.com/">http://git-scm.com/</a></li>
+			<li>Github - <a href="https://github.com/">https://github.com/</a></li>
+			<br>
+			<b>Visual Keeper</b>
+			<li>Visual Keeper on Github (full code) - <a href="https://github.com/jaredcahalan/VisualKeeper">https://github.com/jaredcahalan/VisualKeeper</a></li>
+			<li>Visual Keeper on Phonegap Build - <a href="https://build.phonegap.com/apps/250240/share">https://build.phonegap.com/apps/250240/share</a></li>
+		</ul>
 	</div>
 
 </body>
-</html
+</html>
