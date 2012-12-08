@@ -18,7 +18,7 @@ function deviceReady() {
 	TaskObject = Parse.Object.extend("TaskObject");
 	ListObject = Parse.Object.extend("ListObject");
 	UserObject = Parse.Object.extend("User");
-	console.log("device is ready");
+	//console.log("device is ready");
 
 
 	//////////////////////////////////////////
@@ -69,7 +69,7 @@ function deviceReady() {
 		$('#datePickerAccept').bind('tap', function(){
 			getDateTimeInfo();
 			if(datepickerinfo.freq=='taskOnce'){
-				console.log(datepickerinfo.time+" is the time");
+				//console.log(datepickerinfo.time+" is the time");
 				if(datepickerinfo.time == '' || datepickerinfo.date == ''){
 					$('#errorMsg').show();
 					console.log('must select a date to continue');
@@ -84,7 +84,7 @@ function deviceReady() {
     $('#deleteDialog').bind('pageinit',function(){
     	$('#deleteConfirmButton').bind('tap',function(event){
     		var id = $('#deleteTaskId').html();
-    		console.log(id);
+    		//console.log(id);
     		deleteTask(id);
     	});
     });
@@ -177,20 +177,20 @@ function deviceReady() {
 }
 function init(){
 	
-	console.log('init started');
+	//console.log('init started');
 
 	//////////////////////////////////////////
 	// CHECK IF MATCH DEVICE
 	//////////////////////////////////////////
 	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
         document.addEventListener("deviceready", deviceReady, false);
-        console.log('on phone');
+        //console.log('on phone');
     } else {
 
 	    //////////////////////////////////////////
 	    // ELSE BROWSER
 	    //////////////////////////////////////////
-    	console.log('on browser');
+    	//console.log('on browser');
         deviceReady();
     }
 }
@@ -320,7 +320,7 @@ function setupDelete(event){
 	tid = $(tid).data('task');
 	query.get(tid,{
 		success: function(task){
-			console.log('task to delete: '+task.attributes.taskName);
+			//console.log('task to delete: '+task.attributes.taskName);
 			$('#deleteName').html('"'+task.attributes.taskName+'"');
 			$('#deleteTaskId').html(task.id);
 			$('#deleteResult').hide();
@@ -348,7 +348,7 @@ function setToEditTask(taskid){
 			var task = results[0],
 				imgurl = makeImgURL(user,taskid,1);
 			setupEdit(imgurl, task.attributes.taskName, task.attributes.taskDesc, task.attributes.taskTime, task.id);
-			console.log('editing...');
+			//console.log('editing...');
 		},
 		error: function(){
 			console.log('error getting info for edit');
@@ -366,9 +366,9 @@ function submitEdits(){
 			task.set('taskName',taskName);
 			task.set('taskDesc',taskDesc);
 			task.set('taskTime',datepickerinfo);
-			console.log('saving: '+taskName+" "+taskDesc);
+			//console.log('saving: '+taskName+" "+taskDesc);
 			task.save();
-			console.log('saved');
+			//console.log('saved');
 			$.mobile.changePage('#home');
 		},
 		error: function(){
@@ -438,7 +438,7 @@ function resetDateTimeDialog(){
 function setupDateTime(datetime){
 
 	if(datetime.freq=='taskOnce'){
-		console.log(datetime.time);
+		//console.log(datetime.time);
 		$('#oDate').val(datetime.date);
 		$('#oTime').val(datetime.time);
 	}
@@ -479,7 +479,7 @@ function getDateTimeInfo(){
 // PARSE STUFF - HOME
 //////////////////////////////////////////
 function initHome(){
-	console.log('initing home');
+	//console.log('initing home');
 	loadLists();
 	//loadfromParse();
 	//pullList();
@@ -587,17 +587,17 @@ function register(){
 
         },
         error:function(user, error) {
-            console.log("ERROR!");
-            console.dir(error);
+            //console.log("ERROR!");
+            //console.dir(error);
         }
     });
 }
 function logOut() {
-	console.log("Logout");
+	//console.log("Logout");
 	Parse.User.logOut();
 	CurrentUser="";
 	tUserObject="";
-	 $.mobile.changePage("#login");
+	$.mobile.changePage("#login");
 }
 function login(){
 
@@ -638,7 +638,7 @@ function login(){
         	$("#logstatus").css({"color":"red",
         						 "text-align":"center"});
         	$("#logstatus").html("<p><b>Unsuccessful Login!</b>\nPlease retry or register</p>").fadeIn().show("slow");
-            console.log("ERROR!");    
+            //console.log("ERROR!");    
             $.mobile.changePage("#login");
         }
     });
@@ -707,7 +707,7 @@ function fillInScheduleSummary(){
 				$('#summaryList').listview('refresh');
 			},
 			error: function(error){
-				console.log('error: '+error.code+" "+error.message);
+				// console.log('error: '+error.code+" "+error.message);
 			}
 		});
 }
@@ -750,7 +750,7 @@ function initNewTask(){
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
-	console.log('init in new task');
+	//console.log('init in new task');
 }
 function acceptNewTask(){
 
@@ -815,7 +815,7 @@ function acceptNewTask(){
 		listName:listname
 	},{
 		success: function(tO){
-			console.log('success! id: '+ tO.id);
+			//console.log('success! id: '+ tO.id);
 			uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
 	 	},
 	 	error: function(tO, error){
@@ -869,7 +869,7 @@ function deleteTask(objId) {
 function shareList() {
 	var shareEmail="";
 	shareEmail += $("#shareInput").val();
-	console.log(shareEmail);
+	//console.log(shareEmail);
 	//var tUserObject = Parse.User.current();
 	var shareuserObject = new UserObject();
 	var queryUser = new Parse.Query(UserObject);
@@ -886,7 +886,7 @@ function shareList() {
 				$.mobile.changePage($('#shareDialog'));
 			}
 
-			console.log("The list "+sharedList+" needs to be shared with user "+sharedUser);
+			//console.log("The list "+sharedList+" needs to be shared with user "+sharedUser);
 			//queriedUser = results[0].attributes.username;
 			//console.log(queriedUser);
 		},
@@ -921,7 +921,9 @@ function uploadPhoto(imageURI, id, tid, pid){
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+    ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){
+    	//console.log('success');
+    }, function(err){console.log('failure error code: '+err.code);}, options);
 }
 function addPhotoSpace(){
 	var list = $('#extraPhotos'),
@@ -1010,7 +1012,7 @@ function setupEdit(imgURL, name, desc, datetime, tid){
 	$('#edescArea').val(desc);
 	//console.log(tid);
 	$('#editTaskId').html(tid);
-	console.log('about to set up date time');
+	//console.log('about to set up date time');
 	setupDateTime(datetime);
 }
 function getWeekNumber(indate) {
