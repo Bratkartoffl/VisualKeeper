@@ -1,11 +1,9 @@
-var photoCounter=0;
+var photoCounter;
 var CurrentUser;
 var tUserObject;
-var picNum;
 var datepickerinfo = new Object();
 var currentObj;
-var sharedUser;
-var sharedList;
+
 
 
 //////////////////////////////////////////
@@ -20,7 +18,7 @@ function deviceReady() {
 	TaskObject = Parse.Object.extend("TaskObject");
 	ListObject = Parse.Object.extend("ListObject");
 	UserObject = Parse.Object.extend("User");
-	console.log("device is ready");
+	//console.log("device is ready");
 
 
 	//////////////////////////////////////////
@@ -71,22 +69,22 @@ function deviceReady() {
 		$('#datePickerAccept').bind('tap', function(){
 			getDateTimeInfo();
 			if(datepickerinfo.freq=='taskOnce'){
-				console.log(datepickerinfo.time+" is the time");
+				//console.log(datepickerinfo.time+" is the time");
 				if(datepickerinfo.time == '' || datepickerinfo.date == ''){
 					$('#errorMsg').show();
 					console.log('must select a date to continue');
 				}
 				else{
 					history.back();
+					$("#taskDateError").css({"visibility":"hidden"});
 				}
 			}
-			
 		});
     });
     $('#deleteDialog').bind('pageinit',function(){
     	$('#deleteConfirmButton').bind('tap',function(event){
     		var id = $('#deleteTaskId').html();
-    		console.log(id);
+    		//console.log(id);
     		deleteTask(id);
     	});
     });
@@ -179,20 +177,20 @@ function deviceReady() {
 }
 function init(){
 	
-	console.log('init started');
+	//console.log('init started');
 
 	//////////////////////////////////////////
 	// CHECK IF MATCH DEVICE
 	//////////////////////////////////////////
 	if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
         document.addEventListener("deviceready", deviceReady, false);
-        console.log('on phone');
+        //console.log('on phone');
     } else {
 
 	    //////////////////////////////////////////
 	    // ELSE BROWSER
 	    //////////////////////////////////////////
-    	console.log('on browser');
+    	//console.log('on browser');
         deviceReady();
     }
 }
@@ -279,14 +277,13 @@ function clearTaskListView() {
 	//////////////////////////////////////////
 	$('#taskList').html('');
 }
-
 function cancelNewTask(){
 	resetNewTask();
 	resetDateTimeDialog();
 	$.mobile.changePage($('#home'));
 }
 function resetNewTask(){
-	photoCounter=1;
+	photoCounter=0;
 	var s='';
 	resetDateTimeDialog();
 	$('#extraPhotos').html(s).listview('refresh');
@@ -323,7 +320,7 @@ function setupDelete(event){
 	tid = $(tid).data('task');
 	query.get(tid,{
 		success: function(task){
-			console.log('task to delete: '+task.attributes.taskName);
+			//console.log('task to delete: '+task.attributes.taskName);
 			$('#deleteName').html('"'+task.attributes.taskName+'"');
 			$('#deleteTaskId').html(task.id);
 			$('#deleteResult').hide();
@@ -351,7 +348,7 @@ function setToEditTask(taskid){
 			var task = results[0],
 				imgurl = makeImgURL(user,taskid,1);
 			setupEdit(imgurl, task.attributes.taskName, task.attributes.taskDesc, task.attributes.taskTime, task.id);
-			console.log('editing...');
+			//console.log('editing...');
 		},
 		error: function(){
 			console.log('error getting info for edit');
@@ -369,9 +366,9 @@ function submitEdits(){
 			task.set('taskName',taskName);
 			task.set('taskDesc',taskDesc);
 			task.set('taskTime',datepickerinfo);
-			console.log('saving: '+taskName+" "+taskDesc);
+			//console.log('saving: '+taskName+" "+taskDesc);
 			task.save();
-			console.log('saved');
+			//console.log('saved');
 			$.mobile.changePage('#home');
 		},
 		error: function(){
@@ -441,7 +438,7 @@ function resetDateTimeDialog(){
 function setupDateTime(datetime){
 
 	if(datetime.freq=='taskOnce'){
-		console.log(datetime.time);
+		//console.log(datetime.time);
 		$('#oDate').val(datetime.date);
 		$('#oTime').val(datetime.time);
 	}
@@ -482,7 +479,7 @@ function getDateTimeInfo(){
 // PARSE STUFF - HOME
 //////////////////////////////////////////
 function initHome(){
-	console.log('initing home');
+	//console.log('initing home');
 	loadLists();
 	//loadfromParse();
 	//pullList();
@@ -590,17 +587,17 @@ function register(){
 
         },
         error:function(user, error) {
-            console.log("ERROR!");
-            console.dir(error);
+            //console.log("ERROR!");
+            //console.dir(error);
         }
     });
 }
 function logOut() {
-	console.log("Logout");
+	//console.log("Logout");
 	Parse.User.logOut();
 	CurrentUser="";
 	tUserObject="";
-	 $.mobile.changePage("#login");
+	$.mobile.changePage("#login");
 }
 function login(){
 
@@ -641,7 +638,7 @@ function login(){
         	$("#logstatus").css({"color":"red",
         						 "text-align":"center"});
         	$("#logstatus").html("<p><b>Unsuccessful Login!</b>\nPlease retry or register</p>").fadeIn().show("slow");
-            console.log("ERROR!");    
+            //console.log("ERROR!");    
             $.mobile.changePage("#login");
         }
     });
@@ -710,7 +707,7 @@ function fillInScheduleSummary(){
 				$('#summaryList').listview('refresh');
 			},
 			error: function(error){
-				console.log('error: '+error.code+" "+error.message);
+				// console.log('error: '+error.code+" "+error.message);
 			}
 		});
 }
@@ -750,7 +747,6 @@ function addListToParse(value, name){
 	});
 }
 function initNewTask(){
-	picNum = 0;
 	$('#cancelButton').bind('tap',cancelNewTask);
 	$('#acceptButton').bind('tap',acceptNewTask);
 	setToNewTask();
@@ -761,54 +757,73 @@ function acceptNewTask(){
 	var taskName = $("#nameField").val();
 	var taskDesc = $("#descArea").val();
 
-	$.mobile.changePage($('#home'));
 	var dateObj = datepickerinfo,// = getDateTimeInfo(),
 		datetime,
 		freq;
 	var imgsrc = $('#taskPic').attr('src');
-	if (taskName === "")
-		newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm', 'zzzzzzz');
-	else{
-		if(dateObj.freq=='taskOnce'){
-			datetime = dateObj.date + " at " + dateObj.time;
-			freq= 'Once';
-		}
-		else if(dateObj.freq=='taskDaily'){
-			datetime = dateObj.time;
-			freq = 'Daily';
-		}
-		else if(dateObj.freq=='taskWeekly'){
-			datetime = {days:dateObj.days, time: dateObj.time};
-			freq = 'Weekly';
-		}
-		// if(typeof(datetime)=='Object'){
-		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
-		// }
-		// else{
-		// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
-		// }
-		var listname = $('#listselect > option:selected').attr('value');
-		
-		var taskObject = new TaskObject();
-		taskObject.save({
-			taskName:taskName,
-			taskDesc:taskDesc,
-			taskTime:dateObj,
-			creator:CurrentUser,
-			picCounter:photoCounter,
-			listName:listname
-		},{
-			success: function(tO){
-				console.log('success! id: '+ tO.id);
-				uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
-		 	},
-		 	error: function(tO, error){
-		 		console.log('error saving');
-		 	}
-		});
-		
-		resetDateTimeDialog();
-	}	
+	if (photoCounter === 0) {
+		$("#taskPicError").css({"color":"red",
+								"visibility":"visible"});
+		return;
+	} else
+		$("#taskPicError").css({"visibility":"hidden"});
+	if (taskName === "") {
+		$("#taskNameError").css({"color":"red",
+							 	 "visibility":"visible"});
+		return;
+	} else
+		$("#taskNameError").css({"visibility":"hidden"})
+	if(taskDesc === "") {
+		$("#taskDescError").css({"color":"red",
+								 "visibility":"visible"});
+		return;
+	} else
+		$("#taskDescError").css({"visibility":"hidden"});
+	if(dateObj.freq === undefined) {
+		$("#taskDateError").css({"color":"red",
+								 "visibility":"visible"});
+		//newListViewTask(imgsrc,'example1','Example Task', 'An example task...', '10/19/12 6:30pm', 'zzzzzzz');
+		return;
+	}
+	if(dateObj.freq=='taskOnce'){
+		datetime = dateObj.date + " at " + dateObj.time;
+		freq= 'Once';
+	}
+	else if(dateObj.freq=='taskDaily'){
+		datetime = dateObj.time;
+		freq = 'Daily';
+	}
+	else if(dateObj.freq=='taskWeekly'){
+		datetime = {days:dateObj.days, time: dateObj.time};
+		freq = 'Weekly';
+	}
+	// if(typeof(datetime)=='Object'){
+	// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime.time, freq);	
+	// }
+	// else{
+	// 	newListViewTask(imgsrc,'img', taskName,taskDesc, datetime, freq);	
+	// }
+	var listname = $('#listselect > option:selected').attr('value');
+	
+	var taskObject = new TaskObject();
+	taskObject.save({
+		taskName:taskName,
+		taskDesc:taskDesc,
+		taskTime:dateObj,
+		creator:CurrentUser,
+		picCounter:photoCounter,
+		listName:listname
+	},{
+		success: function(tO){
+			//console.log('success! id: '+ tO.id);
+			uploadPhoto(imgsrc,CurrentUser.id,tO.id,1);
+	 	},
+	 	error: function(tO, error){
+	 		console.log('error saving');
+	 	}
+	});
+	$.mobile.changePage($('#home'));
+	resetDateTimeDialog();
 }
 function sendRes(){
     var email = $("#passwordResetEmail").val();
@@ -854,7 +869,7 @@ function deleteTask(objId) {
 function shareList() {
 	var shareEmail="";
 	shareEmail += $("#shareInput").val();
-	console.log(shareEmail);
+	//console.log(shareEmail);
 	//var tUserObject = Parse.User.current();
 	var shareuserObject = new UserObject();
 	var queryUser = new Parse.Query(UserObject);
@@ -871,7 +886,7 @@ function shareList() {
 				$.mobile.changePage($('#shareDialog'));
 			}
 
-			console.log("The list "+sharedList+" needs to be shared with user "+sharedUser);
+			//console.log("The list "+sharedList+" needs to be shared with user "+sharedUser);
 			//queriedUser = results[0].attributes.username;
 			//console.log(queriedUser);
 		},
@@ -906,10 +921,11 @@ function uploadPhoto(imageURI, id, tid, pid){
     options.chunkedMode = false;
 
     var ft = new FileTransfer();
-    ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){console.log('success');}, function(err){console.log('failure error code: '+err.code);}, options);
+    ft.upload(imageURI, "http://www.abeltsanchez.com/services/upload.php?uid="+id+"&tid="+tid+"&pid="+pid, function(){
+    	//console.log('success');
+    }, function(err){console.log('failure error code: '+err.code);}, options);
 }
 function addPhotoSpace(){
-	picNum++;
 	var list = $('#extraPhotos'),
 		fieldName = "nameField"+photoCounter,
 		fieldDesc = "descField"+photoCounter,
@@ -948,7 +964,6 @@ function addPhotoView(){
 	//console.log('photo view added');
 }
 function capturePhoto(){
-	//console.log(picNum);
 	navigator.camera.getPicture(showPhoto,photoFail,{
 												destinationType : Camera.DestinationType.FILE_URI, 
  												sourceType : Camera.PictureSourceType.CAMERA, 
@@ -957,15 +972,15 @@ function capturePhoto(){
   												quality:30});
 }
 function showPhoto(data){
-	picNum++;
+	photoCounter++;
 	var pic = $('#taskPic');
 	pic.attr('src', data);
 }
 function photoFail() {
-	if(picNum <= 1){
-		picNum = 0;
+	if(photoCounter <= 1){
+		photoCounter = 0;
 	}else{
-		picNum--; 
+		photoCounter--; 
 	}
 }
 function captureAdditionalPhoto(e){
@@ -997,7 +1012,7 @@ function setupEdit(imgURL, name, desc, datetime, tid){
 	$('#edescArea').val(desc);
 	//console.log(tid);
 	$('#editTaskId').html(tid);
-	console.log('about to set up date time');
+	//console.log('about to set up date time');
 	setupDateTime(datetime);
 }
 function getWeekNumber(indate) {
