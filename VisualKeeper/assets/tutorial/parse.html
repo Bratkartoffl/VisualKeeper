@@ -13,16 +13,68 @@
 
 	<div class="content">
 		<h2>Data Storage - Parse.com</h2>
-		<p>For this app we are going to be storing all of the task text data with the Parse API. Parse.com is a cloud data service that makes it really easy to upload and store data. After you create an account at <a href="http://www.parse.com" target="_blank">Parse.com</a> you can create your app data storage. After you make your app you will see a screen like this when you view it.</p>
+		<p>For this app we are going to be storing all of the task text data with the Parse API. Parse.com is a cloud data service that makes it really easy to upload and store data. Since we aren't storing photos on Parse we can do our testing in the browser. After you create an account at <a href="http://www.parse.com" target="_blank">Parse.com</a> you can create your app data storage. After you make your app you will see a screen like this when you view it.</p>
 		<img src="images/parsekeys.png" class="screenshot"/>
-		<p>I have put a red box around the keys we will need later, the Application ID and Javascript Key. Before we can work with the API we have to download the parse javascript file. You can find it here <a href="https://parse.com/docs/downloads" target="_blank">Parse.com Downloads</a>.</p>
+		<p>I have put a red box around the keys we will need later, the Application ID and Javascript Key. I put a green oval around the Data Browser link. The Data Browser allows you to see what data is stored on the Parse servers. This information can be really useful while you are testing. Always have the Data Browser open and you can know for sure your data is being uploaded correctly. Before we can work with the API we have to download the parse javascript file. You can find it here <a href="https://parse.com/docs/downloads" target="_blank">Parse.com Downloads</a>.</p>
 		<p>Once you have the parse javascript file make sure it is in your assets folder so that you can call it in your html file.<br>
 			<code>
 				&lt;script type="text/javascript" src="js/parse-1.1.13.min.js"&gt;&lt;/script&gt;
 			</code>
 			<br>
-		That is the version of Parse that we used for Visual Keeper but you may use a different one but I cannot speak for the compatibility of the code for other versions.
+		That is the version of Parse that we used for Visual Keeper but you may use a different one but I cannot speak for the compatibility of the code for other versions.</p>
+		<p>Now you have to set up your javascript code to work with your specific Parse data. Remember the Application ID and Javascript Key I pointed out earlier? Well we will be using those in our deviceReady function to initialize the Parse API. Using this call:<br>
+			<code>
+				Parse.initialize(Application Id, Javascript Key);
+			</code>
+			<br>
+		With your own Application Id and Javascript Key as the arguments, this gets the Parse API to work with your data.</p>
+		<p>So one more prep step we have to do is define our own Parse Objects. We have to create a type of object that will hold the data we upload. In Visual Keeper we used three different Parse Objects and we defined them like this:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248445.js"> </script>
+		</div>
+		<p>You can find out more about Parse Objects here <a href="https://parse.com/docs/js_guide#objects" target="_blank">Parse Objects</a>. Basically we extend the Parse Object to create our own type of Parse Object. For Visual Keeper we used three different Parse Objects, one for user, one for tasks and one for task lists. To upload data we will need to create new instances of these objects and set the data on them. The cool thing about Parse is that you can add new fields to the objects on the fly and Parse will create new columns in the tables for you.</p>
+		<p>I am going to start with the registration code. To register a new user you create a new Parse User object (that we defined earlier) and set the username, password, and email fields to the fields taken from the form. Then you call the signUp function on the User Object. Here is the code for just creating a new User Object and then setting the fields:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248502.js"> </script>
+		</div>
+		<p>You can see how you just use the set function on the User Object to set a field on it. When you call the signUp function the User Object the success function is called if it worked otherwise the error function is called. If registration was successful we let the user know it worked and then take them to the login screen. To find out more about registering User Objects go here <a href="https://parse.com/docs/js_guide#users" target="_blank">Parse - Users</a>. Take note that the code here does not validate the input from the user. You will need to write code for validating the input. Parse will take care of the database but things may not save correctly if you don't enforce some rules on registration. At the bare minimum you should verify that none of the fields are blank.</p>
+		<p>So if that is registration, how do users login? Well thats pretty similar to registration. Here is the login code:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248519.js"> </script>
+		</div>
+		<p>Again the code here does not check that the user's input is valid, you will have to write that. You can see how the logIn function works similar to the signUp function, they both have a success and error function. Most Parse function calls will have a success and error callback. Here you can see you just pass the username and password that the user provided as the first two arguments of the function. Another thing to notice in the success function is the "Logging in..." message that it sets. Since it can take a second or two for communication to the Parse server to go through, the user could think there was something wrong. We put that message in there to let the user know that they are being logged in. If the login credentials were incorrect the user will not log in and they will be sent back to the login screen.</p>
+		<p>To allow the user to reset their password via email we had to write a script for it. We used the Parse.User.requestPasswordReset function to do this. Here is the code:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248581.js"> </script>
+		</div>
+		<p>You can see how we just call the Parse.User.requestPasswordReset function with the email and callback functions as arguments. An automated e-mail will be sent to the user to instruct them on how to reset their password. You can see how using Parse really helps simplify the work in creating users for the app.</p>
+		<p>So now that we have our users set up we can start adding task lists and tasks to the user. To add new task lists we have to do a few steps. First we check to see if a list with that name already exists, if it doesn't then we can create a new Task List Object and set its name field, and the id of the user that created it. You can see the Visual Keeper code for that here:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248611.js"> </script>
+		</div>
+		<p>You see the functions starts by creating the List Object, the Parse Query Object, and getting the Current User Object. When you create a query make sure you put the name of the object type you want to query for. So in this function look at line 4. I create a new query with the type of ListObject, so that is the table the query will look into. To find out more about Parse Queries go here <a href="https://parse.com/docs/js_guide#queries" target="_blank">Parse - Queries</a>. We will use the equalTo function to query for lists that have a name equal to the name the user gave use for the new list. The find function will give you the results of a query. If it was successful it will call the success function, otherwise the error. One thing to remember is that even if the query returns no results it will call the success function. So in this addListToParse function we have added an if to check if there is a result with that name. If there is, we cannot create the new list and we let the user know, otherwise we use the save function to save the list. The save function is used to save the object data to the server. You can find out more about the save function here <a href="https://parse.com/docs/js_guide#objects-saving" target="_blank">Parse - Saving Objects</a>. If the save is successful we can add the new list to the dropdown menu on the home page. We use the code we wrote earlier to add a list to the dropdown list select.</p>
+		<p>So now that users can make new lists we need to be able to make new tasks. To save a new task we need to create a new TaskObject to upload, then pull the values to save from the fields. We would check to make sure the data is valid, and then we would use the save function to save the new task. Here is the code without the validation check:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248683.js"> </script>
+		</div>
+		<p>The first half of this function is just pulling in data from the input fields. Since the date information is stored in the global datepickerinfo variable, we can grab it from there before we put it into a date object to store with the task info. Then we create a new TaskObject with line 26:<br>
+			<code>
+				var taskObject = new TaskObject();
+			</code>
+			<br>
+		Then we call the save function on this new object. Notice how we used a different method to save this time. Eariler we used the set function to set each field, but now we just passed a set of key/value pairs as the first variable to the save function. Both ways work and its up to personal preference. On success we will call the uploadPhoto function so that the photo is saved on the image server. The last part of the function is returning the user to the home screen.</p>
+		<p>Really quickly we will touch on how the View Task page pulls data from the server. If you remember from the UI control section of the tutorial we made the code that inserted a new task into the listview. We added a data-task attribute to the links so that we knew the objectId of the task we wanted to pull from the server. So we used that by binding a function on click of the task in the listview. That function could get the the html element that triggered the event from the event info. Once you have the element you can use the jQuery data() function to get the value stored in the data-task attribute. We could then query on that objectId to get the task information. Here is some code for that from Visual Keeper:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248760.js"> </script>
+		</div>
+		<p>The pullList function queries parse for all of the tasks for a given list. Then it adds each one to the listview using the javascript we made earlier. The last step it does is bind a function to the click event for each task. On line 19 we use the 'data' function to get the objectId from the data-task attribute. Then we can call populateViewTask with the objectId we got. That way the View Task page always shows the information for the task you tap.</p>
+		<p>Users will want to delete tasks so we have to make a function for that. The delete function will make use of the data-task attribute again to know which task the user wants to delete. The delete function will have to get the TaskObject we want from the objectId and then call the destroy function on that object. Here is the Visual Keeper delete function:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248775.js"> </script>
+		</div>
+		<p>Notice how the destory call is nested inside of the success function of the query. If you can't get the object to delete, you can't delete it. The window.setTimout function is used to display the delete confirmation for 2 seconds then going back to the home screen. For more information on deleting objects in Parse go here <a href="https://parse.com/docs/js_guide#objects-deleting" target="_blank">Parse - Delete Objects</a></p>
 
+		<p>And that completes the Parse code section. I did not go into detail on every Parse function in the app but you should be able to put together the rest. Remember the full code is availbe on Github at <a href="https://github.com/jaredcahalan/VisualKeeper/blob/master/VisualKeeper/assets/www/js/myscript.js">Visual Keeper - myscript.js</a></p>
 	</div>
 
 	<span class="footer">
