@@ -58,16 +58,17 @@
 		<div class="codeSection">
 			<script src="https://gist.github.com/4243535.js"> </script>
 		</div>
-		<p>Last section to cover is the footer. This is pretty simple because its just the one "New Task" button. Here is the code for the whole page:</p>
+		<p>Last section to cover is the footer. This is pretty simple because its just the one "New Task" button. Since this button takes the user to the "New Task" screen, we need to set the href attribute of the &lt;a&gt; tag to the id of the "New Task" page. Here is the code for the button:<br>
+			<code>
+				&lt;a href="#newTask" data-role="button" data-transition="flip" style="width:100%;" data-theme="c" id="newTaskButton"&gt;New Task&lt;/a&gt;
+			</code><br>
+		Since you told jQuery Mobile that the "New Task" page is a page, it will automatically change pages for you just by pointing the href to the id of the destination page. You may notice that I set the width of the button to 100% just to get it to fill the whole footer. You may also notice that I used the data-transition attribute and set it to "flip" this means that when you click/tap the button it will do a "flip" animation to go to the next page. There are different types of animations but you can find out more about them here <a href="http://jquerymobile.com/demos/1.2.0/docs/pages/page-transitions.html" >jQuery Mobile - Page Transitions</a>.
+		<br>
+		Here is the code for the whole page:</p>
 		<div class="codeSection">
 			<script src="https://gist.github.com/4243579.js"> </script>
 		</div>
-		<p>So now that we have that one page made, we can work on the other pages. I wont go into detail on every page because I think you get the idea of how to build a page from the jQuery UI elements. One thing I want to touch on really quick is the way you link from one page to the next. To make a link from one page to the other you have the "href" attribute of the link set to the id of the destination page. You put the id in as if you were doing a jQuery or CSS selector. For example:<br>
-			<code>
-				&lt;a href="#page2" data-role="button" &gt;Go to Page 2&lt;/a&gt;
-			</code>
-		<br>
-		This code will create a button that when clicked/tapped will change the page to the page with id = "page2".</p>
+		<p>So now that we have that one page made, we can work on the other pages. I wont go into detail on every page because I think you get the idea of how to build a page from the jQuery UI elements. If you made some good mockups it shouldn't be a problem converting them to jQuery Mobile pages.</p>
 		<p>As you start fleshing out the pages don't forget you can use the Chrome inspect to try and figure out why things look the way they do. One thing to remember is that you can add some of your own styles to certain elements, just be careful about adding floats and position types of style changes because it can interfere with the jQuery Mobile styles. If things aren't displaying right you might check to make sure you closed all of your tags. Your best friend is going to be the jQuery Mobile Docs, always have them open. When all else fails google/jquery forum/stackoverflow it, someone else may have had a similar problem. Sometimes you may run into a problem where you just can't make the UI you want with the jQuery Mobile UI elements. You could create your own elements using custom css, which is beyond the scope of this tutorial, or change your UI mockup to something more jQuery Mobile friendly.</p>
 		<p>When you are ready to start picking a color scheme for your app check out the <a href="http://jquerymobile.com/themeroller/index.php" target="_blank">jQuery Mobile Themeroller</a>. The theme roller lets you set the color scheme for themes lettered a through z. After you download the css and link it in your html file, you can select the theme for an element(or entire page if you want) by setting the data-theme attribute to the theme lettering. For example:<br>
 			<code>

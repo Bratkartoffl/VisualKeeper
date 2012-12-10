@@ -13,8 +13,59 @@
 
 	<div class="content">
 		<h2>User Control - jQuery Events</h2>
-
-
+		<p>So you have your UI pretty well set up in html and you are ready to start making it interactive. We are going to start working with javascript now and we will be using plenty of jQuery. I am going to assume you have a basic understanding of jQuery selectors and events and some knowledge of javascript. If you don't, then check the <a href="index.html#links">tutorial links</a> I have on the overview page. The first step is to create the javascript file for your app and put a corresponding script tag in the html. For example in Visual Keeper:<br>
+			<code>
+				&lt;script type="text/javascript" src="js/myscript.js"&gt;&lt;/script&gt;
+			</code>
+			<br>
+		If it seems like your script is doing nothing at all then make sure you actually have this line in your html. I know it seems like a really stupid mistake but sometimes those are the hardest to solve.
+		</p>
+		<p>The first thing we need to do is set up our initilizations. You are probably gonna have a lot to do when the app first loads like bind events and fill in pages with data. To get the initialization function to fire at the right time you want to add the 'onload' attribute to the body of your html and set that attribute to the name of your init function. For example:<br>
+			<code>
+				&lt;body onload="init();"&gt;
+			</code>
+			<br>
+		That is the opening tag for the body of the Visual Keeper index.html. When the body is loaded the init function will be executed. So our next step is to create that init function in our javascript file. We just create a function with the name init. Since we are still using the browser to test we are gonna add some code in the init function to find out if we are on a browser or a mobile device. Here is the init funciton in Visual Keeper:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4247488.js"> </script>
+		</div>
+		<p>What we have here is a simple if statement. If we are on a mobile device we bind our deviceReady function to the 'deviceready' event. If you try to initialize some things before the device is ready things don't quite work right. So what we do is wait until the device says it is ready and then we can initialize things. If we are on a browser though, we can just initialize everything right away. If you don't include this if statement and just do the 'deviceready' bind then the deviceReady function will not fire on a web browser. This is mostly so we can test on the browser and test on the phone with the same code.
+		</p>
+		<p>So now that we are set up we can start actually initializing things, but what do we put in our deviceReady function? You want to put in things that set up the pages. For Visual Keeper this included things like binding events to buttons or page loads. If you want to bind a certain event to a button you use jQuery to select the button and then use the bind function on whatever event you want. For example, we will bind a click event to the button with id 'editAcceptButton'.<br>
+			<code>
+				$('#editAcceptButton').bind('click',submitEdits);
+			</code>
+			<br>
+		When the editAcceptButton is clicked the 'submitEdits' function will be executed. You bind events like this so you can do things like prepare data based on the click event. You can also use anonymous functions as the second argument to the bind function. For example:</p>				
+		<div class="codeSample">
+			<script src="https://gist.github.com/4247539.js"> </script>
+		</div>
+		<p>In this example we were able to get the arguments for the addListToParse function and then call it without creating a new function for all of that. For more information on binding events check here <a href="http://api.jquery.com/bind/">jQuery Bind Function</a></p>
+		<p>Some other types of events you will be using are the 'pageinit' and 'pagebeforeshow'. The 'pageinit' event fires the first time the page is loaded, so that only happens once. You use this event to do things that need to get done before the page loads the first time. If you need to have an event that fires every time the user changes to that page, then you can find an event for that. For more information on jQuery Mobile events go here <a href="http://jquerymobile.com/demos/1.2.0/docs/api/events.html" >jQuery Mobile Events</a> We used the 'pagebeforeshow' event for loading data into UI elements on the destination page. Here is an example:<br>
+			<code>
+				$('#home').bind('pagebeforeshow',pullList);
+			</code>
+			<br>
+		This bind is used in Visual Keeper to pull the task list information from the server when the home page is about to be shown. That way the the page can get the data and put it into the proper UI elements right before the page is shown. The 'pagebeforeshow' event fires everytime you change to that page but right before the page is shown to the user.</p>
+		<p>For right now you probably won't know what to put in the deviceReady function but just remember that you can bind events there at the startup of the app. You want to go page by page and start making it functional. For example, on the home page of Visual Keeper we wanted to be able to dynamically add tasks to the list view on the home page. In the last section we figured out the format of a generic list item and now I will show you how we dynamically created those lists and then added them to the page. Here is the javascript for that:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4247621.js"> </script>
+		</div>
+		<p>First off, we have to pass this function some arguments to create it. We need to give the function an image url, an image id, a task name, a task description, and a task date/time, and last we need the id of the task. This last argument, the task id, is generated by Parse.com when we create the task on the database. For right now don't worry about the parse stuff because we will work on that in another section, but for now we just want to be able to create and add these list items dynamically. Now look at how we split up the html for the hard coded list item we did last section so that we can add in the information that was passed to the function. You may notice that we set the data-task attribute to the objId(task id), we do this because when we click on that link we want to know what task it is refering to. Later we will add a click event to the list item so that when it is clicked, the callback function can check the data-task attribute for the objId then use that objId to populate the Task View Page for the corresponding task. I will talk again about the data-task when we start working with Parse.com. Now that the html variable is loaded with the proper html code for the list item, we need to add it to the page. To do this we use this line of code:<br>
+			<code>
+				tasklist.append(html).listview('refresh');
+			</code>
+			<br>
+		What this does is append the html we just made to the tasklist and then refresh the list. We need to do that refresh to tell jQuery Mobile to apply its styles to the new list item. The append function will add the html code you give it to the inside of the tag you selected. For more information on append go here <a href="http://api.jquery.com/append/">jQuery Append</a>. The trigger function is used to recreate the tasklist because we had some display issues even with the refresh. The last line in the function is to bind the delete button that we just added in the list item to the delete function. That delete function will also use the data-task attribute to know which task you are trying to delete. If you want another example of where we added html to the page, then check out the <a href="https://gist.github.com/4247736" target="_blank">'addNewListToDropdown'</a> function. That function adds new lists of tasks to the drop down menu at the top of the main page.</p>
+		<p>So we can add tasks to the list but we need to set up our forms for creating tasks. The 'New Task' page contains the forms we will be using to gather data from the user. One thing you want to do is have a function that will clear all of the forms on the page for you. That way it is easy to bind that function to a 'pagebeforeshow' event or a reset button. We created a resetNewTask function to do this for us:</p>
+		<div class="codeSection">
+			<script src="https://gist.github.com/4247681.js"> </script>
+		</div>
+		<p>This function just selects each form element and set the value of each one to an empty string. The resetDateTimeDialog does about the same thing but for the date/time scroller. I suggest you write this kind of function for every form you have on your app so you can easily reset it.</p>
+		<p>For the date/time picker, it was inside of the date/time dialog so we had to have way to get information from the dialog when it was closed and store it for later use when the user accepted the task thereby uploading the information. So what we did was write a function to grab data from the date/time pickers and store them in a global javascript object called 'datepickerinfo'. That function was called when the user accepted the date and time in the dialog. Here is that function:</p>
+		<div class="codeSection">
+			
+		</div>
 	</div>
 
 	<span class="footer">
