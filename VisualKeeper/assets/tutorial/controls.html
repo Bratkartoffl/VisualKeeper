@@ -61,11 +61,48 @@
 		<div class="codeSection">
 			<script src="https://gist.github.com/4247681.js"> </script>
 		</div>
-		<p>This function just selects each form element and set the value of each one to an empty string. The resetDateTimeDialog does about the same thing but for the date/time scroller. I suggest you write this kind of function for every form you have on your app so you can easily reset it.</p>
+		<p>This function just selects each form element and set the value of each one to an empty string. The resetDateTimeDialog does about the same thing but for the date/time scroller. I suggest you write this kind of function for every form you have on your app so you can easily reset it. Now we can bind the 'resetNewTask' function to the "New Task" button on the home page. That way the New Task Page will be blank every time the user goes to it. We do that by adding the bind to the deviceReady function:<br>
+			<code>
+				$('#newTaskButton').bind('tap',resetNewTask);
+			</code>
+			<br>
+		Now you can see how we can start adding binds to setup certain pages for use.</p>
 		<p>For the date/time picker, it was inside of the date/time dialog so we had to have way to get information from the dialog when it was closed and store it for later use when the user accepted the task thereby uploading the information. So what we did was write a function to grab data from the date/time pickers and store them in a global javascript object called 'datepickerinfo'. That function was called when the user accepted the date and time in the dialog. Here is that function:</p>
 		<div class="codeSection">
-			
+			<script src="https://gist.github.com/4247789.js"> </script>
 		</div>
+		<p>So this function just parses the data from the date and time picker dialog and stores it into that datepickerinfo variable for later use. We can now bind the date/time dialog accept button to the getDateTimeInfo function so that when the user accepts the date/time settings the settings will be stored. We do this by adding some code in the deviceReady function:</p>
+		<div class="codeSection">
+			<script src="https://gist.github.com/4247979.js"> </script>
+		</div>
+		<p>This function also has an example of some input validation. In this code it checks to see if the user has actually entered a date and/or time. If they haven't then the error message will be displayed, otherwise you go back one page to the 'New Task' page. Notice here that on success the function calls<br>
+			<code>
+				history.back();
+			</code>
+			<br>
+		This call takes you back one page but does not call the pagebeforeshow event and so that way you can go back to the 'New Task' page without triggering the clear and erasing all of the users work before entering the dialog.</p>
+		<p>The "View Task" page is pretty simple to update, you just set the html of the proper fields to the data you pull from the server. Since we haven't talked about pulling data from Parse yet I won't go into detail now. The 'Edit Task' page is pretty much a copy of the 'New Task' page with some different ids for setting up the edit.</p>
+		<p>Another function you will want to setup will be the one that can set the fields of the form to whatever you want. In Visual Keeper we used a similar function to setup the edit task page by filling in the fields with the proper data. Here is that function:
+		</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4247994.js"> </script>
+		</div>
+		<p>This function takes in some arguments and sets the proper edit fields to those values. One thing to remember with a function like this is that this function does not check to see if the input is valid so make sure you are giving this function valid input. This setupEdit function gets called in the function that is bound to the "Edit Task" button.</p>
+		<p>The last page I want to touch on is the 'Schedule Summary'. The schedule summary will show the tasks that are coming up this week. We had to write code that could add items to the list view on the proper day. Here is that code:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248047.js"> </script>
+		</div>
+		<p>This function builds the html and then builds the jQuery selector to find insert the day in the proper place. This populateScheduleSummary function will be called in the fillInScheduleSummary on tasks that are occuring that week. I had to look up a function for this but there is a way to find the week of the year that a day occurs. Here is that function:</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248058.js"> </script>
+		</div>
+		<p>So the fillInScheduleSummary gets the dates for each task the user has and checks to see if it is in this week, if it is then it is passed to the populateScheduleSummary function to be added to the schedule summary. The fillInScheduleSummary function will be bound to the 'pagebeforeshow' event in the deviceReady function:<br>
+			<code>
+					$('#summarySchedule').bind('pagebeforeshow',function(){ fillInScheduleSummary(); });
+			</code>
+			<br>
+		That way the schedule summary will be filled out every time the page loads.</p>
+		<p>So we have finished some basic control for the app and we are about ready to start taking tasking photos in the next section</p>
 	</div>
 
 	<span class="footer">

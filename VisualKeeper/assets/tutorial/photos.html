@@ -13,7 +13,31 @@
 
 	<div class="content">
 		<h2>Taking Photos - PhoneGap Photos</h2>
+		<p>To take photos we are going to have to access the native camera and then we can display and store that photo. We are going to use Phonegap to achieve this. Check out the Phonegap docs at <a href="http://docs.phonegap.com/en/2.2.0/cordova_camera_camera.md.html#Camera" target="_blank">http://docs.phonegap.com/en/2.2.0/cordova_camera_camera.md.html#Camera</a> to see how the camera API works. We are going to start building the app with <a href="http://build.phonegap.com" target="_blank">Phonegap Build</a> so we are going to have the app on device now. I did all of my testing on Android so I cannot speak for the other operating systems. I did testing using Eclipse with the Android Development Kit. If you turn on USB debugging on your phone you can plug it in to the usb port and get console data on the Eclipse console. That way you can see your console.log() calls while working on device. To build on Phonegap Build you need to have the code on a <a href="https://github.com/">Github</a> Repository and then you make a new app on Phonegap Build and give it that repository. After your app has been built you can easily install it on the phone by using a QR reader on the QR Code that Phonegap Build gives you.</p>
+		<p>So the first step is adding a script call in your html file. You have to add the call to the phonegap.js script so that when Phonegap Build makes your app it will work. Phonegap Build will put the actual js file in so all you have to do is add a line like this:<br>
+			<code>
+				&lt;script src="phonegap.js"&gt;&lt;/script&gt;
+			</code>
+			<br>
+		to your html file.</p>
+		<p>So the first function we will write will be the capturePhoto function. This function is pretty much taken from the phonegap docs. Here is the capturePhoto button from Visual Keeper:</p>
+		<div class="codeSection">
+			<script src="https://gist.github.com/4248197.js"> </script>
+		</div>
+		<p>This function has a single line but it has a lot of stuff in it so I'm going to break it down. The line starts with<br>
+			<code>
+				navigator.camera.getPicture(...);
+			</code>
+			<br>
+		This is a Phonegap function that you can find information about here <a href="http://docs.phonegap.com/en/2.2.0/cordova_camera_camera.md.html#camera.getPicture">Phonegap - Camera getPicture</a>. The first argument to the getPicture is the success callback function. It is the function you want to execute if the photo is successfully taken. In the case of Visual Keeper that function is called showPhoto. The next argument is the function that will be called if the photo capture is unsuccessful. The third section is a javascript object containing options you can set. Check the docs for all of the options but I will go over the ones here. Destination type is the form the photo will be give to the showPhoto function. In this case we want a location to a temporary file so we set that to 'FILE_URI'. The next option sourceType is the source we want the image to come from. For Visual Keeper we wanted people to take the photo when making the task so we had the sourceType set to 'CAMERA' but we could have set it so the user could select from photos they had already taken. The third option is image encodingType, which we have set to 'JPEG'. The last option is pretty important, it is the quality you want the photo to be. You would think you could just set this really high because, hey, everyone likes high quality photos. Unfortunately, some slower devices have a lot of trouble with higher quality phones. On one phone we tested we had to lower quality quite a bit to keep the phone from crashing. On others the high quality photos would slow the app down. So if you know the specs of the device you are targeting you might be able to pick the appropriate quality level, but you might just have to set it lower to make your app work better on slower devices. So in our app we set it to 30.</p>
 
+		<p>So now that we have the function that actually takes the photo, we have to write the callback functions that execute based on the success or failure of the photo caputre. Those functions for Visual Keeper is the showPhoto function and the photoFail function.</p>
+		<div class="codeSample">
+			<script src="https://gist.github.com/4248247.js"> </script>
+		</div>
+		<p>These functions are pretty simple. The success one just sets the photo in the New Task page to the photo that was taken. Since we set the destination type of the photo to 'FILE_URI' we can just put that URI into the src attribute of the image. If it fails we do nothing but make sure the photo count does not go up.</p>
+		<p>So now that we have all of our functions set up to take photos we have to actually bind the capturePhoto function to a button so the user can take a photo. In the case of Visual Keeper we bound it to the photo itself on the New Task page, so when the user taps the photo they will be able to take a photo. The showPhoto function will update the photo if the capture is successful.</p>
+		<p>So now that we can take photos we need to be able to store and retrieve data (including photos), we will cover this in the next section</p>
 
 	</div>
 

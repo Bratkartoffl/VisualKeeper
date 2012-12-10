@@ -79,6 +79,15 @@ function deviceReady() {
 					$("#taskDateError").css({"visibility":"hidden"});
 				}
 			}
+			else if(datepickerinfo.freq=='taskDaily' || datepickerinfo.freq=='taskWeekly'){
+				if(datepickerinfo.time==''){
+					$('#errorMsg').show();
+				}
+				else{
+					history.back();
+					$("#taskDateError").css({"visibility":"hidden"});	
+				}
+			}
 		});
     });
     $('#deleteDialog').bind('pageinit',function(){
@@ -1006,17 +1015,16 @@ function addPhoto(data){
 	$('#exPhoto1').attr('src',data);
 	$('#extraPhotos').listview('refresh');
 }
-function setupEdit(imgURL, name, desc, datetime, tid){
-	$('#etaskPic').attr('src',imgURL);
-	$('#enameField').val(name);
-	$('#edescArea').val(desc);
-	//console.log(tid);
-	$('#editTaskId').html(tid);
-	//console.log('about to set up date time');
-	setupDateTime(datetime);
-}
+	function setupEdit(imgURL, name, desc, datetime, tid){
+		$('#etaskPic').attr('src',imgURL);
+		$('#enameField').val(name);
+		$('#edescArea').val(desc);
+		//console.log(tid);
+		$('#editTaskId').html(tid);
+		//console.log('about to set up date time');
+		setupDateTime(datetime);
+	}
 function getWeekNumber(indate) {
-    //d = new Date(d);
     d = indate;
     d.setHours(0,0,0);
     d.setDate(d.getDate() + 4 - (d.getDay()||7));
